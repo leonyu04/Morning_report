@@ -32,7 +32,7 @@
         .screen::-webkit-scrollbar { display: none; }
         .content-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
 
-        /* --- iOS Dock (更輕透) --- */
+        /* --- iOS Dock (輕透風格) --- */
         .ios-dock { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px); left: 50%; transform: translateX(-50%); display: flex; align-items: center; background: rgba(255, 255, 255, 0.015); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.03); border-radius: 40px; padding: 6px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.08); user-select: none; -webkit-user-select: none; touch-action: none; }
         .nav-item { width: 54px; height: 46px; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 2; color: rgba(255, 255, 255, 0.45); transition: color 0.3s ease; }
         .nav-item.active { color: rgba(255, 255, 255, 1); }
@@ -43,7 +43,7 @@
         .global-fab { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 95px); right: 28px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.1); color: white; font-size: 1.6rem; font-weight: 300; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.15); cursor: pointer; z-index: 1000; opacity: 0; pointer-events: none; transform: scale(0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .global-fab.show { opacity: 1; pointer-events: auto; transform: scale(1); }
 
-        /* --- 減半透明度、變薄的毛玻璃卡片 --- */
+        /* --- 超輕薄毛玻璃卡片 --- */
         .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.002)); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border-top: 1px solid rgba(255, 255, 255, 0.05); border-left: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.01); border-right: 1px solid rgba(255, 255, 255, 0.01); border-radius: 20px; box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.12); padding: 22px 20px; width: 100%; }
         
         /* --- Screen 1: 健身專屬頁面 --- */
@@ -70,7 +70,7 @@
         .menu-weight { font-size: 0.72rem; font-weight: 300; background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 6px; }
         
         .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; width: 100%; font-size: 0.75rem; font-weight: 400; letter-spacing: 0.5px; padding-bottom: 4px; }
-        .collapsible-content { display: none; flex-direction: column; gap: 14px; margin-top: 14px; }
+        .collapsible-content { display: none; flex-direction: column; gap: 10px; margin-top: 10px; }
         .collapsible-content.show { display: flex; }
 
         /* --- Screen 2: 首頁 (Home) --- */
@@ -140,7 +140,7 @@
         .google-login-btn { background: rgba(255,255,255,0.9); color: black; font-weight: 500; }
         .danger-btn { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ff6b6b; margin-top: 24px; }
 
-        /* Modals (減薄背景) */
+        /* Modals */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-overlay.show { display: flex; }
         .modal-card { background: rgba(25, 30, 35, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px 20px; width: 420px; max-width: 90%; color: white; box-shadow: 0 15px 40px rgba(0,0,0,0.3); max-height: 85dvh; overflow-y: auto;}
@@ -169,7 +169,6 @@
 
     <div class="ios-dock" id="ios-dock">
         <div class="nav-bubble" id="nav-bubble"></div>
-        <!-- [最左側] Icon: 視覺化儀表板圖示 (改用圓餅圖樣式) -->
         <div class="nav-item" onclick="goToScreen(0)"><svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83M22 12A10 10 0 0 0 12 2v10z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="nav-item" onclick="goToScreen(1)"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="nav-item active" onclick="goToScreen(2)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -181,37 +180,52 @@
 
     <div class="app-slider" id="app-slider">
         
-        <!-- [左二] Screen 0: Life Overview (統計儀表板) -->
+        <!-- [左二] Screen 0: Life Overview (生活資料視覺化儀表板) -->
         <section class="screen" id="screen-0" style="justify-content: center;">
             <div class="content-container" style="align-items: center; gap: 20px;">
-                <div class="glass-card" style="padding: 35px 25px; max-width: 400px; width: 100%;">
-                    <h2 style="font-size: 1.35rem; font-weight: 300; letter-spacing: 1.5px; margin-bottom: 25px; text-align: center; color: #fff;">Life Overview</h2>
+                <div class="glass-card" style="padding: 30px 22px; max-width: 440px; width: 100%;">
+                    <h2 style="font-size: 1.35rem; font-weight: 300; letter-spacing: 1.5px; margin-bottom: 22px; text-align: center; color: #fff;">Life Overview</h2>
                     
-                    <div style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 30px;">
+                    <!-- 核心雙環形進度 -->
+                    <div style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 25px;">
                         <!-- Tasks Ring -->
                         <div style="display:flex; flex-direction:column; align-items:center;">
-                            <div id="stats-tasks-ring" style="width:90px; height:90px;">
-                                <!-- SVG Generated in JS -->
-                            </div>
-                            <span style="font-size: 0.75rem; opacity: 0.6; margin-top: 10px; font-family:'Noto Serif JP';">Tasks Done</span>
+                            <div id="stats-tasks-ring" style="width:90px; height:90px;"></div>
+                            <span style="font-size: 0.75rem; opacity: 0.6; margin-top: 8px; font-family:'Noto Serif JP';">Tasks Done</span>
                         </div>
                         <!-- Fitness Ring -->
                         <div style="display:flex; flex-direction:column; align-items:center;">
-                            <div id="stats-fitness-ring" style="width:90px; height:90px;">
-                                <!-- SVG Generated in JS -->
-                            </div>
-                            <span style="font-size: 0.75rem; opacity: 0.6; margin-top: 10px; font-family:'Noto Serif JP';">Week Workouts</span>
+                            <div id="stats-fitness-ring" style="width:90px; height:90px;"></div>
+                            <span style="font-size: 0.75rem; opacity: 0.6; margin-top: 8px; font-family:'Noto Serif JP';">Week Workouts</span>
                         </div>
                     </div>
 
-                    <div style="font-size: 0.82rem; font-weight: 300; opacity: 0.85; padding: 16px; background: rgba(0,0,0,0.1); border-radius: 12px; border: 1px solid rgba(255,255,255,0.02);">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
-                            <span id="stat-t-label">📋 今日任務達成進度</span>
-                            <span id="stat-t-val" style="color: #fde047;">0 / 0</span>
+                    <!-- 數據視覺化明細 -->
+                    <div style="font-size: 0.82rem; font-weight: 300; opacity: 0.9; padding: 16px; background: rgba(0,0,0,0.1); border-radius: 14px; border: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; gap: 14px;">
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                            <span>📋 今日任務完成率</span>
+                            <span id="stat-t-val" style="color: #fde047; font-weight: 400;">0 / 0</span>
                         </div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                            <span>🔥 本週健身達標天數</span>
+                            <span id="stat-f-val" style="color: #9be7e4; font-weight: 400;">0 天</span>
+                        </div>
+
+                        <!-- 增重增肌目標進度條 -->
+                        <div style="display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                                <span>⚖️ 增重增肌目標 (66kg)</span>
+                                <span id="stat-w-val" style="color: #a7f3d0;">59.0 kg / 66 kg</span>
+                            </div>
+                            <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden;">
+                                <div id="stat-w-bar" style="width: 5%; height: 100%; background: linear-gradient(90deg, #9be7e4, #a7f3d0); border-radius: 3px; transition: width 0.5s ease;"></div>
+                            </div>
+                        </div>
+
+                        <!-- 舒壓與隨手記動態 -->
                         <div style="display: flex; justify-content: space-between;">
-                            <span id="stat-f-label">🔥 本週訓練累積天數</span>
-                            <span id="stat-f-val" style="color: #9be7e4;">0 天</span>
+                            <span>🧘 舒壓與靈感隨手記</span>
+                            <span id="stat-zen-val" style="color: rgba(255,255,255,0.7); font-size: 0.75rem;">0 次點擊</span>
                         </div>
                     </div>
                 </div>
@@ -525,7 +539,12 @@
             }
         }
 
-        function saveJournals() { localStorage.setItem('leon_journal_bubbles', JSON.stringify(journalBubbles)); localStorage.setItem('leon_local_updated', Date.now().toString()); scheduleBackup(); }
+        function saveJournals() { 
+            localStorage.setItem('leon_journal_bubbles', JSON.stringify(journalBubbles)); 
+            localStorage.setItem('leon_local_updated', Date.now().toString()); 
+            scheduleBackup(); 
+            updateLifeStats();
+        }
 
         function renderJournals() {
             const area = document.getElementById('journal-area');
@@ -568,6 +587,7 @@
                 });
                 area.appendChild(el);
             });
+            updateLifeStats();
         }
         renderJournals();
 
@@ -616,7 +636,6 @@
         }
         setInterval(updateTime, 1000); updateTime();
         
-        // 加入 weightHistory 初始化
         let fitnessData = JSON.parse(localStorage.getItem('leon_fitness_data')) || { weight: 59.0, weightHistory: [], logs: [] };
         if (!fitnessData.weightHistory) { fitnessData.weightHistory = [{date: new Date().toISOString(), weight: fitnessData.weight || 59.0}]; }
         
@@ -639,32 +658,57 @@
             });
         }
 
-        /* 更新左側統計儀表板 (Life Overview) */
+        /* 更新左側視覺化儀表板 (Life Overview) */
         function updateLifeStats() {
-            // Task Ring
+            // 1. Task Ring
             let tRate = globalTasksStats.total > 0 ? (globalTasksStats.completed / globalTasksStats.total) * 100 : 0;
             const C = 2 * Math.PI * 36;
             const tArc = (tRate / 100) * C;
-            document.getElementById('stats-tasks-ring').innerHTML = `<svg width="90" height="90" viewBox="0 0 90 90">
-                <circle cx="45" cy="45" r="36" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"/>
-                <circle cx="45" cy="45" r="36" fill="none" stroke="#fde047" stroke-width="8" stroke-dasharray="${tArc} ${C}" stroke-linecap="round" transform="rotate(-90 45 45)"/>
-                <text x="45" y="52" fill="#fff" font-size="18" text-anchor="middle" font-weight="300">${Math.round(tRate)}%</text>
-            </svg>`;
-            document.getElementById('stat-t-val').innerText = `${globalTasksStats.completed} / ${globalTasksStats.total}`;
+            const tasksRingEl = document.getElementById('stats-tasks-ring');
+            if (tasksRingEl) {
+                tasksRingEl.innerHTML = `<svg width="90" height="90" viewBox="0 0 90 90">
+                    <circle cx="45" cy="45" r="36" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"/>
+                    <circle cx="45" cy="45" r="36" fill="none" stroke="#fde047" stroke-width="8" stroke-dasharray="${tArc} ${C}" stroke-linecap="round" transform="rotate(-90 45 45)"/>
+                    <text x="45" y="52" fill="#fff" font-size="18" text-anchor="middle" font-weight="300">${Math.round(tRate)}%</text>
+                </svg>`;
+                document.getElementById('stat-t-val').innerText = `${globalTasksStats.completed} / ${globalTasksStats.total}`;
+            }
 
-            // Fitness Ring (Weekly Streak)
+            // 2. Fitness Ring (Weekly Streak)
             const wk = getMonday(new Date()).toLocaleDateString('en-CA');
             const days = new Set(fitnessData.logs.filter(l => getMonday(new Date(l.date)).toLocaleDateString('en-CA') === wk).map(l => dateKeyOf(l.date)));
             const streakCount = days.size;
             const fTarget = 3; 
             const fRate = Math.min((streakCount / fTarget) * 100, 100);
             const fArc = (fRate / 100) * C;
-            document.getElementById('stats-fitness-ring').innerHTML = `<svg width="90" height="90" viewBox="0 0 90 90">
-                <circle cx="45" cy="45" r="36" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"/>
-                <circle cx="45" cy="45" r="36" fill="none" stroke="#9be7e4" stroke-width="8" stroke-dasharray="${fArc} ${C}" stroke-linecap="round" transform="rotate(-90 45 45)"/>
-                <text x="45" y="52" fill="#fff" font-size="18" text-anchor="middle" font-weight="300">${streakCount}/${fTarget}</text>
-            </svg>`;
-            document.getElementById('stat-f-val').innerText = `${streakCount} 天`;
+            const fitRingEl = document.getElementById('stats-fitness-ring');
+            if (fitRingEl) {
+                fitRingEl.innerHTML = `<svg width="90" height="90" viewBox="0 0 90 90">
+                    <circle cx="45" cy="45" r="36" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"/>
+                    <circle cx="45" cy="45" r="36" fill="none" stroke="#9be7e4" stroke-width="8" stroke-dasharray="${fArc} ${C}" stroke-linecap="round" transform="rotate(-90 45 45)"/>
+                    <text x="45" y="52" fill="#fff" font-size="18" text-anchor="middle" font-weight="300">${streakCount}/${fTarget}</text>
+                </svg>`;
+                document.getElementById('stat-f-val').innerText = `${streakCount} 天`;
+            }
+
+            // 3. 增重增肌進度計算 (59.0kg -> 66.0kg)
+            const curW = parseFloat(fitnessData.weight) || 59.0;
+            const targetW = 66.0;
+            const baseW = 59.0;
+            let wPct = Math.min(Math.max(((curW - baseW) / (targetW - baseW)) * 100, 0), 100);
+            if (curW >= targetW) wPct = 100;
+            const wBarEl = document.getElementById('stat-w-bar');
+            if (wBarEl) {
+                wBarEl.style.width = `${Math.max(wPct, 5)}%`;
+                document.getElementById('stat-w-val').innerText = `${curW} kg / ${targetW} kg`;
+            }
+
+            // 4. 隨手記與懸浮泡泡統計
+            const jCount = journalBubbles.length;
+            const zenValEl = document.getElementById('stat-zen-val');
+            if (zenValEl) {
+                zenValEl.innerText = `${jCount} 則懸浮靈感`;
+            }
         }
 
         function initFitness() {
@@ -699,32 +743,31 @@
             document.getElementById('dash-ring').innerHTML = `<svg width="90" height="90" viewBox="0 0 90 90">${arcs}<text x="45" y="52" text-anchor="middle" fill="#fff" font-size="22" font-weight="300">${days.size}/3</text></svg>`;
 
             renderWeightChart();
-            renderWeeklyFitnessLogs(); updateMenuMaxWeights();
+            renderWeeklyFitnessLogs(); 
+            updateMenuMaxWeights();
             updateLifeStats();
         }
 
-        /* 根據更新次數繪製動態體重圖表 */
+        /* 動態繪製體重趨勢圖 */
         function renderWeightChart() {
             if (!fitnessData.weightHistory || fitnessData.weightHistory.length === 0) {
                 fitnessData.weightHistory = [{date: new Date().toISOString(), weight: fitnessData.weight}];
             }
             
-            // 取最近 10 筆更新紀錄
             const history = fitnessData.weightHistory.slice(-10);
             let weights = history.map(h => parseFloat(h.weight));
             
             const targetW = 66;
-            let maxW = Math.max(targetW, ...weights) + 1; // 給上方留白
-            let minW = Math.min(...weights) - 1.5; // 給下方留白
+            let maxW = Math.max(targetW, ...weights) + 1; 
+            let minW = Math.min(...weights) - 1.5; 
             
-            const range = Math.max(maxW - minW, 3); // 避免過度縮放
+            const range = Math.max(maxW - minW, 3); 
             const startX = 15, endX = 185, width = endX - startX;
             const startY = 15, endY = 60, height = endY - startY;
 
             let points = [];
             let circles = [];
             
-            // 計算 X 軸等距間隔 (按照更改的次數)
             const stepX = history.length > 1 ? width / (history.length - 1) : 0;
 
             history.forEach((h, i) => {
@@ -734,13 +777,11 @@
                 points.push(`${x},${y}`);
                 circles.push(`<circle cx="${x}" cy="${y}" r="3.5" fill="#9be7e4" />`);
                 
-                // 最後一個點加上文字標籤
                 if (i === history.length - 1) {
                     circles.push(`<text x="${x}" y="${y - 8}" fill="#9be7e4" font-size="8" font-family="sans-serif" text-anchor="middle" font-weight="600">${w}</text>`);
                 }
             });
 
-            // 計算目標體重 (66kg) 的虛線 Y 座標
             const targetY = endY - ((targetW - minW) / range) * height;
 
             const chartBox = document.getElementById('weight-chart-box');
@@ -754,13 +795,12 @@
             `;
         }
 
-        /* 更新體重，推入 X 軸陣列 */
+        /* 更新體重，推入紀錄陣列 */
         function updateWeight() { 
             const newW = prompt("紀錄最新體重 (kg)：", fitnessData.weight); 
             if (newW && !isNaN(newW)) { 
                 fitnessData.weight = parseFloat(newW).toFixed(1); 
                 if (!fitnessData.weightHistory) fitnessData.weightHistory = [];
-                // 推入新的紀錄點
                 fitnessData.weightHistory.push({date: new Date().toISOString(), weight: fitnessData.weight});
                 saveFitnessData(); 
                 initFitness(); 
@@ -865,14 +905,71 @@
         function saveSession() { const dateVal = document.getElementById('session-date').value; if (!dateVal) return; const newLogs = [...document.querySelectorAll('#batch-list .batch-row')].map((row, idx) => { const name = row.querySelector('.b-name').value.trim(); if(!name) return null; return { id: Date.now().toString() + idx, date: new Date(new Date(dateVal).getTime() + idx).toISOString(), name, sets: row.querySelector('.b-sets').value || "1", reps: row.querySelector('.b-reps').value || "1", weight: row.querySelector('.b-weight').value || "0", note: "" }; }).filter(Boolean); if (newLogs.length === 0) { alert("至少需一個動作"); return; } fitnessData.logs = fitnessData.logs.filter(l => !sessionCtx.ids.includes(l.id)).concat(newLogs); fitnessData.logs.sort((a, b) => new Date(b.date) - new Date(a.date)); saveFitnessData(); closeSessionModal(); initFitness(); }
         function deleteSession() { if(confirm("刪除整天紀錄？")) { fitnessData.logs = fitnessData.logs.filter(l => !sessionCtx.ids.includes(l.id)); saveFitnessData(); closeSessionModal(); initFitness(); } }
 
+        /* 渲染週次紀錄：新的一週在最上方，舊週次收納在摺疊選單中 */
         function renderWeeklyFitnessLogs() {
-            const weeks = {}; const curWeekKey = getMonday(new Date()).toLocaleDateString('en-CA'); weeks[curWeekKey] = {};
-            fitnessData.logs.forEach(log => { const wk = getMonday(new Date(log.date)).toLocaleDateString('en-CA'); const dk = dateKeyOf(log.date); if (!weeks[wk]) weeks[wk] = {}; if (!weeks[wk][dk]) weeks[wk][dk] = []; weeks[wk][dk].push(log); });
-            document.getElementById('fitness-logs-container').innerHTML = Object.keys(weeks).sort().reverse().slice(0, 5).map(wk => {
-                const mon = new Date(wk + 'T00:00:00'); const sun = new Date(mon); sun.setDate(sun.getDate() + 6); const keys = Object.keys(weeks[wk]).sort(); let segs = '';
-                for (let i = 0; i < Math.max(3, keys.length); i++) { if (i < keys.length) { const dk = keys[i]; segs += `<div class="week-seg done" onclick="openEditSession('${dk}')">${detectDay(weeks[wk][dk].map(l=>l.name)) ? 'D'+detectDay(weeks[wk][dk].map(l=>l.name)) : ''} ${dk.substring(5)}</div>`; } else { segs += `<div class="week-seg" onclick="openNewSession(${getNextDay()}, '${wk === curWeekKey ? new Date().toLocaleDateString('en-CA') : sun.toLocaleDateString('en-CA')}')">+</div>`; } }
-                return `<div class="week-row"><div class="week-head"><span>${mon.getMonth()+1}/${mon.getDate()} - ${sun.getMonth()+1}/${sun.getDate()}</span></div><div class="week-bar">${segs}</div></div>`;
-            }).join('');
+            const weeks = {}; 
+            const curWeekKey = getMonday(new Date()).toLocaleDateString('en-CA'); 
+            weeks[curWeekKey] = {};
+            
+            fitnessData.logs.forEach(log => { 
+                const wk = getMonday(new Date(log.date)).toLocaleDateString('en-CA'); 
+                const dk = dateKeyOf(log.date); 
+                if (!weeks[wk]) weeks[wk] = {}; 
+                if (!weeks[wk][dk]) weeks[wk][dk] = []; 
+                weeks[wk][dk].push(log); 
+            });
+
+            const sortedWeeks = Object.keys(weeks).sort().reverse();
+            const currentWkKey = sortedWeeks[0];
+            const pastWkKeys = sortedWeeks.slice(1);
+
+            function buildWeekRowHTML(wk, isCurrent = false) {
+                const mon = new Date(wk + 'T00:00:00'); 
+                const sun = new Date(mon); 
+                sun.setDate(sun.getDate() + 6); 
+                const keys = Object.keys(weeks[wk]).sort(); 
+                let segs = '';
+                for (let i = 0; i < Math.max(3, keys.length); i++) { 
+                    if (i < keys.length) { 
+                        const dk = keys[i]; 
+                        segs += `<div class="week-seg done" onclick="openEditSession('${dk}')">${detectDay(weeks[wk][dk].map(l=>l.name)) ? 'D'+detectDay(weeks[wk][dk].map(l=>l.name)) : ''} ${dk.substring(5)}</div>`; 
+                    } else { 
+                        segs += `<div class="week-seg" onclick="openNewSession(${getNextDay()}, '${wk === curWeekKey ? new Date().toLocaleDateString('en-CA') : sun.toLocaleDateString('en-CA')}')">+</div>`; 
+                    } 
+                }
+                return `<div class="week-row">
+                    <div class="week-head">
+                        <span>${mon.getMonth()+1}/${mon.getDate()} - ${sun.getMonth()+1}/${sun.getDate()} ${isCurrent ? '<small style="color:#9be7e4; margin-left:6px;">(本週)</small>' : ''}</span>
+                    </div>
+                    <div class="week-bar">${segs}</div>
+                </div>`;
+            }
+
+            let html = buildWeekRowHTML(currentWkKey, true);
+
+            if (pastWkKeys.length > 0) {
+                let pastRowsHTML = pastWkKeys.map(wk => buildWeekRowHTML(wk, false)).join('');
+                html += `
+                    <div style="margin-top: 10px;">
+                        <div class="collapsible-header" onclick="togglePastWeeks(this)" style="font-size:0.75rem; opacity:0.75;">
+                            <span>歷史週次紀錄 (${pastWkKeys.length})</span>
+                            <span class="past-arrow">▼</span>
+                        </div>
+                        <div class="collapsible-content past-weeks-content">
+                            ${pastRowsHTML}
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('fitness-logs-container').innerHTML = html;
+        }
+
+        window.togglePastWeeks = function(el) {
+            const content = el.nextElementSibling;
+            const arrow = el.querySelector('.past-arrow');
+            content.classList.toggle('show');
+            arrow.innerText = content.classList.contains('show') ? '▲' : '▼';
         }
 
         function saveFitnessData() { localStorage.setItem('leon_fitness_data', JSON.stringify(fitnessData)); localStorage.setItem('leon_local_updated', Date.now().toString()); scheduleBackup(); }
@@ -911,7 +1008,6 @@
                 document.getElementById('completed-count').textContent = cCount;
                 document.getElementById('completed-wrapper').classList.toggle('visible', cCount > 0);
                 
-                // 寫入全局供儀表板呈現
                 globalTasksStats.total = tasks.length;
                 globalTasksStats.completed = cCount;
                 updateLifeStats();
