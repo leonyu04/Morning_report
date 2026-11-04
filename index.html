@@ -43,14 +43,14 @@
         .global-fab { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 95px); right: 28px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25); color: white; font-size: 1.6rem; font-weight: 300; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.25); cursor: pointer; z-index: 1000; opacity: 0; pointer-events: none; transform: scale(0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .global-fab.show { opacity: 1; pointer-events: auto; transform: scale(1); }
 
-        /* 更理想的半透明度：通透且帶有更重的毛玻璃霧化，確保字體清晰 */
         .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.005)); backdrop-filter: blur(26px); -webkit-backdrop-filter: blur(26px); border-top: 1px solid rgba(255, 255, 255, 0.14); border-left: 1px solid rgba(255, 255, 255, 0.14); border-bottom: 1px solid rgba(255, 255, 255, 0.03); border-right: 1px solid rgba(255, 255, 255, 0.03); border-radius: 24px; box-shadow: 0 12px 35px 0 rgba(0, 0, 0, 0.25); padding: 22px 20px; width: 100%; }
         
-        /* --- Screen 0: Zen Focus 番茄鐘 --- */
-        .zen-ring { width: 190px; height: 190px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.25); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 25px auto; cursor: pointer; transition: all 0.3s ease; background: rgba(255,255,255,0.02); }
-        .zen-ring.active { border: 2px solid #9be7e4; box-shadow: 0 0 35px rgba(155,231,228,0.25); background: rgba(155,231,228,0.04); }
-        .zen-time { font-size: 3.2rem; font-weight: 300; letter-spacing: 2px; line-height: 1; }
-        .zen-cap { font-size: 0.75rem; opacity: 0.6; font-family: 'Noto Serif JP', serif; margin-top: 8px; letter-spacing: 1px; }
+        /* --- Screen 0: Zen Breathing & Flow 舒壓區 --- */
+        .zen-container { width: 100%; height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; cursor: pointer; user-select: none; }
+        .zen-aura { position: absolute; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle, rgba(155,231,228,0.35) 0%, rgba(155,231,228,0.02) 70%); animation: breatheAura 6s ease-in-out infinite; pointer-events: none; }
+        .zen-orb { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(155,231,228,0.05)); backdrop-filter: blur(10px); border: 1px solid rgba(155,231,228,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(155,231,228,0.2); transition: transform 0.1s ease; will-change: transform; z-index: 2; }
+        @keyframes breatheAura { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.6); opacity: 0.9; } }
+        .zen-text { font-size: 0.75rem; opacity: 0.8; font-family: 'Noto Serif JP', serif; letter-spacing: 2px; margin-top: 20px; z-index: 2; }
 
         /* --- Screen 1: 健身專屬頁面 --- */
         .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -60,7 +60,6 @@
         .dash-cap { font-size: 0.7rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
         .dash-big { font-size: 1.35rem; font-weight: 300; color: #9be7e4; line-height: 1.1; letter-spacing: 1px; margin: 4px 0; }
         
-        /* 體重折線圖區塊 */
         .weight-chart-container { width: 100%; height: 65px; position: relative; margin: 8px 0 4px; display: flex; align-items: flex-end; }
         .weight-svg { width: 100%; height: 100%; overflow: visible; }
 
@@ -71,7 +70,6 @@
         .week-seg { flex: 1; height: 32px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: rgba(255,255,255,0.4); cursor: pointer; font-family: 'Noto Serif JP', serif; }
         .week-seg.done { background: rgba(155,231,228,0.2); border-color: #9be7e4; color: #9be7e4; font-weight: 700; }
         
-        /* 完整選單字體全面調小 */
         .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: rgba(0,0,0,0.12); border-radius: 8px; margin-bottom: 6px; cursor: pointer; }
         .menu-name { font-size: 0.82rem; font-weight: 400; }
         .menu-reps { font-size: 0.68rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; margin-top: 1px;}
@@ -159,6 +157,7 @@
         .form-group { margin-bottom: 12px; flex: 1; }
         .form-group label { display: block; font-size: 0.8rem; margin-bottom: 4px; opacity: 0.7; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.14); color: white; border-radius: 10px; font-size: 0.85rem; outline: none; font-family: 'Noto Serif JP', serif;}
+        .form-group select option { background: #191e23; color: white; }
         .modal-actions { display: flex; justify-content: flex-end; margin-top: 20px; gap: 10px; }
         .modal-btn { padding: 10px 18px; border-radius: 10px; border: none; cursor: pointer; font-weight: 400; font-size: 0.85rem; }
         .btn-cancel { background: rgba(255,255,255,0.06); color: white; }
@@ -192,16 +191,18 @@
 
     <div class="app-slider" id="app-slider">
         
-        <!-- [左二] Screen 0: Zen Focus 番茄鐘 -->
+        <!-- [左二] Screen 0: Zen Breathing & Flow 舒壓區 -->
         <section class="screen" id="screen-0" style="justify-content: center;">
-            <div class="content-container" style="align-items: center; gap: 30px;">
-                <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; padding: 40px 20px;">
-                    <h2 style="font-size:1.1rem; font-weight:400; opacity:0.8; letter-spacing:1px; margin-bottom: 10px;">Zen Focus</h2>
-                    <div class="zen-ring" id="pomodoro-ring" onclick="togglePomodoro()">
-                        <div class="zen-time" id="pomodoro-time">25:00</div>
-                        <div class="zen-cap" id="pomodoro-status">Tap to start</div>
+            <div class="content-container" style="align-items: center; gap: 20px;">
+                <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; padding: 45px 20px;">
+                    <h2 style="font-size:1.1rem; font-weight:400; opacity:0.8; letter-spacing:1px; margin-bottom: 10px;">Zen Flow</h2>
+                    <div class="zen-container" id="zen-container">
+                        <div class="zen-aura"></div>
+                        <div class="zen-orb" id="zen-orb">
+                            <span style="font-size: 1.2rem; font-weight: 300;">✨</span>
+                        </div>
+                        <div class="zen-text" id="zen-status-text">點擊或拖曳來感受呼吸與流動</div>
                     </div>
-                    <button class="action-btn" style="width: auto; padding: 8px 20px; font-size:0.75rem;" onclick="resetPomodoro()">重置計時</button>
                 </div>
             </div>
         </section>
@@ -212,7 +213,6 @@
                 <div class="glass-card">
                     <div class="dash-head"><h2>My Training Space</h2></div>
                     
-                    <!-- 第一塊：進度條與當週統計 -->
                     <div class="dash-tile" style="flex-direction: row; justify-content: space-evenly; padding: 14px;">
                         <div id="dash-ring"></div>
                         <div style="display:flex; flex-direction:column; justify-content:center; text-align:left;">
@@ -221,23 +221,19 @@
                         </div>
                     </div>
 
-                    <!-- 第二塊：放大版 Next Workout (點擊滑順滾動並展開對應 Day) -->
                     <div class="dash-tile" style="cursor: pointer; background: linear-gradient(135deg, rgba(155,231,228,0.08), rgba(255,255,255,0.01)); border-color: rgba(155,231,228,0.3);" onclick="scrollToAndExpandNextWorkout()">
                         <div class="dash-cap" style="margin: 0 0 2px; color: #9be7e4;">NEXT WORKOUT (點擊前往)</div>
                         <div class="dash-big" id="dash-next-day" style="font-size: 1.6rem; margin: 4px 0;">Day 1</div>
                         <div class="dash-cap" id="dash-next-label" style="font-size: 0.8rem; opacity: 0.9;">背＋二頭</div>
                     </div>
 
-                    <!-- 第三塊：目前體重與折線圖 -->
                     <div class="dash-tile">
                         <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
                             <div class="dash-cap">目前體重</div>
                             <div class="w-num" id="display-weight" onclick="updateWeight()" style="font-size:1.1rem; text-decoration:none;">59.0 kg</div>
                             <div class="dash-cap" style="opacity:0.5;">目標 66 kg</div>
                         </div>
-                        <div class="weight-chart-container" id="weight-chart-box">
-                            <!-- 動態 SVG 折線圖 -->
-                        </div>
+                        <div class="weight-chart-container" id="weight-chart-box"></div>
                     </div>
 
                     <div class="weekly-container">
@@ -245,7 +241,6 @@
                     </div>
                 </div>
 
-                <!-- 完整菜單總目錄（可收合） -->
                 <div class="glass-card">
                     <div class="collapsible-header" onclick="toggleMenuCollapse()">
                         <span>Workout Programs (完整菜單)</span>
@@ -286,7 +281,7 @@
                             <div class="menu-action" onclick="quickLog('三頭滑輪下壓', '2', '15', '')"><div><div class="menu-name">三頭滑輪下壓</div><div class="menu-reps">1-2 × 10–15 ⚠️</div></div><div class="menu-weight" data-exercise="三頭滑輪下壓">輕量起</div></div>
                         </div>
 
-                        <!-- 獨立的跑步方塊 -->
+                        <!-- Running -->
                         <div id="program-running" style="background: rgba(0,0,0,0.15); padding: 12px; border-radius: 14px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-bottom: 10px;">
                                 <span style="font-size:0.9rem; font-weight:400;">Running <small style="opacity:0.7; font-family:'Noto Serif JP';">有氧跑步</small></span>
@@ -385,7 +380,7 @@
                     <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 4px; font-weight: 300;">Google 雲端備份</p>
                     <button class="google-login-btn" id="settings-login-btn" onclick="handleAuthClick()">登入 Google</button>
                     <button class="action-btn" onclick="cloudBackup(true)">☁️ 備份到 Google</button>
-                    <button class="action-btn" onclick="cloudRestore(true)">☁️ 從 Google 還原</button>
+                    <button class="action-btn" onclick="cloudRestore(true)">☁️ 從 Google還原</button>
                     <p id="cloud-status" style="font-size: 0.7rem; opacity: 0.6; margin-top: 8px; font-weight: 300; line-height: 1.4;">登入 Google 後自動同步</p>
                     
                     <div style="margin-top: 30px;"></div>
@@ -397,59 +392,63 @@
 
     </div>
 
-    <!-- Modals -->
-    <div class="modal-overlay" id="event-modal"><div class="modal-card"><h3>New Event</h3><div class="form-group"><label>行程標題</label><input type="text" id="evt-title"></div><div class="form-group"><label>開始時間</label><input type="datetime-local" id="evt-start"></div><div class="form-group"><label>結束時間</label><input type="datetime-local" id="evt-end"></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeEventModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveNewEvent()">Save</button></div></div></div>
+    <!-- Modals (點擊黑幕背景自動關閉 / Cancel) -->
+    <div class="modal-overlay" id="event-modal" onclick="if(event.target === this) closeEventModal()"><div class="modal-card"><h3>New Event</h3><div class="form-group"><label>行程標題</label><input type="text" id="evt-title"></div><div class="form-group"><label>開始時間</label><input type="datetime-local" id="evt-start"></div><div class="form-group"><label>結束時間</label><input type="datetime-local" id="evt-end"></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeEventModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveNewEvent()">Save</button></div></div></div>
     
-    <div class="modal-overlay" id="fit-modal"><div class="modal-card"><h3>Log Workout</h3><div style="display:flex; gap:10px;"><div class="form-group" style="flex: 1.5;"><label>動作名稱</label><input type="text" id="fit-name"></div><div class="form-group" style="flex: 1;"><label>日期</label><input type="date" id="fit-date"></div></div><div style="display:flex; gap:10px;"><div class="form-group"><label>組</label><input type="number" id="fit-sets"></div><div class="form-group"><label>次</label><input type="number" id="fit-reps"></div><div class="form-group"><label>kg</label><input type="number" id="fit-weight" step="0.5"></div></div><div class="form-group"><label>備註</label><textarea id="fit-note" rows="2"></textarea></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeFitModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveFitLog()">Save</button></div></div></div>
+    <div class="modal-overlay" id="fit-modal" onclick="if(event.target === this) closeFitModal()"><div class="modal-card"><h3>Log Workout</h3>
+        <div style="display:flex; gap:10px;">
+            <div class="form-group" style="flex: 1.5;">
+                <label>動作名稱</label>
+                <select id="fit-name-select" onchange="onFitNameChange()" style="width:100%; padding:10px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.14); color:white; border-radius:10px; font-size:0.85rem; outline:none; font-family:'Noto Serif JP',serif;">
+                    <option value="">-- 請選擇 Day 2 動作 --</option>
+                    <option value="獨立握把划船機">獨立握把划船機</option>
+                    <option value="一般啞鈴二頭彎舉">一般啞鈴二頭彎舉</option>
+                    <option value="槌式彎舉">槌式彎舉</option>
+                    <option value="戶外有氧跑步">戶外有氧跑步</option>
+                    <option value="custom">自訂動作...</option>
+                </select>
+                <input type="text" id="fit-name-custom" style="display:none; margin-top:6px;" placeholder="輸入自訂動作">
+            </div>
+            <div class="form-group" style="flex: 1;"><label>日期</label><input type="date" id="fit-date"></div>
+        </div>
+        <!-- 顯示上一次的組數提示 -->
+        <div id="last-record-hint" style="font-size:0.75rem; color:#9be7e4; margin-bottom:12px; font-family:'Noto Serif JP',serif; display:none;"></div>
+        
+        <div style="display:flex; gap:10px;">
+            <div class="form-group"><label>組</label><input type="number" id="fit-sets"></div>
+            <div class="form-group"><label>次</label><input type="number" id="fit-reps"></div>
+            <div class="form-group"><label>kg</label><input type="number" id="fit-weight" step="0.5"></div>
+        </div>
+        <div class="form-group"><label>備註</label><textarea id="fit-note" rows="2"></textarea></div>
+        <div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeFitModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveFitLog()">Save</button></div></div></div>
     
-    <div class="modal-overlay" id="session-modal"><div class="modal-card" style="width: 500px;"><h3 id="session-title">Log Day</h3><div class="form-group" style="margin-bottom: 14px;"><label>日期</label><input type="date" id="session-date"></div><div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div><button class="add-row-btn" onclick="addSessionRow()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:white; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:0.8rem;">+ 新增動作</button><div class="modal-actions"><button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除整天</button><button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveSession()">Save</button></div></div></div>
+    <div class="modal-overlay" id="session-modal" onclick="if(event.target === this) closeSessionModal()"><div class="modal-card" style="width: 500px;"><h3 id="session-title">Log Day</h3><div class="form-group" style="margin-bottom: 14px;"><label>日期</label><input type="date" id="session-date"></div><div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div><button class="add-row-btn" onclick="addSessionRow()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:white; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:0.8rem;">+ 新增動作</button><div class="modal-actions"><button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除整天</button><button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveSession()">Save</button></div></div></div>
 
     <script>
-        /* === Zen Focus 番茄鐘邏輯 === */
-        let pomodoroTimer = null;
-        let pomodoroSeconds = 25 * 60;
-        let pomodoroRunning = false;
+        /* === Zen Breathing & Flow 舒壓區互動邏輯 === */
+        const zenContainer = document.getElementById('zen-container');
+        const zenOrb = document.getElementById('zen-orb');
+        const zenStatusText = document.getElementById('zen-status-text');
+        let isZenInteracting = false;
 
-        function togglePomodoro() {
-            const statusEl = document.getElementById('pomodoro-status');
-            const ringEl = document.getElementById('pomodoro-ring');
-            if (!pomodoroRunning) {
-                pomodoroRunning = true;
-                ringEl.classList.add('active');
-                statusEl.innerText = 'Focusing...';
-                pomodoroTimer = setInterval(() => {
-                    if (pomodoroSeconds > 0) {
-                        pomodoroSeconds--;
-                        updatePomodoroDisplay();
-                    } else {
-                        clearInterval(pomodoroTimer);
-                        pomodoroRunning = false;
-                        ringEl.classList.remove('active');
-                        statusEl.innerText = 'Time is up! 🎉';
-                    }
-                }, 1000);
-            } else {
-                clearInterval(pomodoroTimer);
-                pomodoroRunning = false;
-                ringEl.classList.remove('active');
-                statusEl.innerText = 'Paused (Tap to resume)';
-            }
-        }
-
-        function resetPomodoro() {
-            clearInterval(pomodoroTimer);
-            pomodoroRunning = false;
-            pomodoroSeconds = 25 * 60;
-            document.getElementById('pomodoro-ring').classList.remove('active');
-            document.getElementById('pomodoro-status').innerText = 'Tap to start';
-            updatePomodoroDisplay();
-        }
-
-        function updatePomodoroDisplay() {
-            const m = Math.floor(pomodoroSeconds / 60);
-            const s = pomodoroSeconds % 60;
-            document.getElementById('pomodoro-time').innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-        }
+        zenContainer.addEventListener('pointerdown', (e) => {
+            isZenInteracting = true;
+            zenOrb.style.transform = 'scale(1.25)';
+            zenStatusText.innerText = '釋放壓力，感受呼吸與當下... 🌿';
+        });
+        window.addEventListener('pointermove', (e) => {
+            if (!isZenInteracting) return;
+            const rect = zenContainer.getBoundingClientRect();
+            const x = e.clientX - (rect.left + rect.width / 2);
+            const y = e.clientY - (rect.top + rect.height / 2);
+            zenOrb.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px) scale(1.35)`;
+        });
+        window.addEventListener('pointerup', () => {
+            if (!isZenInteracting) return;
+            isZenInteracting = false;
+            zenOrb.style.transform = 'translate(0px, 0px) scale(1)';
+            zenStatusText.innerText = '點擊或拖曳來感受呼吸與流動';
+        });
 
         /* === 完整菜單收合與點擊滑動展開 === */
         function toggleMenuCollapse() {
@@ -651,33 +650,21 @@
             const C = 2 * Math.PI * 36, arc = C / 3 - 8; let arcs = ''; for (let i = 0; i < 3; i++) { const on = i < days.size; arcs += `<circle cx="45" cy="45" r="36" fill="none" stroke-width="8" stroke-linecap="round" stroke="${on ? '#9be7e4' : 'rgba(255,255,255,0.12)'}" stroke-dasharray="${arc} ${C - arc}" transform="rotate(${-90 + i * 120 + 5} 45 45)"/>`; }
             document.getElementById('dash-ring').innerHTML = `<svg width="90" height="90" viewBox="0 0 90 90">${arcs}<text x="45" y="52" text-anchor="middle" fill="#fff" font-size="22" font-weight="300">${days.size}/3</text></svg>`;
 
-            // 第二塊：中間 Next Workout 放大顯示，不冗長
             document.getElementById('dash-next-day').innerText = `Day ${next}`; 
             document.getElementById('dash-next-label').innerText = dayLabels[next];
 
-            // 渲染體重折線圖
             renderWeightChart();
-
             renderWeeklyFitnessLogs(); updateMenuMaxWeights();
         }
 
         function renderWeightChart() {
             const chartBox = document.getElementById('weight-chart-box');
-            const currentW = parseFloat(fitnessData.weight) || 59.0;
-            const targetW = 66.0;
-            
-            // 繪製簡單 SVG 折線圖與目標線
             chartBox.innerHTML = `
                 <svg class="weight-svg" viewBox="0 0 200 50">
-                    <!-- 目標虛線 (66kg) -->
                     <line x1="10" y1="10" x2="190" y2="10" stroke="rgba(255,255,255,0.2)" stroke-dasharray="3,3" stroke-width="1"/>
                     <text x="195" y="13" fill="rgba(255,255,255,0.4)" font-size="7" font-family="sans-serif">66</text>
-
-                    <!-- 目前線 (59kg) -->
                     <line x1="10" y1="40" x2="190" y2="40" stroke="rgba(155,231,228,0.3)" stroke-width="1"/>
                     <text x="195" y="43" fill="#9be7e4" font-size="7" font-family="sans-serif">59</text>
-
-                    <!-- 趨勢折線 -->
                     <polyline fill="none" stroke="#9be7e4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         points="20,40 70,38 120,40 170,40" />
                     <circle cx="170" cy="40" r="3" fill="#9be7e4" />
@@ -686,22 +673,87 @@
         }
 
         function updateWeight() { const newW = prompt("最新體重 (kg)：", fitnessData.weight); if (newW && !isNaN(newW)) { fitnessData.weight = parseFloat(newW).toFixed(1); saveFitnessData(); initFitness(); } }
-        function openFitModal() { document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA'); ['fit-name', 'fit-sets', 'fit-reps', 'fit-weight', 'fit-note'].forEach(id => document.getElementById(id).value = ''); document.getElementById('fit-modal').classList.add('show'); }
+        
+        /* === 智慧下拉與歷史提示記錄功能 === */
+        function openFitModal() { 
+            document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA'); 
+            const sel = document.getElementById('fit-name-select');
+            sel.value = "獨立握把划船機";
+            document.getElementById('fit-name-custom').style.display = 'none';
+            document.getElementById('fit-name-custom').value = '';
+            onFitNameChange();
+            document.getElementById('fit-modal').classList.add('show'); 
+        }
         function closeFitModal() { document.getElementById('fit-modal').classList.remove('show'); }
-        function quickLog(name, sets, reps, weight) { const last = lastLogFor(name); document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA'); document.getElementById('fit-name').value = name; document.getElementById('fit-sets').value = last ? last.sets : sets; document.getElementById('fit-reps').value = last ? last.reps : reps; document.getElementById('fit-weight').value = last ? (parseFloat(last.weight) > 0 ? last.weight : '') : weight; document.getElementById('fit-note').value = ''; document.getElementById('fit-modal').classList.add('show'); }
+        
+        function onFitNameChange() {
+            const selVal = document.getElementById('fit-name-select').value;
+            const customInput = document.getElementById('fit-name-custom');
+            const hintEl = document.getElementById('last-record-hint');
+            
+            if (selVal === 'custom') {
+                customInput.style.display = 'block';
+                customInput.focus();
+                hintEl.style.display = 'none';
+                return;
+            } else {
+                customInput.style.display = 'none';
+            }
+
+            const targetName = selVal;
+            const last = lastLogFor(targetName);
+            if (last) {
+                document.getElementById('fit-sets').value = last.sets;
+                document.getElementById('fit-reps').value = last.reps;
+                document.getElementById('fit-weight').value = parseFloat(last.weight) > 0 ? last.weight : '';
+                hintEl.innerText = `💡 上次紀錄：${last.sets} 組 × ${last.reps} 次 (${last.weight} kg) - ${new Date(last.date).toLocaleDateString()}`;
+                hintEl.style.display = 'block';
+            } else {
+                document.getElementById('fit-sets').value = '3';
+                document.getElementById('fit-reps').value = '12';
+                document.getElementById('fit-weight').value = '';
+                hintEl.innerText = `💡 尚無此動作歷史紀錄`;
+                hintEl.style.display = 'block';
+            }
+        }
+
+        function quickLog(name, sets, reps, weight) { 
+            const sel = document.getElementById('fit-name-select');
+            let found = false;
+            for(let opt of sel.options) {
+                if(opt.value === name) { found = true; break; }
+            }
+            if(found) {
+                sel.value = name;
+                document.getElementById('fit-name-custom').style.display = 'none';
+            } else {
+                sel.value = 'custom';
+                const customIn = document.getElementById('fit-name-custom');
+                customIn.style.display = 'block';
+                customIn.value = name;
+            }
+            document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA');
+            onFitNameChange();
+            document.getElementById('fit-modal').classList.add('show'); 
+        }
         
         function openRunningModal() {
+            const sel = document.getElementById('fit-name-select');
+            sel.value = '戶外有氧跑步';
+            document.getElementById('fit-name-custom').style.display = 'none';
             document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA');
-            document.getElementById('fit-name').value = '戶外有氧跑步';
-            document.getElementById('fit-sets').value = '1';
-            document.getElementById('fit-reps').value = '1';
-            document.getElementById('fit-weight').value = '';
+            onFitNameChange();
             document.getElementById('fit-note').value = '距離: km, 時間: 分';
             document.getElementById('fit-modal').classList.add('show');
         }
 
         function saveFitLog() {
-            const dateVal = document.getElementById('fit-date').value; const name = document.getElementById('fit-name').value.trim(); const sets = document.getElementById('fit-sets').value; const reps = document.getElementById('fit-reps').value; const weight = document.getElementById('fit-weight').value;
+            const selVal = document.getElementById('fit-name-select').value;
+            const name = selVal === 'custom' ? document.getElementById('fit-name-custom').value.trim() : selVal;
+            const dateVal = document.getElementById('fit-date').value; 
+            const sets = document.getElementById('fit-sets').value; 
+            const reps = document.getElementById('fit-reps').value; 
+            const weight = document.getElementById('fit-weight').value;
             if (!name || !sets || !reps) { alert("請填寫動作/組數/次數"); return; }
             fitnessData.logs.unshift({ id: Date.now().toString(), date: dateVal ? new Date(dateVal).toISOString() : new Date().toISOString(), name, sets, reps, weight: weight || "0", note: document.getElementById('fit-note').value });
             fitnessData.logs.sort((a, b) => new Date(b.date) - new Date(a.date)); saveFitnessData(); closeFitModal(); initFitness();
