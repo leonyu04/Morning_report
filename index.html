@@ -28,8 +28,7 @@
         .app-slider { display: flex; width: 100vw; height: 100dvh; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .app-slider::-webkit-scrollbar { display: none; }
 
-        /* scroll-snap-stop 確保一次只滑動一頁 */
-        .screen { flex: 0 0 100vw; width: 100vw; height: 100%; overflow-y: auto; overflow-x: hidden; scroll-snap-align: center; scroll-snap-stop: always; padding: calc(env(safe-area-inset-top) + 60px) 36px calc(env(safe-area-inset-bottom) + 120px); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; scrollbar-width: none; position: relative; }
+        .screen { flex: 0 0 100vw; width: 100vw; height: 100%; overflow-y: auto; overflow-x: hidden; scroll-snap-align: center; scroll-snap-stop: always; padding: calc(env(safe-area-inset-top) + 40px) 36px calc(env(safe-area-inset-bottom) + 120px); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; scrollbar-width: none; position: relative; }
         .screen::-webkit-scrollbar { display: none; }
         .content-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
 
@@ -46,6 +45,20 @@
 
         .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.15); border-bottom: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.15); padding: 22px 20px; width: 100%; }
         
+        /* --- Screen 0: 記帳系統 --- */
+        .acc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .acc-header h2 { font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; }
+        .acc-total-box { text-align: center; margin: 10px 0 16px; }
+        .acc-total-num { font-size: 2.2rem; font-weight: 300; color: #9be7e4; letter-spacing: 1px; }
+        .acc-top-cat { font-size: 0.8rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; margin-top: 4px; }
+        .acc-chart-bar { display: flex; height: 8px; width: 100%; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin: 14px 0; gap: 2px; }
+        .acc-bar-seg { height: 100%; transition: width 0.3s ease; }
+        .acc-cat-legend { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; font-size: 0.7rem; opacity: 0.8; font-family: 'Noto Serif JP', serif; }
+        .acc-tx-item { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.15); padding: 10px 14px; border-radius: 12px; margin-bottom: 8px; }
+        .acc-tx-info h4 { font-size: 0.85rem; font-weight: 400; }
+        .acc-tx-info span { font-size: 0.7rem; opacity: 0.6; font-family: 'Noto Serif JP', serif; }
+        .acc-tx-price { font-size: 0.9rem; font-weight: 300; color: #ff9b9b; }
+
         /* --- Screen 2: 首頁 (Home) --- */
         .clock-card { display: flex; flex-direction: column; align-items: center; text-align: center; border: none; background: transparent; box-shadow: none; padding: 10px 0; }
         .time-display { font-size: 4.8rem; font-weight: 300; letter-spacing: 2px; line-height: 1; margin-bottom: 10px; color: #ffffff; text-shadow: 0 4px 20px rgba(0,0,0,0.25); }
@@ -53,30 +66,35 @@
         .greeting, .date-display { font-size: 0.9rem; font-weight: 300; letter-spacing: 1px; }
         .dot-separator { width: 4px; height: 4px; background: white; border-radius: 50%; opacity: 0.5; }
 
-        /* 飄浮膠囊日記 */
-        .journal-container { width: 100%; display: flex; justify-content: center; margin-top: -5px; margin-bottom: 10px; z-index: 10; }
+        .journal-container { width: 100%; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 15px; z-index: 10; }
         .journal-input { background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 10px 24px; color: white; font-size: 0.85rem; text-align: center; width: 220px; outline: none; transition: all 0.3s ease; font-weight: 300; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .journal-input::placeholder { color: rgba(255,255,255,0.4); }
         .journal-input:focus { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.12); width: 260px; }
 
-        /* 調高 z-index 確保泡泡不會被卡在底層 */
+        /* 隨機漂移日記泡泡 */
         #journal-area { position: absolute; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
-        .journal-bubble { position: absolute; display: flex; align-items: center; gap: 12px; pointer-events: auto; cursor: grab; background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; padding: 10px 14px 10px 18px; color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; transform-origin: center center; }
-        .journal-bubble-anim { animation: floatCapsule 6s ease-in-out infinite; }
-        .journal-text { font-size: 0.85rem; font-weight: 300; letter-spacing: 0.5px; white-space: nowrap; }
-        .journal-del { background: rgba(255,255,255,0.1); border: none; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; cursor: pointer; opacity: 0.6; }
-        .journal-del:active { opacity: 1; background: rgba(255,255,255,0.3); }
-        @keyframes floatCapsule { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
-        @keyframes popIn { 0% { opacity: 0; transform: scale(0.5) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        .journal-bubble { position: absolute; display: flex; align-items: center; gap: 10px; pointer-events: auto; cursor: grab; background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; padding: 10px 18px; color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; white-space: nowrap; }
+        .journal-text { font-size: 0.85rem; font-weight: 300; letter-spacing: 0.5px; }
 
-        .bubbles-panel { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; width: 100%; z-index: 10; }
-        .floating-bubble { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: white; padding: 10px; width: 32%; aspect-ratio: 1/1; max-width: 120px; cursor: pointer; animation: float 4s ease-in-out infinite; user-select: none; -webkit-user-select: none; }
+        /* 拖曳刪除置頂/置底半透明區域 */
+        .trash-drop-zone { position: fixed; left: 0; width: 100vw; height: 90px; background: rgba(239, 68, 68, 0.25); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(239, 68, 68, 0.4); display: flex; align-items: center; justify-content: center; color: #ff8585; font-size: 0.85rem; font-weight: 300; z-index: 2500; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+        .trash-drop-zone.top { top: 0; }
+        .trash-drop-zone.bottom { bottom: 0; border-top: 1px solid rgba(239, 68, 68, 0.4); border-bottom: none; }
+        .trash-drop-zone.active { opacity: 1; }
+
+        /* 三顆獨立不規則浮動泡泡 */
+        .bubbles-panel { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 15px; width: 100%; z-index: 10; }
+        .floating-bubble { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: white; padding: 10px; width: 32%; aspect-ratio: 1/1; max-width: 120px; cursor: pointer; user-select: none; -webkit-user-select: none; }
         .floating-bubble strong { font-size: 0.7rem; font-weight: 400; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.9; }
         .floating-bubble .val { font-size: 0.8rem; margin: 2px 0; font-weight: 300; }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
+        .b-weather { animation: floatA 5.2s ease-in-out infinite; }
+        .b-tech { animation: floatB 6.8s ease-in-out infinite; padding: 6px; }
+        .b-fitness { animation: floatC 4.5s ease-in-out infinite; }
+        @keyframes floatA { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-10px) rotate(1deg); } }
+        @keyframes floatB { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-7px) rotate(-1.5deg); } }
+        @keyframes floatC { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-12px) rotate(1deg); } }
 
         /* --- 任務區塊 (Today's Focus) --- */
-        /* 新增 pointer 以便點擊收合 */
         .tasks-header { font-size: 1.05rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.9; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
         #active-task-list { width: 100%; max-height: 220px; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; justify-content: flex-start; }
         #active-task-list::-webkit-scrollbar { width: 4px; }
@@ -112,7 +130,6 @@
         .chips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 4px; }
         .chip { font-size: 0.65rem; padding: 3px 8px; border-radius: 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); font-family: 'Noto Serif JP', serif; }
         .w-num { font-size: 1.5rem; font-weight: 300; cursor: pointer; color: #9be7e4; text-decoration: underline dotted; text-underline-offset: 4px; margin-top: 4px; }
-        /* 調整目標體重的間距，不再卡住 */
         .w-track { position: relative; width: 85%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 5px; margin: 16px 0 20px; }
         .w-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #9be7e4; border-radius: 5px; box-shadow: 0 0 8px rgba(155,231,228,0.6); }
         .w-mark { position: absolute; top: -3px; width: 2px; height: 11px; background: rgba(255,255,255,0.8); }
@@ -149,7 +166,9 @@
         .modal-overlay.show { display: flex; }
         .modal-card { background: rgba(25, 30, 35, 0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 24px 20px; width: 420px; max-width: 90%; color: white; box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-height: 85dvh; overflow-y: auto;}
         .form-group { margin-bottom: 12px; flex: 1; }
-        .form-group input, .form-group textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-size: 0.85rem; outline: none; font-family: 'Noto Serif JP', serif;}
+        .form-group label { display: block; font-size: 0.8rem; margin-bottom: 4px; opacity: 0.7; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-size: 0.85rem; outline: none; font-family: 'Noto Serif JP', serif;}
+        .form-group select option { background: #191e23; color: white; }
         .modal-actions { display: flex; justify-content: flex-end; margin-top: 20px; gap: 10px; }
         .modal-btn { padding: 10px 18px; border-radius: 10px; border: none; cursor: pointer; font-weight: 400; font-size: 0.85rem; }
         .btn-cancel { background: rgba(255,255,255,0.1); color: white; }
@@ -166,9 +185,12 @@
 
     <div class="bg-fixed"></div>
 
+    <!-- 拖曳刪除置頂 / 置底區域 -->
+    <div class="trash-drop-zone top" id="trash-top">拖曳至此處刪除泡泡</div>
+    <div class="trash-drop-zone bottom" id="trash-bottom">拖曳至此處刪除泡泡</div>
+
     <div class="ios-dock" id="ios-dock">
         <div class="nav-bubble" id="nav-bubble"></div>
-        <!-- 最左側改為記帳本圖示 (錢包/清單) -->
         <div class="nav-item" onclick="goToScreen(0)"><svg viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="nav-item" onclick="goToScreen(1)"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="nav-item active" onclick="goToScreen(2)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -180,22 +202,46 @@
 
     <div class="app-slider" id="app-slider">
         
-        <!-- [左二] Screen 0: 記帳系統預留區塊 -->
-        <section class="screen" id="screen-0" style="justify-content: center;">
-            <div class="content-container" style="align-items: center; gap: 30px;">
-                <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; padding: 40px 20px; text-align: center;">
-                    <h2 style="font-size:1.1rem; font-weight:400; opacity:0.8; letter-spacing:1px; margin-bottom: 10px;">Accounting System</h2>
-                    <p style="font-size: 0.85rem; font-weight: 300; opacity: 0.6; line-height: 1.6;">(記帳系統介面即將於此實作)</p>
+        <!-- [左二] Screen 0: 記帳系統 -->
+        <section class="screen" id="screen-0">
+            <div class="content-container">
+                <div class="glass-card">
+                    <div class="acc-header">
+                        <h2>Accounting</h2>
+                        <button class="add-event-btn" onclick="openAccModal()">+</button>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <button class="modal-btn btn-cancel" style="padding: 4px 10px; font-size:0.75rem;" onclick="changeMonth(-1)">◀</button>
+                        <span id="acc-month-label" style="font-size: 0.9rem; font-weight: 300;">2026-06</span>
+                        <button class="modal-btn btn-cancel" style="padding: 4px 10px; font-size:0.75rem;" onclick="changeMonth(1)">▶</button>
+                    </div>
+
+                    <div class="acc-total-box">
+                        <div class="dash-cap">本月總花費</div>
+                        <div class="acc-total-num" id="acc-total-val">$0</div>
+                        <div class="acc-top-cat" id="acc-top-cat-text">本月最多花費：無</div>
+                    </div>
+
+                    <div class="acc-chart-bar" id="acc-chart-bar"></div>
+                    <div class="acc-cat-legend" id="acc-cat-legend"></div>
+                </div>
+
+                <div class="glass-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="font-size: 1rem; font-weight: 400; letter-spacing: 1px;">Recent Transactions</h3>
+                        <span style="font-size: 0.75rem; opacity: 0.6; cursor: pointer;" onclick="openCategoryManager()">⚙️ 管理類別</span>
+                    </div>
+                    <div id="acc-tx-list"></div>
                 </div>
             </div>
         </section>
 
-        <!-- [左一] Screen 1: My Training Space (+ 所有菜單) -->
+        <!-- [左一] Screen 1: My Training Space -->
         <section class="screen" id="screen-1">
             <div class="content-container">
                 <div class="glass-card">
                     <div class="dash-head"><h2>My Training Space</h2></div>
-                    
                     <div class="dash-tile" style="margin-bottom: 12px; flex-direction: row; justify-content: space-evenly; padding: 16px;">
                         <div id="dash-ring"></div>
                         <div style="display:flex; flex-direction:column; justify-content:center; text-align:left;">
@@ -203,7 +249,6 @@
                             <div class="dash-cap" style="margin-top: 6px;">本週訓練進度</div>
                         </div>
                     </div>
-
                     <div class="dash-grid">
                         <div class="dash-tile" style="cursor: pointer;" onclick="openNewSession(getNextDay(), new Date().toLocaleDateString('en-CA'))">
                             <div class="dash-cap" style="margin: 0 0 6px;">Next</div>
@@ -218,27 +263,23 @@
                             <div class="dash-cap">目標 66</div>
                         </div>
                     </div>
-                    
                     <div class="weekly-container">
                         <h3 style="margin-bottom: 12px; font-weight: 400; letter-spacing: 1px; font-size: 1rem;">Weekly Progress</h3>
                         <div id="fitness-logs-container"></div>
                     </div>
                 </div>
 
-                <!-- 整合過來的訓練菜單 -->
                 <div id="fitness-menus-container" style="width: 100%; display: flex; flex-direction: column; gap: 16px;">
                     <div class="glass-card">
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
                             <span class="day-title">Day 1<small>胸＋腿</small></span>
                             <button class="add-event-btn" onclick="openBatchModal('day1')">📋</button>
                         </div>
-                        <!-- 加入 data-exercise 供 JS 自動抓最高重量 -->
                         <div class="menu-action" onclick="quickLog('槓鈴臥推', '3', '10', '30')"><div><div class="menu-name">槓鈴臥推</div><div class="menu-reps">3 × 6–10</div></div><div class="menu-weight" data-exercise="槓鈴臥推">30 kg</div></div>
                         <div class="menu-action" onclick="quickLog('上斜啞鈴臥推', '2', '12', '')"><div><div class="menu-name">上斜啞鈴臥推</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight" data-exercise="上斜啞鈴臥推">依狀態</div></div>
                         <div class="menu-action" onclick="quickLog('腿推', '3', '12', '80')"><div><div class="menu-name">腿推</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight" data-exercise="腿推">80 kg</div></div>
                         <div class="menu-action" onclick="quickLog('腿屈伸 / 腿後勾', '2', '15', '')"><div><div class="menu-name">腿屈伸 / 腿後勾</div><div class="menu-reps">2 × 10–15</div></div><div class="menu-weight" data-exercise="腿屈伸 / 腿後勾">依狀態</div></div>
                     </div>
-                    
                     <div class="glass-card">
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
                             <span class="day-title">Day 2<small>背＋二頭</small></span>
@@ -248,7 +289,6 @@
                         <div class="menu-action" onclick="quickLog('一般啞鈴二頭彎舉', '2', '12', '8')"><div><div class="menu-name">一般啞鈴二頭彎舉</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight" data-exercise="一般啞鈴二頭彎舉">8 kg</div></div>
                         <div class="menu-action" onclick="quickLog('槌式彎舉', '2', '12', '')"><div><div class="menu-name">槌式彎舉</div><div class="menu-reps">2 × 10–12</div></div><div class="menu-weight" data-exercise="槌式彎舉">依狀態</div></div>
                     </div>
-
                     <div class="glass-card">
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
                             <span class="day-title">Day 3<small>肩＋三頭</small></span>
@@ -300,7 +340,6 @@
         <section class="screen" id="screen-3">
             <div class="content-container">
                 <div class="glass-card" style="margin-bottom: 6px;">
-                    <!-- 加入收合點擊與圖示 -->
                     <h3 class="tasks-header" onclick="toggleActiveTasks()">
                         Today's Focus <span id="active-toggle-icon" style="font-size: 0.75rem; opacity: 0.6;">▼</span>
                     </h3>
@@ -308,7 +347,6 @@
                         <div id="active-task-list"><p style="opacity: 0.7; font-weight: 300; text-align: center; margin-top: 15px; font-size: 0.8rem;">同步資料中...</p></div>
                         <input type="text" id="new-task-input" class="add-task-input" placeholder="+ Press Enter to add task..." onkeypress="handleAddTask(event)" style="display: none;">
                         <div id="completed-wrapper" class="completed-wrapper">
-                            <!-- 加入收合圖示 -->
                             <div class="completed-header" onclick="toggleCompletedSection()">
                                 <span style="margin-right:6px;">✓</span> Completed (<span id="completed-count">0</span>)
                                 <span id="completed-toggle-icon" style="margin-left:auto; font-size:0.75rem;">▶</span>
@@ -336,7 +374,7 @@
             <div class="content-container">
                 <div class="glass-card">
                     <h2 style="font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Settings</h2>
-                    <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 4px; font-weight: 300;">健身資料管理</p>
+                    <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 4px; font-weight: 300;">資料管理與備份</p>
                     <button class="action-btn" onclick="exportFitnessData()">⬇️ 匯出本機資料</button>
                     <button class="action-btn" onclick="document.getElementById('import-file').click()">⬆️ 匯入本機資料</button>
                     <input type="file" id="import-file" style="display:none" accept=".json" onchange="importFitnessData(event)">
@@ -359,8 +397,16 @@
 
     <!-- Modals -->
     <div class="modal-overlay" id="event-modal"><div class="modal-card"><h3>New Event</h3><div class="form-group"><label>行程標題</label><input type="text" id="evt-title"></div><div class="form-group"><label>開始時間</label><input type="datetime-local" id="evt-start"></div><div class="form-group"><label>結束時間</label><input type="datetime-local" id="evt-end"></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeEventModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveNewEvent()">Save</button></div></div></div>
-    <div class="modal-overlay" id="fit-modal"><div class="modal-card"><h3>Log Workout</h3><div class="fit-input-group" style="display:flex; gap:10px;"><div class="form-group" style="flex: 1.5;"><label>動作名稱</label><input type="text" id="fit-name"></div><div class="form-group" style="flex: 1;"><label>日期</label><input type="date" id="fit-date"></div></div><div class="fit-input-group" style="display:flex; gap:10px;"><div class="form-group"><label>組</label><input type="number" id="fit-sets"></div><div class="form-group"><label>次</label><input type="number" id="fit-reps"></div><div class="form-group"><label>kg</label><input type="number" id="fit-weight" step="0.5"></div></div><div class="form-group"><label>備註</label><textarea id="fit-note" rows="2"></textarea></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeFitModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveFitLog()">Save</button></div></div></div>
+    
+    <div class="modal-overlay" id="fit-modal"><div class="modal-card"><h3>Log Workout</h3><div style="display:flex; gap:10px;"><div class="form-group" style="flex: 1.5;"><label>動作名稱</label><input type="text" id="fit-name"></div><div class="form-group" style="flex: 1;"><label>日期</label><input type="date" id="fit-date"></div></div><div style="display:flex; gap:10px;"><div class="form-group"><label>組</label><input type="number" id="fit-sets"></div><div class="form-group"><label>次</label><input type="number" id="fit-reps"></div><div class="form-group"><label>kg</label><input type="number" id="fit-weight" step="0.5"></div></div><div class="form-group"><label>備註</label><textarea id="fit-note" rows="2"></textarea></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeFitModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveFitLog()">Save</button></div></div></div>
+    
     <div class="modal-overlay" id="session-modal"><div class="modal-card" style="width: 500px;"><h3 id="session-title">Log Day</h3><div class="form-group" style="margin-bottom: 14px;"><label>日期</label><input type="date" id="session-date"></div><div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div><button class="add-row-btn" onclick="addSessionRow()">+ 新增動作</button><div class="modal-actions"><button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除整天</button><button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveSession()">Save</button></div></div></div>
+
+    <!-- 記帳 Modal -->
+    <div class="modal-overlay" id="acc-modal"><div class="modal-card"><h3>記一筆</h3><div class="form-group"><label>項目名稱</label><input type="text" id="acc-name" placeholder="例如：午餐 / 咖啡"></div><div class="form-group"><label>金額 ($)</label><input type="number" id="acc-amount"></div><div class="form-group"><label>類別</label><select id="acc-category"></select></div><div class="form-group"><label>日期</label><input type="date" id="acc-date"></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeAccModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveAccTx()">Save</button></div></div></div>
+
+    <!-- 類別管理 Modal -->
+    <div class="modal-overlay" id="cat-modal"><div class="modal-card"><h3>管理記帳類別</h3><div id="cat-list" style="margin-bottom: 12px; max-height: 30vh; overflow-y: auto;"></div><div class="form-group"><label>新類別名稱</label><input type="text" id="new-cat-name"></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeCategoryManager()">Close</button><button class="modal-btn btn-save" onclick="addNewCategory()">新增類別</button></div></div></div>
 
     <script>
         /* === UI Slider & Dock Logic === */
@@ -386,14 +432,13 @@
             updateFabState(activeIndex);
         });
 
-        // 取消了容易引發延遲的拖曳邏輯，讓它保持穩定的點擊跳轉 (iOS 慣例)
         function updateFabState(index) {
             if (index === 1 || index === 3) globalFab.classList.add('show'); else globalFab.classList.remove('show');
         }
 
         function handleFabClick() {
             const index = Math.round(slider.scrollLeft / window.innerWidth);
-            if (index === 1) openFitModal(); else if (index === 3) openEventModal();
+            if (index === 1) openFitModal(); else if (index === 3) openEventModal(); else if (index === 0) openAccModal();
         }
 
         window.addEventListener('load', () => {
@@ -401,65 +446,216 @@
                 slider.scrollTo({ left: window.innerWidth * 2, behavior: 'instant' });
                 navBubble.style.transform = `translateX(${2 * ITEM_WIDTH}px)`;
                 navItems[2].classList.add('active'); updateFabState(2);
+                checkDailyJournalCleanup();
             }, 50);
         });
 
-        /* === 首頁微日記膠囊 (Journal Bubble) === */
+        /* === 記帳系統與類別邏輯 === */
+        let accData = JSON.parse(localStorage.getItem('leon_acc_data')) || {
+            categories: ["餐飲", "交通", "購物", "娛樂", "其他"],
+            transactions: []
+        };
+        let currentAccDate = new Date();
+
+        function getMonthKey(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
+        function changeMonth(dir) { currentAccDate.setMonth(currentAccDate.getMonth() + dir); initAccounting(); }
+
+        function openAccModal() {
+            document.getElementById('acc-date').value = new Date().toLocaleDateString('en-CA');
+            document.getElementById('acc-name').value = ''; document.getElementById('acc-amount').value = '';
+            const sel = document.getElementById('acc-category');
+            sel.innerHTML = accData.categories.map(c => `<option value="${c}">${c}</option>`).join('');
+            document.getElementById('acc-modal').classList.add('show');
+        }
+        function closeAccModal() { document.getElementById('acc-modal').classList.remove('show'); }
+
+        function saveAccTx() {
+            const name = document.getElementById('acc-name').value.trim();
+            const amount = parseFloat(document.getElementById('acc-amount').value);
+            const category = document.getElementById('acc-category').value;
+            const date = document.getElementById('acc-date').value;
+            if(!name || isNaN(amount) || !date) { alert("請完整填寫項目與金額"); return; }
+            accData.transactions.unshift({ id: Date.now().toString(), name, amount, category, date });
+            saveAccounting(); closeAccModal(); initAccounting();
+        }
+        function deleteAccTx(id) {
+            if(confirm("確定刪除此筆記帳？")) { accData.transactions = accData.transactions.filter(t => t.id !== id); saveAccounting(); initAccounting(); }
+        }
+        function saveAccounting() { localStorage.setItem('leon_acc_data', JSON.stringify(accData)); localStorage.setItem('leon_local_updated', Date.now().toString()); scheduleBackup(); }
+
+        function openCategoryManager() {
+            renderCatList(); document.getElementById('cat-modal').classList.add('show');
+        }
+        function closeCategoryManager() { document.getElementById('cat-modal').classList.remove('show'); initAccounting(); }
+        function renderCatList() {
+            document.getElementById('cat-list').innerHTML = accData.categories.map(c => `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:8px 12px; border-radius:8px; margin-bottom:6px;">
+                    <span>${c}</span>
+                    <button class="row-del" onclick="deleteCategory('${c}')">×</button>
+                </div>
+            `).join('');
+        }
+        function addNewCategory() {
+            const name = document.getElementById('new-cat-name').value.trim();
+            if(name && !accData.categories.includes(name)) { accData.categories.push(name); document.getElementById('new-cat-name').value = ''; renderCatList(); saveAccounting(); }
+        }
+        function deleteCategory(name) {
+            if(accData.categories.length <= 1) { alert("至少需保留一個類別"); return; }
+            accData.categories = accData.categories.filter(c => c !== name); renderCatList(); saveAccounting();
+        }
+
+        const catColors = { "餐飲": "#ff9b9b", "交通": "#9be7e4", "購物": "#e7df9b", "娛樂": "#d09be7", "其他": "#9bcbe7" };
+        function getCatColor(cat) { return catColors[cat] || '#' + Math.floor(Math.abs(Math.sin(cat.charCodeAt(0)) * 16777215)).toString(16).padStart(6, '0'); }
+
+        function initAccounting() {
+            const mKey = getMonthKey(currentAccDate);
+            document.getElementById('acc-month-label').innerText = mKey;
+            const monthTxs = accData.transactions.filter(t => t.date.startsWith(mKey));
+            
+            let total = 0; const catTotals = {};
+            accData.categories.forEach(c => catTotals[c] = 0);
+            monthTxs.forEach(t => { total += t.amount; catTotals[t.category] = (catTotals[t.category] || 0) + t.amount; });
+            
+            document.getElementById('acc-total-val').innerText = `$${total.toLocaleString()}`;
+            
+            let topCat = '無', maxAmt = 0;
+            Object.keys(catTotals).forEach(c => { if(catTotals[c] > maxAmt) { maxAmt = catTotals[c]; topCat = c; } });
+            document.getElementById('acc-top-cat-text').innerText = total > 0 ? `本月最多花費：${topCat} ($${maxAmt})` : `本月尚無花費`;
+
+            // 視覺化長條圖
+            let barHTML = '', legendHTML = '';
+            if(total > 0) {
+                Object.keys(catTotals).forEach(c => {
+                    const amt = catTotals[c];
+                    if(amt > 0) {
+                        const pct = (amt / total) * 100;
+                        const col = getCatColor(c);
+                        barHTML += `<div class="acc-bar-seg" style="width:${pct}%; background:${col};" title="${c}: $${amt}"></div>`;
+                        legendHTML += `<span><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${col}; margin-right:4px;"></span>${c} $${amt} (${Math.round(pct)}%)</span>`;
+                    }
+                });
+            }
+            document.getElementById('acc-chart-bar').innerHTML = barHTML || '<div style="width:100%; height:100%; background:rgba(255,255,255,0.05);"></div>';
+            document.getElementById('acc-cat-legend').innerHTML = legendHTML;
+
+            // 渲染清單
+            document.getElementById('acc-tx-list').innerHTML = monthTxs.length ? monthTxs.map(t => `
+                <div class="acc-tx-item">
+                    <div class="acc-tx-info">
+                        <h4>${t.name}</h4>
+                        <span>${t.date} · ${t.category}</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span class="acc-tx-price">-$${t.amount}</span>
+                        <button class="row-del" onclick="deleteAccTx('${t.id}')">×</button>
+                    </div>
+                </div>
+            `).join('') : '<p style="text-align:center; opacity:0.6; font-size:0.8rem; padding:15px;">本月尚無記帳紀錄</p>';
+        }
+        initAccounting();
+
+
+        /* === 微日記膠囊 (Micro-Journal) 與 隨機漂移 + 拖曳刪除 === */
+        let journalBubbles = JSON.parse(localStorage.getItem('leon_journal_bubbles')) || [];
+
         function addJournalBubble(e) {
             if (e.key === 'Enter' && e.target.value.trim() !== '') {
-                createJournalBubble(e.target.value.trim()); e.target.value = '';
+                const text = e.target.value.trim();
+                const newBubble = { id: Date.now().toString(), text, date: new Date().toISOString(), x: Math.random() * (window.innerWidth - 180), y: 120 + Math.random() * (window.innerHeight * 0.35) };
+                journalBubbles.push(newBubble);
+                saveJournals(); renderJournals();
+                e.target.value = '';
             }
         }
-        function createJournalBubble(text) {
-            const area = document.getElementById('journal-area');
-            const bubbleWrapper = document.createElement('div');
-            bubbleWrapper.className = 'journal-bubble';
-            // 加入刪除按鈕
-            bubbleWrapper.innerHTML = `
-                <div class="journal-bubble-anim" style="display:flex; align-items:center; gap:8px;">
-                    <span class="journal-text">${text}</span>
-                    <button class="journal-del">×</button>
-                </div>
-            `;
-            
-            // 安全範圍計算（生成在中下方，避開時鐘）
-            const maxX = window.innerWidth - 180; 
-            const minY = window.innerHeight * 0.45; // 從螢幕中間開始往下
-            const maxY = window.innerHeight - 300; 
-            const x = Math.max(20, Math.random() * maxX);
-            const y = Math.max(minY, minY + Math.random() * (maxY - minY));
-            
-            bubbleWrapper.style.left = `${x}px`; bubbleWrapper.style.top = `${y}px`;
-            bubbleWrapper.style.animation = 'popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
-            
-            // 刪除事件
-            bubbleWrapper.querySelector('.journal-del').addEventListener('click', () => {
-                bubbleWrapper.style.animation = 'popIn 0.3s reverse forwards';
-                setTimeout(() => bubbleWrapper.remove(), 300);
-            });
 
-            // 拖曳事件
-            let isDragging = false; let startX, startY, initX, initY;
-            bubbleWrapper.addEventListener('pointerdown', (e) => {
-                if(e.target.classList.contains('journal-del')) return;
-                isDragging = true; startX = e.clientX; startY = e.clientY;
-                initX = parseFloat(bubbleWrapper.style.left); initY = parseFloat(bubbleWrapper.style.top);
-                bubbleWrapper.setPointerCapture(e.pointerId); bubbleWrapper.style.zIndex = 100;
-                bubbleWrapper.style.transform = 'scale(1.05)';
+        function saveJournals() { localStorage.setItem('leon_journal_bubbles', JSON.stringify(journalBubbles)); localStorage.setItem('leon_local_updated', Date.now().toString()); scheduleBackup(); }
+
+        function renderJournals() {
+            const area = document.getElementById('journal-area');
+            area.innerHTML = '';
+            journalBubbles.forEach(b => {
+                const el = document.createElement('div');
+                el.className = 'journal-bubble';
+                el.innerText = b.text;
+                el.style.left = `${b.x}px`;
+                el.style.top = `${b.y}px`;
+
+                // 隨機漂移動畫賦予
+                const animDuration = 4 + (b.text.length % 3);
+                el.style.animation = `floatCapsule ${animDuration}s ease-in-out infinite`;
+
+                // 拖曳與刪除邏輯
+                let isDragging = false, startX, startY, initX, initY;
+                const trashTop = document.getElementById('trash-top');
+                const trashBottom = document.getElementById('trash-bottom');
+
+                el.addEventListener('pointerdown', (e) => {
+                    isDragging = true; startX = e.clientX; startY = e.clientY;
+                    initX = b.x; initY = b.y;
+                    el.setPointerCapture(e.pointerId);
+                    el.style.zIndex = 3000; el.style.animation = 'none';
+                    trashTop.classList.add('active'); trashBottom.classList.add('active');
+                });
+                el.addEventListener('pointermove', (e) => {
+                    if (!isDragging) return;
+                    b.x = initX + e.clientX - startX;
+                    b.y = initY + e.clientY - startY;
+                    el.style.left = `${b.x}px`; el.style.top = `${b.y}px`;
+
+                    // 檢測是否碰到上下刪除區域
+                    if (e.clientY < 100 || e.clientY > window.innerHeight - 100) {
+                        el.style.opacity = '0.3';
+                    } else {
+                        el.style.opacity = '1';
+                    }
+                });
+                el.addEventListener('pointerup', (e) => {
+                    if (!isDragging) return;
+                    isDragging = false; el.releasePointerCapture(e.pointerId);
+                    trashTop.classList.remove('active'); trashBottom.classList.remove('active');
+                    
+                    if (e.clientY < 100 || e.clientY > window.innerHeight - 100) {
+                        // 刪除
+                        journalBubbles = journalBubbles.filter(item => item.id !== b.id);
+                        saveJournals(); renderJournals();
+                    } else {
+                        saveJournals(); renderJournals();
+                    }
+                });
+
+                area.appendChild(el);
             });
-            bubbleWrapper.addEventListener('pointermove', (e) => {
-                if(!isDragging) return;
-                bubbleWrapper.style.left = `${initX + e.clientX - startX}px`;
-                bubbleWrapper.style.top = `${initY + e.clientY - startY}px`;
-            });
-            bubbleWrapper.addEventListener('pointerup', (e) => {
-                isDragging = false; bubbleWrapper.releasePointerCapture(e.pointerId);
-                bubbleWrapper.style.zIndex = 1; bubbleWrapper.style.transform = 'scale(1)';
-            });
-            area.appendChild(bubbleWrapper);
+        }
+        renderJournals();
+
+        // 每日凌晨 01:00 自動歸檔昨日想法至 Google Tasks
+        async function checkDailyJournalCleanup() {
+            if(journalBubbles.length === 0) return;
+            const now = new Date();
+            const lastCheck = localStorage.getItem('leon_last_journal_cleanup');
+            const todayStr = now.toLocaleDateString('en-CA');
+            
+            // 如果過了一天且時間大於凌晨 1 點
+            if (lastCheck !== todayStr && now.getHours() >= 1) {
+                const yesterdayTexts = journalBubbles.map((b, idx) => `${idx + 1}. ${b.text}`).join('\n');
+                if(yesterdayTexts && typeof gapi !== 'undefined' && gapi.client && gapi.client.tasks) {
+                    try {
+                        await gapi.client.tasks.tasks.insert({
+                            tasklist: '@default',
+                            resource: {
+                                title: `💡 昨天的想法 (${new Date(Date.now() - 86400000).toLocaleDateString('en-CA')})`,
+                                notes: yesterdayTexts
+                            }
+                        });
+                        journalBubbles = [];
+                        saveJournals(); renderJournals();
+                        localStorage.setItem('leon_last_journal_cleanup', todayStr);
+                    } catch(e) {}
+                }
+            }
         }
 
-        /* === 基礎設施 API === */
+        /* === 基礎設施 API (天氣、時間、健身、雲端備份) === */
         function clearDataAndReload() { localStorage.removeItem('google_calendar_token'); location.reload(); }
         let userCity = localStorage.getItem('user_city_name') || 'Douliu'; let userLat = localStorage.getItem('user_city_lat') || '23.709'; let userLng = localStorage.getItem('user_city_lng') || '120.543';
         document.getElementById('val-weather-city').innerText = userCity;
@@ -475,7 +671,7 @@
                 document.getElementById('val-weather-city').style.display = 'block'; document.getElementById('input-city').style.display = 'none'; document.getElementById('input-city').value = '';
             }
         }
-        async function fetchLiveWeather() { try { const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLng}&current=temperature_2m,apparent_temperature&daily=precipitation_probability_max&timezone=Asia/Taipei`); const data = await res.json(); document.getElementById('val-weather-temp').innerHTML = `${Math.round(data.current.temperature_2m)}°C`; } catch (e) { } }
+        async function fetchLiveWeather() { try { const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLng}&current=temperature_2m,apparent_temperature&timezone=Asia/Taipei`); const data = await res.json(); document.getElementById('val-weather-temp').innerHTML = `${Math.round(data.current.temperature_2m)}°C`; } catch (e) { } }
         async function fetchLiveNews() { try { const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://technews.tw/feed/')}`); const data = await res.json(); if(data.items && data.items.length > 0) { document.getElementById('val-news').innerText = data.items[0].title.substring(0, 18) + '...'; } } catch (e) {} }
         fetchLiveWeather(); fetchLiveNews();
 
@@ -504,9 +700,7 @@
                     if (logs.length > 0) {
                         const maxW = Math.max(...logs.map(l => parseFloat(l.weight)));
                         el.innerText = maxW + ' kg';
-                    } else {
-                        el.innerText = '依狀態';
-                    }
+                    } else { el.innerText = '依狀態'; }
                 }
             });
         }
@@ -519,12 +713,10 @@
             document.getElementById('dash-next-day').innerText = `Day ${next}`; document.getElementById('dash-next-label').innerText = dayLabels[next] + (days.has(new Date().toLocaleDateString('en-CA')) ? ' ✓' : ''); document.getElementById('dash-next-chips').innerHTML = workoutPrograms['day' + next].items.map(i => `<span class="chip">${i.name.substring(0,4)}</span>`).join('');
             const cur = parseFloat(fitnessData.weight) || 0; const pos = v => Math.max(0, Math.min(100, (v - Math.min(55, Math.floor(cur)-1)) / (70 - Math.min(55, Math.floor(cur)-1)) * 100));
             document.getElementById('dash-w-track').innerHTML = `<div class="w-fill" style="width:${pos(cur)}%"></div><div class="w-mark" style="left:${pos(62)}%"><span>62</span></div><div class="w-mark" style="left:${pos(66)}%"><span>66</span></div>`;
-            renderWeeklyFitnessLogs();
-            updateMenuMaxWeights();
+            renderWeeklyFitnessLogs(); updateMenuMaxWeights();
         }
 
         function updateWeight() { const newW = prompt("最新體重 (kg)：", fitnessData.weight); if (newW && !isNaN(newW)) { fitnessData.weight = parseFloat(newW).toFixed(1); saveFitnessData(); initFitness(); } }
-
         function openFitModal() { document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA'); ['fit-name', 'fit-sets', 'fit-reps', 'fit-weight', 'fit-note'].forEach(id => document.getElementById(id).value = ''); document.getElementById('fit-modal').classList.add('show'); }
         function closeFitModal() { document.getElementById('fit-modal').classList.remove('show'); }
         function quickLog(name, sets, reps, weight) { const last = lastLogFor(name); document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA'); document.getElementById('fit-name').value = name; document.getElementById('fit-sets').value = last ? last.sets : sets; document.getElementById('fit-reps').value = last ? last.reps : reps; document.getElementById('fit-weight').value = last ? (parseFloat(last.weight) > 0 ? last.weight : '') : weight; document.getElementById('fit-note').value = ''; document.getElementById('fit-modal').classList.add('show'); }
@@ -542,7 +734,6 @@
             row.querySelector('.b-name').value = r.name || ''; row.querySelector('.b-sets').value = r.sets || ''; row.querySelector('.b-reps').value = r.reps || ''; row.querySelector('.b-weight').value = r.weight || ''; document.getElementById('batch-list').appendChild(row);
         }
         function moveRow(btn, dir) { const row = btn.closest('.batch-row'); if (dir < 0 && row.previousElementSibling) row.parentElement.insertBefore(row, row.previousElementSibling); else if (dir > 0 && row.nextElementSibling) row.parentElement.insertBefore(row.nextElementSibling, row); }
-        
         function openNewSession(dayNum, dateStr) { sessionCtx = { mode: 'new', ids: [] }; document.getElementById('session-title').innerText = 'Log ' + workoutPrograms['day' + dayNum].title; document.getElementById('session-date').value = dateStr; document.getElementById('session-delete').style.display = 'none'; document.getElementById('batch-list').innerHTML = ''; workoutPrograms['day' + dayNum].items.forEach(item => { const last = lastLogFor(item.name); addSessionRow({ name: item.name, sets: last ? last.sets : item.sets, reps: last ? last.reps : item.reps, weight: last && parseFloat(last.weight) > 0 ? last.weight : '' }); }); document.getElementById('session-modal').classList.add('show'); }
         function openBatchModal(dayKey) { openNewSession(parseInt(dayKey.replace('day', '')), new Date().toLocaleDateString('en-CA')); }
         function openEditSession(dateKey) { const dayLogs = fitnessData.logs.filter(l => dateKeyOf(l.date) === dateKey).sort((a, b) => new Date(a.date) - new Date(b.date)); sessionCtx = { mode: 'edit', ids: dayLogs.map(l=>l.id) }; document.getElementById('session-title').innerText = `${dateKey.substring(5)} 訓練紀錄`; document.getElementById('session-date').value = dateKey; document.getElementById('session-delete').style.display = 'block'; document.getElementById('batch-list').innerHTML = ''; dayLogs.forEach(l => addSessionRow({ name: l.name, sets: l.sets, reps: l.reps, weight: parseFloat(l.weight) > 0 ? l.weight : '' })); document.getElementById('session-modal').classList.add('show'); }
@@ -561,11 +752,11 @@
         }
 
         function saveFitnessData() { localStorage.setItem('leon_fitness_data', JSON.stringify(fitnessData)); localStorage.setItem('leon_local_updated', Date.now().toString()); scheduleBackup(); }
-        function exportFitnessData() { const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fitnessData, null, 2)); a.download = `Leon_Fitness.json`; document.body.appendChild(a); a.click(); a.remove(); }
-        function importFitnessData(event) { const file = event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = e => { try { const d = JSON.parse(e.target.result); if(d.logs) { fitnessData = d; saveFitnessData(); initFitness(); alert("成功"); } } catch(err){} }; reader.readAsText(file); }
+        function exportFitnessData() { const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ fitnessData, accData, journalBubbles }, null, 2)); a.download = `Leon_Dashboard_Backup.json`; document.body.appendChild(a); a.click(); a.remove(); }
+        function importFitnessData(event) { const file = event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = e => { try { const d = JSON.parse(e.target.result); if(d.fitnessData) { fitnessData = d.fitnessData; saveFitnessData(); } if(d.accData) { accData = d.accData; saveAccounting(); initAccounting(); } if(d.journalBubbles) { journalBubbles = d.journalBubbles; saveJournals(); renderJournals(); } initFitness(); alert("匯入成功"); } catch(err){} }; reader.readAsText(file); }
         initFitness();
 
-        /* Google Tasks & Calendar */
+        /* Google Tasks & Calendar API */
         const CLIENT_ID = '964246501733-ha9h53h0erug792i03d3jshhctfv3nal.apps.googleusercontent.com'; const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/tasks https://www.googleapis.com/auth/drive.appdata';
         let tokenClient; let gapiInited = false; let gisInited = false;
 
@@ -574,45 +765,23 @@
         function maybeEnableAuth() { if (gapiInited && gisInited) { const t = localStorage.getItem('google_calendar_token'); if (t) { gapi.client.setToken({ access_token: t }); fetchData(); document.getElementById('settings-login-btn').innerText = "已連結 Google"; } } }
         function handleAuthClick() { tokenClient.callback = async (resp) => { if (resp.error) return; gapi.client.setToken({ access_token: resp.access_token }); localStorage.setItem('google_calendar_token', resp.access_token); document.getElementById('settings-login-btn').innerText = "已連結 Google"; await fetchData(); }; if (gapi.client.getToken() === null) tokenClient.requestAccessToken({prompt: 'consent'}); else tokenClient.requestAccessToken({prompt: ''}); }
         
-        async function fetchData() { document.getElementById('auth-container').style.display = 'none'; document.getElementById('new-task-input').style.display = 'block'; await Promise.all([fetchTasks(), fetchAllEvents()]); cloudSync(); }
+        async function fetchData() { document.getElementById('auth-container').style.display = 'none'; document.getElementById('new-task-input').style.display = 'block'; await Promise.all([fetchTasks(), fetchAllEvents()]); cloudSync(); checkDailyJournalCleanup(); }
 
         window.toggleTaskNote = function(e, id) { e.stopPropagation(); document.getElementById(`note-${id}`).classList.toggle('show'); }
-        window.toggleActiveTasks = function() {
-            const list = document.getElementById('active-task-list'); const icon = document.getElementById('active-toggle-icon');
-            if(list.style.display === 'none') { list.style.display = 'flex'; icon.innerText = '▼'; }
-            else { list.style.display = 'none'; icon.innerText = '▶'; }
-        }
-        window.toggleCompletedSection = function() {
-            const list = document.getElementById('completed-task-list'); const icon = document.getElementById('completed-toggle-icon');
-            if(list.style.display === 'block') { list.style.display = 'none'; icon.innerText = '▶'; }
-            else { list.style.display = 'block'; icon.innerText = '▼'; }
-        }
+        window.toggleActiveTasks = function() { const list = document.getElementById('active-task-list'); const icon = document.getElementById('active-toggle-icon'); list.style.display = list.style.display === 'none' ? 'flex' : 'none'; icon.innerText = list.style.display === 'none' ? '▶' : '▼'; }
+        window.toggleCompletedSection = function() { const list = document.getElementById('completed-task-list'); const icon = document.getElementById('completed-toggle-icon'); list.style.display = list.style.display === 'block' ? 'none' : 'block'; icon.innerText = list.style.display === 'block' ? '▼' : '▶'; }
 
         async function fetchTasks() {
             try {
                 const res = await gapi.client.tasks.tasks.list({ tasklist: '@default', showHidden: false });
-                let tasks = res.result.items || [];
-                tasks.sort((a, b) => (a.status === 'completed' ? 1 : 0) - (b.status === 'completed' ? 1 : 0));
-                
+                let tasks = res.result.items || []; tasks.sort((a, b) => (a.status === 'completed' ? 1 : 0) - (b.status === 'completed' ? 1 : 0));
                 let aHTML = '', cHTML = '', cCount = 0;
                 tasks.forEach(t => { 
                     const noteBtn = t.notes ? `<button class="task-detail-btn" onclick="toggleTaskNote(event, '${t.id}')">▼</button>` : '';
                     const notesDiv = t.notes ? `<div class="task-notes" id="note-${t.id}">${t.notes.replace(/\n/g, '<br>')}</div>` : '';
-                    
-                    const html = `
-                    <div class="task-item ${t.status === 'completed' ? 'completed' : ''}" id="task-${t.id}">
-                        <div class="task-header">
-                            <div class="task-circle ${t.status === 'completed' ? 'completed' : ''}" onclick="toggleTaskStatus('${t.id}', '${t.status}')"></div>
-                            <div class="task-title" ondblclick="toggleTaskStatus('${t.id}', '${t.status}')">
-                                ${t.title} ${noteBtn}
-                            </div>
-                            <button class="task-delete-btn" onclick="deleteTask('${t.id}')">×</button>
-                        </div>
-                        ${notesDiv}
-                    </div>`;
+                    const html = `<div class="task-item ${t.status === 'completed' ? 'completed' : ''}" id="task-${t.id}"><div class="task-header"><div class="task-circle ${t.status === 'completed' ? 'completed' : ''}" onclick="toggleTaskStatus('${t.id}', '${t.status}')"></div><div class="task-title" ondblclick="toggleTaskStatus('${t.id}', '${t.status}')">${t.title} ${noteBtn}</div><button class="task-delete-btn" onclick="deleteTask('${t.id}')">×</button></div>${notesDiv}</div>`;
                     if(t.status === 'completed') { cHTML += html; cCount++; } else { aHTML += html; }
                 });
-                
                 document.getElementById('active-task-list').innerHTML = aHTML || '<p style="opacity:0.7; font-size: 0.8rem; text-align: center; margin-top: 15px;">All Focus Completed.</p>';
                 document.getElementById('completed-task-list').innerHTML = cHTML;
                 document.getElementById('completed-count').textContent = cCount;
@@ -639,9 +808,9 @@
         const BACKUP_NAME = 'leon_dashboard_backup.json'; let backupTimer = null;
         function cloudReady() { return typeof gapi !== 'undefined' && gapi.client && gapi.client.getToken && gapi.client.getToken(); }
         function scheduleBackup() { if (cloudReady()) { clearTimeout(backupTimer); backupTimer = setTimeout(() => cloudBackup(false), 3000); } }
-        async function cloudBackup(manual) { if(!cloudReady()){if(manual)alert('請先登入');return;} try{ const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; const data = JSON.stringify({updatedAt: parseInt(localStorage.getItem('leon_local_updated')||'0'), fitnessData, settings:{city:userCity,lat:userLat,lng:userLng}}); if(f) await gapi.client.request({path:`https://www.googleapis.com/upload/drive/v3/files/${f.id}`, method:'PATCH', params:{uploadType:'media'}, body:data}); else await gapi.client.request({path:'https://www.googleapis.com/upload/drive/v3/files', method:'POST', params:{uploadType:'multipart'}, headers:{'Content-Type':'multipart/related; boundary=bnd'}, body:`--bnd\r\nContent-Type: application/json\r\n\r\n{"name":"${BACKUP_NAME}","parents":["appDataFolder"]}\r\n--bnd\r\nContent-Type: application/json\r\n\r\n${data}\r\n--bnd--`}); document.getElementById('cloud-status').innerText = '已自動備份'; if(manual)alert('備份成功'); }catch(e){document.getElementById('cloud-status').innerText = '備份失敗';} }
-        async function cloudRestore(manual) { if(!cloudReady()){if(manual)alert('請先登入');return;} try{ const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; if(!f){if(manual)alert('無雲端備份');return;} const d = await gapi.client.request({path:`https://www.googleapis.com/drive/v3/files/${f.id}`, params:{alt:'media'}}); const b = typeof d.result === 'object' ? d.result : JSON.parse(d.body); fitnessData = b.fitnessData; localStorage.setItem('leon_fitness_data', JSON.stringify(fitnessData)); initFitness(); document.getElementById('cloud-status').innerText = '已從雲端還原'; }catch(e){document.getElementById('cloud-status').innerText = '還原失敗';} }
-        async function cloudSync() { try { const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; if(!f) { if(fitnessData.logs.length) cloudBackup(false); return; } const d = await gapi.client.request({path:`https://www.googleapis.com/drive/v3/files/${f.id}`, params:{alt:'media'}}); const cloud = typeof d.result === 'object' ? d.result : JSON.parse(d.body); const localTs = parseInt(localStorage.getItem('leon_local_updated')||'0'); if((cloud.updatedAt||0) > localTs) cloudRestore(false); else if(localTs > (cloud.updatedAt||0)) cloudBackup(false); else document.getElementById('cloud-status').innerText = '已同步'; } catch(e){} }
+        async function cloudBackup(manual) { if(!cloudReady()){if(manual)alert('請先登入');return;} try{ const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; const data = JSON.stringify({updatedAt: parseInt(localStorage.getItem('leon_local_updated')||'0'), fitnessData, accData, journalBubbles, settings:{city:userCity,lat:userLat,lng:userLng}}); if(f) await gapi.client.request({path:`https://www.googleapis.com/upload/drive/v3/files/${f.id}`, method:'PATCH', params:{uploadType:'media'}, body:data}); else await gapi.client.request({path:'https://www.googleapis.com/upload/drive/v3/files', method:'POST', params:{uploadType:'multipart'}, headers:{'Content-Type':'multipart/related; boundary=bnd'}, body:`--bnd\r\nContent-Type: application/json\r\n\r\n{"name":"${BACKUP_NAME}","parents":["appDataFolder"]}\r\n--bnd\r\nContent-Type: application/json\r\n\r\n${data}\r\n--bnd--`}); document.getElementById('cloud-status').innerText = '已自動備份'; if(manual)alert('備份成功'); }catch(e){document.getElementById('cloud-status').innerText = '備份失敗';} }
+        async function cloudRestore(manual) { if(!cloudReady()){if(manual)alert('請先登入');return;} try{ const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; if(!f){if(manual)alert('無雲端備份');return;} const d = await gapi.client.request({path:`https://www.googleapis.com/drive/v3/files/${f.id}`, params:{alt:'media'}}); const b = typeof d.result === 'object' ? d.result : JSON.parse(d.body); if(b.fitnessData) { fitnessData = b.fitnessData; localStorage.setItem('leon_fitness_data', JSON.stringify(fitnessData)); } if(b.accData) { accData = b.accData; saveAccounting(); initAccounting(); } if(b.journalBubbles) { journalBubbles = b.journalBubbles; saveJournals(); renderJournals(); } initFitness(); document.getElementById('cloud-status').innerText = '已從雲端還原'; }catch(e){document.getElementById('cloud-status').innerText = '還原失敗';} }
+        async function cloudSync() { try { const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; if(!f) { if(fitnessData.logs.length || accData.transactions.length) cloudBackup(false); return; } const d = await gapi.client.request({path:`https://www.googleapis.com/drive/v3/files/${f.id}`, params:{alt:'media'}}); const cloud = typeof d.result === 'object' ? d.result : JSON.parse(d.body); const localTs = parseInt(localStorage.getItem('leon_local_updated')||'0'); if((cloud.updatedAt||0) > localTs) cloudRestore(false); else if(localTs > (cloud.updatedAt||0)) cloudBackup(false); else document.getElementById('cloud-status').innerText = '已同步'; } catch(e){} }
 
         window.onload = () => { gapiLoaded(); gisLoaded(); };
     </script>
