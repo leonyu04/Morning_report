@@ -48,10 +48,10 @@
             overflow-y: auto; overflow-x: hidden; scroll-snap-align: center;
             padding: calc(env(safe-area-inset-top) + 60px) 36px calc(env(safe-area-inset-bottom) + 120px);
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            scrollbar-width: none;
+            scrollbar-width: none; position: relative; /* 讓漂浮泡泡以此為定位 */
         }
         .screen::-webkit-scrollbar { display: none; }
-        .content-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; }
+        .content-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
 
         /* --- iOS 風格懸浮導航欄 (Dock) --- */
         .ios-dock {
@@ -60,15 +60,15 @@
             background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255,255,255,0.12); border-radius: 40px;
             padding: 6px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            /* 讓 Dock 內部相對定位，以承載氣泡 */
-            touch-action: none; /* 防止在 Dock 上滑動觸發網頁原生手勢 */
+            /* 解決反白誤觸的核心：禁止選取與系統默認行為 */
+            user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: none;
         }
         .nav-item {
             width: 54px; height: 46px; display: flex; justify-content: center; align-items: center;
             cursor: pointer; z-index: 2; color: rgba(255, 255, 255, 0.45); transition: color 0.3s ease;
         }
         .nav-item.active { color: rgba(255, 255, 255, 1); }
-        .nav-item svg { width: 22px; height: 22px; stroke-width: 1.5; fill: none; stroke: currentColor; }
+        .nav-item svg { width: 22px; height: 22px; stroke-width: 1.5; fill: none; stroke: currentColor; pointer-events: none; } /* 讓點擊穿透 SVG 到 nav-item */
 
         /* 互動式「游動玻璃泡泡」 */
         .nav-bubble {
@@ -78,18 +78,20 @@
             border: 1px solid rgba(255,255,255,0.35); border-radius: 30px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 1; 
             will-change: transform; 
-            /* 開啟互動與指標支援 */
             pointer-events: auto; touch-action: none; cursor: grab;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, background 0.2s ease;
+            /* 預設不給 transform transition，解決滾動延遲！ */
+            transition: background 0.2s ease, box-shadow 0.2s ease;
         }
         .nav-bubble:active { cursor: grabbing; }
+        /* 只有在點擊圖示跳轉時，才加回動畫 */
+        .nav-bubble.snap { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease, box-shadow 0.2s ease; }
 
         /* 右下角 FAB */
         .global-fab {
             position: fixed; bottom: calc(env(safe-area-inset-bottom) + 95px); right: 28px;
-            width: 52px; height: 52px; border-radius: 50%;
+            width: 50px; height: 50px; border-radius: 50%;
             background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3); color: white; font-size: 1.8rem; font-weight: 300;
+            border: 1px solid rgba(255, 255, 255, 0.3); color: white; font-size: 1.6rem; font-weight: 300;
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.25); cursor: pointer; z-index: 1000;
             opacity: 0; pointer-events: none; transform: scale(0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -97,7 +99,7 @@
         .global-fab.show { opacity: 1; pointer-events: auto; transform: scale(1); }
         .global-fab:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
 
-        /* 全局共用卡片樣式：透明度提升 */
+        /* 全局共用卡片樣式 */
         .glass-card {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
             backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
@@ -107,31 +109,58 @@
             padding: 22px 20px; width: 100%;
         }
 
-        /* --- [首頁] 時鐘 --- */
-        .clock-card { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 26px 16px; border: none; background: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
-        .time-display { font-size: 5.5rem; font-weight: 300; letter-spacing: 2px; line-height: 1; margin-bottom: 10px; color: #ffffff; text-shadow: 0 4px 20px rgba(0,0,0,0.25); }
+        /* --- [首頁] --- */
+        .clock-card { display: flex; flex-direction: column; align-items: center; text-align: center; border: none; background: transparent; box-shadow: none; padding: 10px 0; }
+        .time-display { font-size: 4.8rem; font-weight: 300; letter-spacing: 2px; line-height: 1; margin-bottom: 10px; color: #ffffff; text-shadow: 0 4px 20px rgba(0,0,0,0.25); }
         .greeting-date-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.85; font-weight: 300; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .greeting, .date-display { font-size: 0.95rem; font-weight: 300; letter-spacing: 1px; }
+        .greeting, .date-display { font-size: 0.9rem; font-weight: 300; letter-spacing: 1px; }
         .dot-separator { width: 4px; height: 4px; background: white; border-radius: 50%; opacity: 0.5; }
 
-        /* --- 浮動泡泡 --- */
-        .bubbles-panel { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 20px; width: 100%; }
+        /* 漂浮日記泡泡輸入框 */
+        .journal-container { width: 100%; display: flex; justify-content: center; margin-top: -5px; margin-bottom: 10px; z-index: 10; }
+        .journal-input {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 10px 24px; color: white;
+            font-size: 0.85rem; text-align: center; width: 220px; outline: none; transition: all 0.3s ease; 
+            font-weight: 300; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .journal-input::placeholder { color: rgba(255,255,255,0.4); }
+        .journal-input:focus { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.12); width: 260px; }
+
+        /* 漂浮產生的泡泡 */
+        #journal-area { position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: hidden; }
+        .journal-bubble {
+            position: absolute; pointer-events: auto; cursor: grab;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01));
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.25); border-radius: 30px;
+            padding: 10px 18px; color: white; font-size: 0.8rem; font-weight: 300; letter-spacing: 0.5px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            user-select: none; -webkit-user-select: none; white-space: nowrap;
+        }
+        .journal-bubble:active { cursor: grabbing; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.5) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+        /* --- 浮動系統泡泡 --- */
+        .bubbles-panel { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; width: 100%; z-index: 10; }
         .floating-bubble {
             position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01));
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: white; padding: 10px;
             width: 32%; aspect-ratio: 1/1; max-width: 120px; cursor: pointer;
-            animation: float 4s ease-in-out infinite;
+            animation: float 4s ease-in-out infinite; user-select: none; -webkit-user-select: none;
         }
-        .floating-bubble strong { font-size: 0.75rem; font-weight: 400; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.9; }
-        .floating-bubble .val { font-size: 0.85rem; margin: 2px 0; font-weight: 300; }
+        .floating-bubble strong { font-size: 0.7rem; font-weight: 400; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.9; }
+        .floating-bubble .val { font-size: 0.8rem; margin: 2px 0; font-weight: 300; }
         .b-weather { animation-delay: 0s; } .b-tech { animation-delay: -1.5s; padding: 6px; } .b-fitness { animation-delay: -3s; }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
 
-        /* --- 任務區塊 (移至 Agenda) --- */
-        .tasks-header { font-size: 1.1rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.9; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px;}
-        #active-task-list { width: 100%; max-height: 125px; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; justify-content: flex-start; }
+        /* --- 任務區塊 --- */
+        .tasks-header { font-size: 1.05rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.9; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px;}
+        /* 修改 max-height 支援到大約 5 個任務 */
+        #active-task-list { width: 100%; max-height: 220px; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; justify-content: flex-start; }
         #active-task-list::-webkit-scrollbar { width: 4px; }
         #active-task-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
         #active-task-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 10px; }
@@ -140,7 +169,7 @@
         .task-header { display: flex; align-items: center; width: 100%; }
         .task-circle { width: 18px; height: 18px; border: 1.5px solid rgba(255, 255, 255, 0.7); border-radius: 50%; margin-right: 12px; cursor: pointer; flex-shrink: 0; transition: all 0.3s; }
         .task-circle.completed { background: #4ADE80; border-color: #4ADE80; box-shadow: 0 0 10px rgba(74, 222, 128, 0.5); }
-        .task-title { font-size: 0.95rem; font-weight: 300; flex-grow: 1; display: flex; align-items: center; flex-wrap: wrap; cursor: pointer; user-select: none; letter-spacing: 0.5px; }
+        .task-title { font-size: 0.9rem; font-weight: 300; flex-grow: 1; display: flex; align-items: center; flex-wrap: wrap; cursor: pointer; user-select: none; letter-spacing: 0.5px; line-height: 1.3;}
         .completed .task-title { text-decoration: line-through; opacity: 0.4; }
         .task-delete-btn { background: none; border: none; color: #ff6b6b; cursor: pointer; opacity: 0.6; font-size: 1.2rem; margin-left: 6px; font-weight: 300; }
         .add-task-input { background: transparent; border: none; color: white; width: 100%; padding: 4px 0; font-size: 0.85rem; font-weight: 300; outline: none; margin-top: 4px; opacity: 0.6; transition: opacity 0.3s; }
@@ -148,73 +177,75 @@
         .add-task-input:focus { opacity: 1; }
         .completed-wrapper { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); display: none; }
         .completed-wrapper.visible { display: block; }
-        .completed-header { display: flex; align-items: center; cursor: pointer; opacity: 0.6; font-size: 0.85rem; font-weight: 300; letter-spacing: 1px; }
+        .completed-header { display: flex; align-items: center; cursor: pointer; opacity: 0.6; font-size: 0.8rem; font-weight: 300; letter-spacing: 1px; }
         .completed-task-list { display: none; margin-top: 10px; max-height: 100px; overflow-y: auto; padding-right: 5px; }
         .completed-task-list.show { display: block; }
 
-        /* --- [左一/左二] Fitness 訓練空間樣式 --- */
+        /* --- Fitness 訓練空間樣式 --- */
         .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .dash-head h2 { font-size: 1.4rem; font-weight: 400; letter-spacing: 1px; }
+        .dash-head h2 { font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; }
         .dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .dash-tile { background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 140px; }
-        .dash-cap { font-size: 0.78rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
-        .dash-big { font-size: 1.8rem; font-weight: 300; color: #9be7e4; line-height: 1.1; letter-spacing: 1px; }
+        .dash-tile { background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 14px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 130px; }
+        .dash-cap { font-size: 0.75rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
+        .dash-big { font-size: 1.6rem; font-weight: 300; color: #9be7e4; line-height: 1.1; letter-spacing: 1px; }
         .chips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 8px; }
-        .chip { font-size: 0.7rem; padding: 3px 8px; border-radius: 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); font-family: 'Noto Serif JP', serif; }
-        .w-num { font-size: 1.7rem; font-weight: 300; cursor: pointer; color: #9be7e4; text-decoration: underline dotted; text-underline-offset: 4px; margin-top: 6px; }
-        .w-track { position: relative; width: 85%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 5px; margin: 16px 0 10px; }
+        .chip { font-size: 0.65rem; padding: 3px 8px; border-radius: 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); font-family: 'Noto Serif JP', serif; }
+        .w-num { font-size: 1.5rem; font-weight: 300; cursor: pointer; color: #9be7e4; text-decoration: underline dotted; text-underline-offset: 4px; margin-top: 4px; }
+        /* 縮小體重進度條上下邊界，解決卡字問題 */
+        .w-track { position: relative; width: 85%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 5px; margin: 10px 0 8px; }
         .w-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #9be7e4; border-radius: 5px; box-shadow: 0 0 8px rgba(155,231,228,0.6); }
         .w-mark { position: absolute; top: -3px; width: 2px; height: 11px; background: rgba(255,255,255,0.8); }
         .w-mark span { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; opacity: 0.8; font-family: 'Noto Serif JP', serif; }
         .weekly-container { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; }
         .week-row { background: rgba(0,0,0,0.12); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
-        .week-head { display: flex; justify-content: space-between; align-items: center; font-family: 'Noto Serif JP', serif; font-size: 0.82rem; opacity: 0.85; margin-bottom: 6px; }
+        .week-head { display: flex; justify-content: space-between; align-items: center; font-family: 'Noto Serif JP', serif; font-size: 0.8rem; opacity: 0.85; margin-bottom: 6px; }
         .week-bar { display: flex; gap: 3px; }
-        .week-seg { flex: 1; height: 32px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; color: rgba(255,255,255,0.4); cursor: pointer; font-family: 'Noto Serif JP', serif; }
+        .week-seg { flex: 1; height: 32px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: rgba(255,255,255,0.4); cursor: pointer; font-family: 'Noto Serif JP', serif; }
         .week-seg:first-child { border-radius: 6px 3px 3px 6px; } .week-seg:last-child { border-radius: 3px 6px 6px 3px; }
         .week-seg.done { background: rgba(155,231,228,0.2); border-color: #9be7e4; color: #9be7e4; font-weight: 700; }
-        .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: rgba(0,0,0,0.12); border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
-        .menu-name { font-size: 0.95rem; font-weight: 400; }
-        .menu-reps { font-size: 0.78rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; margin-top: 2px;}
+        .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(0,0,0,0.12); border-radius: 10px; margin-bottom: 8px; cursor: pointer; }
+        .menu-name { font-size: 0.9rem; font-weight: 400; }
+        .menu-reps { font-size: 0.75rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; margin-top: 2px;}
         .menu-weight { font-size: 0.85rem; font-weight: 300; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px; }
-        .day-title { display: flex; flex-direction: column; line-height: 1.2; font-size: 1.2rem; font-weight: 400;}
-        .day-title small { font-size: 0.75rem; opacity: 0.7; font-weight: 300; font-family: 'Noto Serif JP', serif; margin-top: 2px;}
-        .add-event-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.85rem; font-weight: 300; }
+        .day-title { display: flex; flex-direction: column; line-height: 1.2; font-size: 1.1rem; font-weight: 400;}
+        .day-title small { font-size: 0.7rem; opacity: 0.7; font-weight: 300; font-family: 'Noto Serif JP', serif; margin-top: 2px;}
+        .add-event-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.8rem; font-weight: 300; }
 
         /* --- [右一] 行事曆 Agenda --- */
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
-        .calendar-header h2 { font-size: 1.4rem; font-weight: 400; letter-spacing: 1px; }
-        .auth-section { text-align: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 16px; }
-        .google-btn { background: rgba(255,255,255,0.9); color: #333; border: none; padding: 10px 20px; border-radius: 20px; font-size: 0.95rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .agenda-item { display: flex; align-items: center; margin-bottom: 12px; background: rgba(0, 0, 0, 0.15); padding: 12px 14px; border-radius: 14px; border-left: 3px solid transparent; }
-        .agenda-time { font-size: 0.95rem; font-weight: 400; width: 90px; flex-shrink: 0; border-right: 1px solid rgba(255, 255, 255, 0.2); margin-right: 14px; }
-        .agenda-content h4 { font-size: 0.95rem; font-weight: 300; margin-bottom: 3px; color: white; }
-        .agenda-content p { font-size: 0.8rem; font-weight: 300; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
+        .calendar-header h2 { font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; }
+        .auth-section { text-align: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 12px; }
+        .google-btn { background: rgba(255,255,255,0.9); color: #333; border: none; padding: 10px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .agenda-item { display: flex; align-items: center; margin-bottom: 10px; background: rgba(0, 0, 0, 0.15); padding: 10px 12px; border-radius: 12px; border-left: 3px solid transparent; }
+        .agenda-time { font-size: 0.85rem; font-weight: 400; width: 85px; flex-shrink: 0; border-right: 1px solid rgba(255, 255, 255, 0.2); margin-right: 12px; }
+        .agenda-content h4 { font-size: 0.9rem; font-weight: 300; margin-bottom: 2px; color: white; line-height: 1.3;}
+        .agenda-content p { font-size: 0.75rem; font-weight: 300; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
 
         /* --- [右二] Settings --- */
-        .action-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25); color: white; padding: 14px; border-radius: 12px; cursor: pointer; font-weight: 300; margin-top: 10px; font-size: 1rem; width: 100%; letter-spacing: 1px; }
-        .danger-btn { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #ff6b6b; margin-top: 30px; }
-        .google-login-btn { background: rgba(255,255,255,0.9); color: black; border: none; padding: 14px; border-radius: 12px; cursor: pointer; font-weight: 500; margin-top: 10px; font-size: 1rem; width: 100%; letter-spacing: 1px; }
+        /* 字體縮小優化 */
+        .action-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25); color: white; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 300; margin-top: 8px; font-size: 0.85rem; width: 100%; letter-spacing: 1px; }
+        .danger-btn { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #ff6b6b; margin-top: 24px; }
+        .google-login-btn { background: rgba(255,255,255,0.9); color: black; border: none; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 500; margin-top: 8px; font-size: 0.85rem; width: 100%; letter-spacing: 1px; }
 
         /* Modal UI 共用 */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-overlay.show { display: flex; }
         .modal-card { background: rgba(25, 30, 35, 0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 24px 20px; width: 420px; max-width: 90%; color: white; box-shadow: 0 20px 50px rgba(0,0,0,0.5); font-weight: 300; max-height: 85dvh; overflow-y: auto;}
-        .modal-card h3 { margin-bottom: 18px; text-align: center; font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; }
+        .modal-card h3 { margin-bottom: 18px; text-align: center; font-size: 1.15rem; font-weight: 400; letter-spacing: 1px; }
         .form-group { margin-bottom: 12px; flex: 1; }
         .form-group label { display: block; font-size: 0.8rem; margin-bottom: 6px; opacity: 0.7; }
-        .form-group input, .form-group textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-size: 0.9rem; outline: none; font-family: 'Noto Serif JP', serif;}
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-size: 0.85rem; outline: none; font-family: 'Noto Serif JP', serif;}
         .modal-actions { display: flex; justify-content: flex-end; margin-top: 20px; gap: 10px; }
-        .modal-btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 400; font-size: 0.9rem; }
+        .modal-btn { padding: 10px 18px; border-radius: 10px; border: none; cursor: pointer; font-weight: 400; font-size: 0.85rem; }
         .btn-cancel { background: rgba(255,255,255,0.1); color: white; }
         .btn-save { background: white; color: black; }
         .btn-delete { background: rgba(239,68,68,0.15); color: #ff6b6b; border: 1px solid rgba(239,68,68,0.4); margin-right: auto; }
         .batch-row { display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 10px; margin-bottom: 6px; }
-        .batch-input { width: 50px; padding: 6px 4px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); color: white; border-radius: 6px; text-align: center; font-size: 0.9rem; font-family: 'Noto Serif JP', serif; }
+        .batch-input { width: 45px; padding: 6px 4px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); color: white; border-radius: 6px; text-align: center; font-size: 0.85rem; font-family: 'Noto Serif JP', serif; }
         .batch-input.b-name { flex: 1; width: auto; text-align: left; padding: 6px 8px; }
-        .row-del { background: none; border: none; color: #ff6b6b; font-size: 1.2rem; }
-        .row-mv { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; width: 28px; height: 30px; border-radius: 6px; font-size: 0.65rem; }
-        .add-row-btn { width: 100%; background: none; border: 1px dashed rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); padding: 8px; border-radius: 10px; margin-top: 4px; }
+        .row-del { background: none; border: none; color: #ff6b6b; font-size: 1.1rem; }
+        .row-mv { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; width: 26px; height: 28px; border-radius: 6px; font-size: 0.65rem; }
+        .add-row-btn { width: 100%; background: none; border: 1px dashed rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); padding: 8px; border-radius: 10px; margin-top: 4px; font-size: 0.85rem;}
     </style>
 </head>
 <body>
@@ -223,27 +254,19 @@
 
     <!-- 底部 iOS 導航欄 (Dock) -->
     <div class="ios-dock" id="ios-dock">
-        <!-- 游動透明玻璃泡泡 -->
         <div class="nav-bubble" id="nav-bubble"></div>
-        
-        <!-- 5 個圖標按鈕 -->
-        <!-- [左二] 菜單 (List) -->
         <div class="nav-item" onclick="goToScreen(0)">
             <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <!-- [左一] 儀表板 (Activity) -->
         <div class="nav-item" onclick="goToScreen(1)">
             <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <!-- [中間] 首頁 (Home) -->
         <div class="nav-item active" onclick="goToScreen(2)">
             <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <!-- [右一] 行事曆 (Calendar) -->
         <div class="nav-item" onclick="goToScreen(3)">
             <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <!-- [右二] 設定 (Settings) -->
         <div class="nav-item" onclick="goToScreen(4)">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
@@ -297,16 +320,14 @@
                 <div class="glass-card">
                     <div class="dash-head"><h2>My Training Space</h2></div>
                     
-                    <!-- 首推區塊：本週進度大圓環 -->
-                    <div class="dash-tile" style="margin-bottom: 12px; flex-direction: row; justify-content: space-evenly; padding: 20px 16px;">
+                    <div class="dash-tile" style="margin-bottom: 12px; flex-direction: row; justify-content: space-evenly; padding: 16px;">
                         <div id="dash-ring"></div>
                         <div style="display:flex; flex-direction:column; justify-content:center; text-align:left;">
-                            <div style="font-size: 1.5rem; font-weight: 300; letter-spacing:1px;">This week</div>
+                            <div style="font-size: 1.4rem; font-weight: 300; letter-spacing:1px;">This week</div>
                             <div class="dash-cap" style="margin-top: 6px;">本週訓練進度</div>
                         </div>
                     </div>
 
-                    <!-- 下方兩小塊：下次訓練 與 體重進度 -->
                     <div class="dash-grid">
                         <div class="dash-tile" style="cursor: pointer;" onclick="openNewSession(getNextDay(), new Date().toLocaleDateString('en-CA'))">
                             <div class="dash-cap" style="margin: 0 0 6px;">Next</div>
@@ -315,8 +336,9 @@
                             <div class="chips" id="dash-next-chips"></div>
                         </div>
 
+                        <!-- 修正：調整內部空間，避免文字與進度條卡住 -->
                         <div class="dash-tile">
-                            <div class="dash-cap" style="margin-bottom: 8px;">目前體重</div>
+                            <div class="dash-cap" style="margin-bottom: 4px;">目前體重</div>
                             <div class="w-num" id="display-weight" onclick="updateWeight()" style="text-decoration:none;">59.0 kg</div>
                             <div class="w-track" id="dash-w-track"></div>
                             <div class="dash-cap">目標 66</div>
@@ -324,19 +346,20 @@
                     </div>
                     
                     <div class="weekly-container">
-                        <h3 style="margin-bottom: 12px; font-weight: 400; letter-spacing: 1px; font-size: 1.05rem;">Weekly Progress</h3>
+                        <h3 style="margin-bottom: 12px; font-weight: 400; letter-spacing: 1px; font-size: 1rem;">Weekly Progress</h3>
                         <div id="fitness-logs-container"></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- [中間] Screen 2: 主視覺畫面 (Home - 極簡居中版) -->
-        <!-- 加入 justify-content: center 讓內容完全在正中間 -->
+        <!-- [中間] Screen 2: 主視覺畫面 (Home) -->
         <section class="screen" id="screen-2" style="justify-content: center;">
-            <div class="content-container" style="flex: unset; gap: 30px;">
-                
-                <!-- 獨立的時鐘區塊 (移除卡片底框，直接懸浮) -->
+            
+            <!-- 專屬的日誌飄浮區域 -->
+            <div id="journal-area"></div>
+
+            <div class="content-container" style="flex: unset; gap: 20px;">
                 <div class="clock-card">
                     <div class="time-display" id="clock">00:00</div>
                     <div class="greeting-date-wrapper">
@@ -346,12 +369,16 @@
                     </div>
                 </div>
 
-                <!-- 三顆浮動泡泡 -->
+                <!-- 新增：生活微日記輸入框 -->
+                <div class="journal-container">
+                    <input type="text" id="journal-input" class="journal-input" placeholder="記下此時此刻..." onkeypress="addJournalBubble(event)">
+                </div>
+
                 <div class="bubbles-panel">
                     <div class="floating-bubble b-weather" onclick="goToScreen(2)">
                         <strong>Location <span class="edit-icon" onclick="editCity(event)">✎</span></strong>
                         <div class="val" id="val-weather-city">Douliu</div>
-                        <input type="text" id="input-city" class="add-task-input" style="display:none; font-size: 0.85rem; padding: 0; text-align: center;" onkeypress="saveCity(event)">
+                        <input type="text" id="input-city" class="add-task-input" style="display:none; font-size: 0.8rem; padding: 0; text-align: center;" onkeypress="saveCity(event)">
                         <div class="val" id="val-weather-temp">--°C</div>
                     </div>
                     <div class="floating-bubble b-tech" onclick="window.open('https://technews.tw/feed/', '_blank')">
@@ -363,7 +390,6 @@
                         <div class="val" id="val-fitness-next" style="color: #9be7e4;">Next</div>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -371,11 +397,10 @@
         <section class="screen" id="screen-3">
             <div class="content-container">
                 
-                <!-- 新增：將任務區塊移至此處 (Agenda之上) -->
-                <div class="glass-card" style="margin-bottom: 8px;">
+                <div class="glass-card" style="margin-bottom: 6px;">
                     <h3 class="tasks-header">Today's Focus</h3>
                     <div class="tasks-container">
-                        <div id="active-task-list"><p style="opacity: 0.7; font-weight: 300; text-align: center; margin-top: 15px; font-size: 0.85rem;">同步資料中...</p></div>
+                        <div id="active-task-list"><p style="opacity: 0.7; font-weight: 300; text-align: center; margin-top: 15px; font-size: 0.8rem;">同步資料中...</p></div>
                         <input type="text" id="new-task-input" class="add-task-input" placeholder="+ Press Enter to add task..." onkeypress="handleAddTask(event)" style="display: none;">
                         <div id="completed-wrapper" class="completed-wrapper">
                             <div class="completed-header" onclick="toggleCompletedSection()">
@@ -386,14 +411,13 @@
                     </div>
                 </div>
 
-                <!-- 原本的行事曆區塊 -->
                 <div class="glass-card calendar-card">
                     <div class="calendar-header">
                         <h2>Agenda</h2>
-                        <div id="calendar-date" class="date-display" style="opacity: 0.8; font-size: 0.85rem;"></div>
+                        <div id="calendar-date" class="date-display" style="opacity: 0.8; font-size: 0.8rem;"></div>
                     </div>
                     <div class="auth-section" id="auth-container">
-                        <p style="margin-bottom: 10px; font-weight: 300; font-size: 0.85rem;">請登入取得行程</p>
+                        <p style="margin-bottom: 10px; font-weight: 300; font-size: 0.8rem;">請登入取得行程</p>
                         <button type="button" class="google-btn" onclick="handleAuthClick()">Log in with Google</button>
                     </div>
                     <div id="agenda-list"></div>
@@ -406,19 +430,21 @@
         <section class="screen" id="screen-4">
             <div class="content-container">
                 <div class="glass-card">
-                    <h2 style="font-size: 1.4rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">Settings</h2>
-                    <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 8px; font-weight: 300;">健身資料管理</p>
+                    <h2 style="font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Settings</h2>
+                    <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 4px; font-weight: 300;">健身資料管理</p>
                     <button class="action-btn" onclick="exportFitnessData()">⬇️ 匯出本機資料</button>
                     <button class="action-btn" onclick="document.getElementById('import-file').click()">⬆️ 匯入本機資料</button>
                     <input type="file" id="import-file" style="display:none" accept=".json" onchange="importFitnessData(event)">
+                    
                     <div style="margin-top: 24px;"></div>
-                    <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 8px; font-weight: 300;">Google 雲端備份</p>
+                    <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 4px; font-weight: 300;">Google 雲端備份</p>
                     <button class="google-login-btn" id="settings-login-btn" onclick="handleAuthClick()">登入 Google</button>
                     <button class="action-btn" onclick="cloudBackup(true)">☁️ 備份到 Google</button>
                     <button class="action-btn" onclick="cloudRestore(true)">☁️ 從 Google 還原</button>
-                    <p id="cloud-status" style="font-size: 0.75rem; opacity: 0.6; margin-top: 8px; font-weight: 300; line-height: 1.4;">登入 Google 後自動同步</p>
+                    <p id="cloud-status" style="font-size: 0.7rem; opacity: 0.6; margin-top: 8px; font-weight: 300; line-height: 1.4;">登入 Google 後自動同步</p>
+                    
                     <div style="margin-top: 30px;"></div>
-                    <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 8px; font-weight: 300;">系統除錯</p>
+                    <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 4px; font-weight: 300;">系統除錯</p>
                     <button class="danger-btn action-btn" onclick="clearDataAndReload()">登出 / 清除授權快取</button>
                 </div>
             </div>
@@ -426,13 +452,13 @@
 
     </div>
 
-    <!-- Modal 區域保留 -->
+    <!-- Modal 區域 -->
     <div class="modal-overlay" id="event-modal"><div class="modal-card"><h3>New Event</h3><div class="form-group"><label>行程標題</label><input type="text" id="evt-title"></div><div class="form-group"><label>開始時間</label><input type="datetime-local" id="evt-start"></div><div class="form-group"><label>結束時間</label><input type="datetime-local" id="evt-end"></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeEventModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveNewEvent()">Save</button></div></div></div>
     <div class="modal-overlay" id="fit-modal"><div class="modal-card"><h3>Log Workout</h3><div class="fit-input-group"><div class="form-group" style="flex: 1.5;"><label>動作名稱</label><input type="text" id="fit-name"></div><div class="form-group" style="flex: 1;"><label>日期</label><input type="date" id="fit-date"></div></div><div class="fit-input-group"><div class="form-group"><label>組</label><input type="number" id="fit-sets"></div><div class="form-group"><label>次</label><input type="number" id="fit-reps"></div><div class="form-group"><label>kg</label><input type="number" id="fit-weight" step="0.5"></div></div><div class="form-group"><label>備註</label><textarea id="fit-note" rows="2"></textarea></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeFitModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveFitLog()">Save</button></div></div></div>
     <div class="modal-overlay" id="session-modal"><div class="modal-card" style="width: 500px;"><h3 id="session-title">Log Day</h3><div class="form-group" style="margin-bottom: 14px;"><label>日期</label><input type="date" id="session-date"></div><div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div><button class="add-row-btn" onclick="addSessionRow()">+ 新增動作</button><div class="modal-actions"><button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除整天</button><button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveSession()">Save</button></div></div></div>
 
     <script>
-        /* === UI Slider Navigation Logic (iOS Dock 互動拖曳版) === */
+        /* === UI Slider Navigation Logic (無延遲 + 完美拖曳版) === */
         const slider = document.getElementById('app-slider');
         const globalFab = document.getElementById('global-fab');
         const navBubble = document.getElementById('nav-bubble');
@@ -443,13 +469,19 @@
         let isDraggingBubble = false;
 
         function goToScreen(index) {
+            // 點擊圖標時加上動畫，讓它滑過去
+            navBubble.classList.add('snap');
             slider.scrollTo({ left: window.innerWidth * index, behavior: 'smooth' });
+            // 動畫結束後移除，確保後續手滑時零延遲
+            setTimeout(() => navBubble.classList.remove('snap'), 300);
         }
 
-        // 當畫面自然滾動時，同步泡泡位置
+        // 畫面滾動時同步泡泡位置
         slider.addEventListener('scroll', () => {
-            if (isDraggingBubble) return; // 如果正在手動拖拉泡泡，則暫停同步
+            if (isDraggingBubble) return; 
             const scrollNorm = slider.scrollLeft / window.innerWidth;
+            
+            // 直接賦予 Transform，沒有 Transition，實現「零延遲」同步
             navBubble.style.transform = `translateX(${scrollNorm * ITEM_WIDTH}px)`;
             
             const activeIndex = Math.round(scrollNorm);
@@ -457,48 +489,36 @@
             updateFabState(activeIndex);
         });
 
-        // 泡泡被按下 (Touch / Mouse)
+        // 泡泡拖曳邏輯
         navBubble.addEventListener('pointerdown', (e) => {
             isDraggingBubble = true;
-            // 讓泡泡發光、稍微放大，準備拖曳
-            navBubble.style.transition = 'none';
+            navBubble.classList.remove('snap'); // 確保拖曳時無延遲
             navBubble.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05))';
             navBubble.style.boxShadow = '0 8px 25px rgba(255,255,255,0.3)';
-            navBubble.setPointerCapture(e.pointerId); // 鎖定游標追蹤
+            navBubble.setPointerCapture(e.pointerId);
         });
 
-        // 泡泡被拖曳中
         navBubble.addEventListener('pointermove', (e) => {
             if (!isDraggingBubble) return;
             const dockRect = iosDock.getBoundingClientRect();
-            // 計算手指相對於 Dock 左側的 X 座標 (減去泡泡半寬以置中)
             let x = e.clientX - dockRect.left - (ITEM_WIDTH / 2); 
-            // 限制在 0 到 4 之間
             x = Math.max(0, Math.min(x, 4 * ITEM_WIDTH));
-            
-            // 改變外觀：位移 + 放大(scale)
             navBubble.style.transform = `translateX(${x}px) scale(1.15)`;
-            
-            // 同時滑動畫面
             slider.scrollLeft = (x / ITEM_WIDTH) * window.innerWidth;
         });
 
-        // 泡泡放開
         navBubble.addEventListener('pointerup', (e) => {
             if (!isDraggingBubble) return;
             isDraggingBubble = false;
             navBubble.releasePointerCapture(e.pointerId);
             
-            // 恢復原本的外觀與過場
-            navBubble.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            navBubble.classList.add('snap');
             navBubble.style.background = '';
             navBubble.style.boxShadow = '';
             
-            // 吸附到最接近的頁面
             const activeIndex = Math.round(slider.scrollLeft / window.innerWidth);
             goToScreen(activeIndex);
         });
-
 
         function updateFabState(index) {
             if (index === 1 || index === 3) globalFab.classList.add('show');
@@ -520,8 +540,61 @@
             }, 50);
         });
 
+        /* === 首頁微日記 (Journal Bubble) 邏輯 === */
+        function addJournalBubble(e) {
+            if (e.key === 'Enter' && e.target.value.trim() !== '') {
+                createJournalBubble(e.target.value.trim());
+                e.target.value = ''; // 清空輸入框
+            }
+        }
 
-        /* === Data & Logic === */
+        function createJournalBubble(text) {
+            const area = document.getElementById('journal-area');
+            const bubble = document.createElement('div');
+            bubble.className = 'journal-bubble';
+            bubble.innerText = text;
+            
+            // 在畫面安全範圍內隨機生成位置
+            const maxX = window.innerWidth - 150;
+            const maxY = window.innerHeight - 350;
+            const x = Math.max(20, Math.random() * maxX);
+            const y = Math.max(100, Math.random() * maxY);
+            
+            bubble.style.left = `${x}px`;
+            bubble.style.top = `${y}px`;
+            
+            // 讓泡泡可被拖曳
+            let isDragging = false;
+            let startX, startY, initX, initY;
+            
+            bubble.addEventListener('pointerdown', (e) => {
+                isDragging = true;
+                startX = e.clientX; startY = e.clientY;
+                initX = parseFloat(bubble.style.left); initY = parseFloat(bubble.style.top);
+                bubble.setPointerCapture(e.pointerId);
+                bubble.style.zIndex = 100;
+            });
+            bubble.addEventListener('pointermove', (e) => {
+                if(!isDragging) return;
+                bubble.style.left = `${initX + e.clientX - startX}px`;
+                bubble.style.top = `${initY + e.clientY - startY}px`;
+            });
+            bubble.addEventListener('pointerup', (e) => {
+                isDragging = false;
+                bubble.releasePointerCapture(e.pointerId);
+                bubble.style.zIndex = 1;
+            });
+            
+            // 連點兩下刪除泡泡
+            bubble.addEventListener('dblclick', () => {
+                bubble.style.animation = 'popIn 0.3s reverse forwards';
+                setTimeout(() => bubble.remove(), 300);
+            });
+            
+            area.appendChild(bubble);
+        }
+
+        /* === API 與 基礎資料 (與之前一致) === */
         function clearDataAndReload() { localStorage.removeItem('google_calendar_token'); location.reload(); }
 
         let userCity = localStorage.getItem('user_city_name') || 'Douliu';
@@ -689,7 +762,7 @@
                     if(t.status === 'completed') { cHTML += html; cCount++; } else { aHTML += html; }
                 });
                 
-                document.getElementById('active-task-list').innerHTML = aHTML || '<p style="opacity:0.7; font-size: 0.85rem; text-align: center; margin-top: 15px;">All Focus Completed.</p>';
+                document.getElementById('active-task-list').innerHTML = aHTML || '<p style="opacity:0.7; font-size: 0.8rem; text-align: center; margin-top: 15px;">All Focus Completed.</p>';
                 document.getElementById('completed-task-list').innerHTML = cHTML;
                 document.getElementById('completed-count').textContent = cCount;
                 document.getElementById('completed-wrapper').classList.toggle('visible', cCount > 0);
@@ -706,7 +779,7 @@
                 const cals = (await gapi.client.calendar.calendarList.list()).result.items;
                 let events = (await Promise.all(cals.map(cal => gapi.client.calendar.events.list({ calendarId: cal.id, timeMin: s.toISOString(), timeMax: e.toISOString(), singleEvents: true }).then(r => r.result.items.map(ev => ({...ev, colorCode: cal.backgroundColor}))).catch(()=>[])))).flat();
                 events.sort((a, b) => new Date(a.start.dateTime || a.start.date) - new Date(b.start.dateTime || b.start.date));
-                document.getElementById('agenda-list').innerHTML = events.length ? events.map(ev => `<div class="agenda-item" style="border-left-color: ${ev.colorCode};"><div class="agenda-time">${ev.start.dateTime ? new Date(ev.start.dateTime).toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit'}) : '全天'}</div><div class="agenda-content"><h4>${ev.summary}</h4></div></div>`).join('') : '<p style="text-align:center; opacity:0.7; font-size:0.85rem; margin-top:20px;">今天無行程安排</p>';
+                document.getElementById('agenda-list').innerHTML = events.length ? events.map(ev => `<div class="agenda-item" style="border-left-color: ${ev.colorCode};"><div class="agenda-time">${ev.start.dateTime ? new Date(ev.start.dateTime).toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit'}) : '全天'}</div><div class="agenda-content"><h4>${ev.summary}</h4></div></div>`).join('') : '<p style="text-align:center; opacity:0.7; font-size:0.8rem; margin-top:20px;">今天無行程安排</p>';
             } catch (err) {}
         }
         function openEventModal() { document.getElementById('event-modal').classList.add('show'); }
