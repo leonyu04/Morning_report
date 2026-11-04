@@ -32,7 +32,7 @@
         .screen::-webkit-scrollbar { display: none; }
         .content-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
 
-        /* --- iOS Dock (輕透風格) --- */
+        /* --- iOS Dock (更輕透) --- */
         .ios-dock { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px); left: 50%; transform: translateX(-50%); display: flex; align-items: center; background: rgba(255, 255, 255, 0.015); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.03); border-radius: 40px; padding: 6px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.08); user-select: none; -webkit-user-select: none; touch-action: none; }
         .nav-item { width: 54px; height: 46px; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 2; color: rgba(255, 255, 255, 0.45); transition: color 0.3s ease; }
         .nav-item.active { color: rgba(255, 255, 255, 1); }
@@ -43,7 +43,7 @@
         .global-fab { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 95px); right: 28px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.1); color: white; font-size: 1.6rem; font-weight: 300; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.15); cursor: pointer; z-index: 1000; opacity: 0; pointer-events: none; transform: scale(0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .global-fab.show { opacity: 1; pointer-events: auto; transform: scale(1); }
 
-        /* --- 超輕薄毛玻璃卡片 --- */
+        /* --- 減半透明度、變薄的毛玻璃卡片 --- */
         .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.002)); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border-top: 1px solid rgba(255, 255, 255, 0.05); border-left: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.01); border-right: 1px solid rgba(255, 255, 255, 0.01); border-radius: 20px; box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.12); padding: 22px 20px; width: 100%; }
         
         /* --- Screen 1: 健身專屬頁面 --- */
@@ -70,7 +70,7 @@
         .menu-weight { font-size: 0.72rem; font-weight: 300; background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 6px; }
         
         .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; width: 100%; font-size: 0.75rem; font-weight: 400; letter-spacing: 0.5px; padding-bottom: 4px; }
-        .collapsible-content { display: none; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .collapsible-content { display: none; flex-direction: column; gap: 14px; margin-top: 14px; }
         .collapsible-content.show { display: flex; }
 
         /* --- Screen 2: 首頁 (Home) --- */
@@ -140,7 +140,7 @@
         .google-login-btn { background: rgba(255,255,255,0.9); color: black; font-weight: 500; }
         .danger-btn { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ff6b6b; margin-top: 24px; }
 
-        /* Modals */
+        /* Modals (減薄背景) */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-overlay.show { display: flex; }
         .modal-card { background: rgba(25, 30, 35, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px 20px; width: 420px; max-width: 90%; color: white; box-shadow: 0 15px 40px rgba(0,0,0,0.3); max-height: 85dvh; overflow-y: auto;}
@@ -169,6 +169,7 @@
 
     <div class="ios-dock" id="ios-dock">
         <div class="nav-bubble" id="nav-bubble"></div>
+        <!-- [最左側] Icon: 視覺化儀表板圖示 -->
         <div class="nav-item" onclick="goToScreen(0)"><svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83M22 12A10 10 0 0 0 12 2v10z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="nav-item" onclick="goToScreen(1)"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="nav-item active" onclick="goToScreen(2)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -180,7 +181,7 @@
 
     <div class="app-slider" id="app-slider">
         
-        <!-- [左二] Screen 0: Life Overview (生活資料視覺化儀表板) -->
+        <!-- [左二] Screen 0: Life Overview (統計儀表板) -->
         <section class="screen" id="screen-0" style="justify-content: center;">
             <div class="content-container" style="align-items: center; gap: 20px;">
                 <div class="glass-card" style="padding: 30px 22px; max-width: 440px; width: 100%;">
@@ -203,11 +204,11 @@
                     <!-- 數據視覺化明細 -->
                     <div style="font-size: 0.82rem; font-weight: 300; opacity: 0.9; padding: 16px; background: rgba(0,0,0,0.1); border-radius: 14px; border: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; gap: 14px;">
                         <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
-                            <span>📋 今日任務完成率</span>
+                            <span>📋 今日任務達成進度</span>
                             <span id="stat-t-val" style="color: #fde047; font-weight: 400;">0 / 0</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
-                            <span>🔥 本週健身達標天數</span>
+                            <span>🔥 本週訓練累積天數</span>
                             <span id="stat-f-val" style="color: #9be7e4; font-weight: 400;">0 天</span>
                         </div>
 
@@ -225,7 +226,7 @@
                         <!-- 舒壓與隨手記動態 -->
                         <div style="display: flex; justify-content: space-between;">
                             <span>🧘 舒壓與靈感隨手記</span>
-                            <span id="stat-zen-val" style="color: rgba(255,255,255,0.7); font-size: 0.75rem;">0 次點擊</span>
+                            <span id="stat-zen-val" style="color: rgba(255,255,255,0.7); font-size: 0.75rem;">0 則靈感</span>
                         </div>
                     </div>
                 </div>
@@ -596,6 +597,7 @@
             const now = new Date();
             const lastCheck = localStorage.getItem('leon_last_journal_cleanup');
             const todayStr = now.toLocaleDateString('en-CA');
+            // 確認：凌晨 1 點清理 (now.getHours() >= 1)
             if (lastCheck !== todayStr && now.getHours() >= 1) {
                 const yesterdayTexts = journalBubbles.map((b, idx) => `${idx + 1}. ${b.text}`).join('\n');
                 if(yesterdayTexts && typeof gapi !== 'undefined' && gapi.client && gapi.client.tasks) {
@@ -658,9 +660,9 @@
             });
         }
 
-        /* 更新左側視覺化儀表板 (Life Overview) */
+        /* 更新左側統計儀表板 (Life Overview) */
         function updateLifeStats() {
-            // 1. Task Ring
+            // Task Ring
             let tRate = globalTasksStats.total > 0 ? (globalTasksStats.completed / globalTasksStats.total) * 100 : 0;
             const C = 2 * Math.PI * 36;
             const tArc = (tRate / 100) * C;
@@ -674,7 +676,7 @@
                 document.getElementById('stat-t-val').innerText = `${globalTasksStats.completed} / ${globalTasksStats.total}`;
             }
 
-            // 2. Fitness Ring (Weekly Streak)
+            // Fitness Ring (Weekly Streak)
             const wk = getMonday(new Date()).toLocaleDateString('en-CA');
             const days = new Set(fitnessData.logs.filter(l => getMonday(new Date(l.date)).toLocaleDateString('en-CA') === wk).map(l => dateKeyOf(l.date)));
             const streakCount = days.size;
@@ -691,7 +693,7 @@
                 document.getElementById('stat-f-val').innerText = `${streakCount} 天`;
             }
 
-            // 3. 增重增肌進度計算 (59.0kg -> 66.0kg)
+            // 增重增肌目標進度條 (59kg -> 66kg)
             const curW = parseFloat(fitnessData.weight) || 59.0;
             const targetW = 66.0;
             const baseW = 59.0;
@@ -703,11 +705,11 @@
                 document.getElementById('stat-w-val').innerText = `${curW} kg / ${targetW} kg`;
             }
 
-            // 4. 隨手記與懸浮泡泡統計
+            // 隨手記泡泡數量統計
             const jCount = journalBubbles.length;
             const zenValEl = document.getElementById('stat-zen-val');
             if (zenValEl) {
-                zenValEl.innerText = `${jCount} 則懸浮靈感`;
+                zenValEl.innerText = `${jCount} 則靈感`;
             }
         }
 
@@ -743,12 +745,11 @@
             document.getElementById('dash-ring').innerHTML = `<svg width="90" height="90" viewBox="0 0 90 90">${arcs}<text x="45" y="52" text-anchor="middle" fill="#fff" font-size="22" font-weight="300">${days.size}/3</text></svg>`;
 
             renderWeightChart();
-            renderWeeklyFitnessLogs(); 
-            updateMenuMaxWeights();
+            renderWeeklyFitnessLogs(); updateMenuMaxWeights();
             updateLifeStats();
         }
 
-        /* 動態繪製體重趨勢圖 */
+        /* 根據更新次數繪製動態體重圖表 */
         function renderWeightChart() {
             if (!fitnessData.weightHistory || fitnessData.weightHistory.length === 0) {
                 fitnessData.weightHistory = [{date: new Date().toISOString(), weight: fitnessData.weight}];
@@ -795,7 +796,7 @@
             `;
         }
 
-        /* 更新體重，推入紀錄陣列 */
+        /* 更新體重，推入 X 軸陣列 */
         function updateWeight() { 
             const newW = prompt("紀錄最新體重 (kg)：", fitnessData.weight); 
             if (newW && !isNaN(newW)) { 
@@ -905,7 +906,7 @@
         function saveSession() { const dateVal = document.getElementById('session-date').value; if (!dateVal) return; const newLogs = [...document.querySelectorAll('#batch-list .batch-row')].map((row, idx) => { const name = row.querySelector('.b-name').value.trim(); if(!name) return null; return { id: Date.now().toString() + idx, date: new Date(new Date(dateVal).getTime() + idx).toISOString(), name, sets: row.querySelector('.b-sets').value || "1", reps: row.querySelector('.b-reps').value || "1", weight: row.querySelector('.b-weight').value || "0", note: "" }; }).filter(Boolean); if (newLogs.length === 0) { alert("至少需一個動作"); return; } fitnessData.logs = fitnessData.logs.filter(l => !sessionCtx.ids.includes(l.id)).concat(newLogs); fitnessData.logs.sort((a, b) => new Date(b.date) - new Date(a.date)); saveFitnessData(); closeSessionModal(); initFitness(); }
         function deleteSession() { if(confirm("刪除整天紀錄？")) { fitnessData.logs = fitnessData.logs.filter(l => !sessionCtx.ids.includes(l.id)); saveFitnessData(); closeSessionModal(); initFitness(); } }
 
-        /* 渲染週次紀錄：新的一週在最上方，舊週次收納在摺疊選單中 */
+        /* 渲染週次紀錄：本週在最上方，舊週次收納在摺疊選單中 */
         function renderWeeklyFitnessLogs() {
             const weeks = {}; 
             const curWeekKey = getMonday(new Date()).toLocaleDateString('en-CA'); 
@@ -1034,7 +1035,7 @@
         function cloudReady() { return typeof gapi !== 'undefined' && gapi.client && gapi.client.getToken && gapi.client.getToken(); }
         function scheduleBackup() { if (cloudReady()) { clearTimeout(backupTimer); backupTimer = setTimeout(() => cloudBackup(false), 3000); } }
         async function cloudBackup(manual) { if(!cloudReady()){if(manual)alert('請先登入');return;} try{ const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; const data = JSON.stringify({updatedAt: parseInt(localStorage.getItem('leon_local_updated')||'0'), fitnessData, journalBubbles, settings:{city:userCity,lat:userLat,lng:userLng}}); if(f) await gapi.client.request({path:`https://www.googleapis.com/upload/drive/v3/files/${f.id}`, method:'PATCH', params:{uploadType:'media'}, body:data}); else await gapi.client.request({path:'https://www.googleapis.com/upload/drive/v3/files', method:'POST', params:{uploadType:'multipart'}, headers:{'Content-Type':'multipart/related; boundary=bnd'}, body:`--bnd\r\nContent-Type: application/json\r\n\r\n{"name":"${BACKUP_NAME}","parents":["appDataFolder"]}\r\n--bnd\r\nContent-Type: application/json\r\n\r\n${data}\r\n--bnd--`}); document.getElementById('cloud-status').innerText = '已自動備份'; if(manual)alert('備份成功'); }catch(e){document.getElementById('cloud-status').innerText = '備份失敗';} }
-        async function cloudRestore(manual) { if(!cloudReady()){if(manual)alert('請先登入');return;} try{ const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; if(!f){if(manual)alert('無雲端備份');return;} const d = await gapi.client.request({path:`https://www.googleapis.com/drive/v3/files/${f.id}`, params:{alt:'media'}}); const b = typeof d.result === 'object' ? d.result : JSON.parse(d.body); if(b.fitnessData) { fitnessData = b.fitnessData; localStorage.setItem('leon_fitness_data', JSON.stringify(fitnessData)); } if(b.journalBubbles) { journalBubbles = b.journalBubbles; saveJournals(); renderJournals(); } initFitness(); document.getElementById('cloud-status').innerText = '已從雲端還原'; }catch(e){document.getElementById('cloud-status').innerText = '還原失敗';} }
+        async function cloudRestore(manual) { if(!cloudReady()){if(manual)alert('請先登入');return;} try{ const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; if(!f){if(manual)alert('無雲端備份');return;} const d = await gapi.client.request({path:`https://www.googleapis.com/upload/drive/v3/files/${f.id}`, params:{alt:'media'}}); const b = typeof d.result === 'object' ? d.result : JSON.parse(d.body); if(b.fitnessData) { fitnessData = b.fitnessData; localStorage.setItem('leon_fitness_data', JSON.stringify(fitnessData)); } if(b.journalBubbles) { journalBubbles = b.journalBubbles; saveJournals(); renderJournals(); } initFitness(); document.getElementById('cloud-status').innerText = '已從雲端還原'; }catch(e){document.getElementById('cloud-status').innerText = '還原失敗';} }
         async function cloudSync() { try { const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; if(!f) { if(fitnessData.logs.length) cloudBackup(false); return; } const d = await gapi.client.request({path:`https://www.googleapis.com/drive/v3/files/${f.id}`, params:{alt:'media'}}); const cloud = typeof d.result === 'object' ? d.result : JSON.parse(d.body); const localTs = parseInt(localStorage.getItem('leon_local_updated')||'0'); if((cloud.updatedAt||0) > localTs) cloudRestore(false); else if(localTs > (cloud.updatedAt||0)) cloudBackup(false); else document.getElementById('cloud-status').innerText = '已同步'; } catch(e){} }
 
         window.onload = () => { gapiLoaded(); gisLoaded(); };
