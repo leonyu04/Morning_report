@@ -25,16 +25,16 @@
         body { 
             background: #14191e; 
             color: #FFFFFF; 
-            scrollbar-width: none; 
-            overflow-x: hidden; 
-            position: relative;
+            overflow: hidden; /* 鎖死外層，完全依賴內部橫向滑動 */
+            position: fixed;
+            width: 100vw;
+            height: 100dvh;
         }
-        body::-webkit-scrollbar { display: none; }
 
         .bg-fixed {
-            position: fixed;
+            position: absolute;
             top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            width: 100%; height: 100%;
             background-image: url('background.jpg');
             background-repeat: no-repeat;
             background-position: center center;
@@ -42,95 +42,111 @@
             pointer-events: none;
         }
 
-        /* 主應用程式內容容器：給予邊框足夠的呼吸空間 */
-        .app-container {
-            width: 100%;
-            max-width: 1000px; /* 縮小桌面端/寬螢幕最大寬度 */
-            margin: 0 auto;
-            padding: 30px 24px 60px; /* 增加邊界的空氣感 */
+        /* 橫向滑動主容器 (5個畫面) */
+        .app-slider {
+            display: flex;
+            width: 100vw;
+            height: 100dvh;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .app-slider::-webkit-scrollbar { display: none; }
+
+        /* 單一分頁設定 */
+        .screen {
+            flex: 0 0 100vw;
+            width: 100vw;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-snap-align: center;
+            padding: calc(env(safe-area-inset-top) + 20px) 20px calc(env(safe-area-inset-bottom) + 90px);
             display: flex;
             flex-direction: column;
-            gap: 28px; /* 區塊之間的寬鬆間距 */
-        }
-
-        .screen { 
-            width: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            position: relative; 
-            z-index: 10; 
-        }
-
-        /* 頂部導覽列與設定圖示（滾動時逐漸顯現、提高透明度與質感） */
-        .top-bar {
-            width: 100%;
-            display: flex;
-            justify-content: flex-start;
             align-items: center;
-            margin-bottom: 10px;
-            padding: 0 4px;
+            scrollbar-width: none;
+        }
+        .screen::-webkit-scrollbar { display: none; }
+
+        /* 內容寬度限制 */
+        .content-container {
+            width: 100%;
+            max-width: 600px; /* 手機與平版最適寬度 */
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
-        .settings-btn { 
-            width: 40px; height: 40px; 
-            border-radius: 50%; 
-            background: rgba(255, 255, 255, 0.12); 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255,255,255,0.3); 
-            display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; 
-            opacity: 0.95; /* 提高顯眼度與質感 */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s; 
+        /* 底部導航列 (玻璃毛邊) */
+        .bottom-nav {
+            position: fixed;
+            bottom: calc(env(safe-area-inset-bottom) + 20px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            padding: 14px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.25);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
         }
-        .settings-btn:hover { opacity: 1; background: rgba(255,255,255,0.25); transform: rotate(90deg); }
-        
-        .sidebar { position: fixed; top: 0; left: -320px; width: 320px; height: 100vh; background: rgba(20,25,30,0.88); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-right: 1px solid rgba(255,255,255,0.1); transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; padding: 40px 30px; color: white; display: flex; flex-direction: column; overflow-y: auto; }
-        .sidebar.open { left: 0; }
-        .sidebar-close { align-self: flex-end; cursor: pointer; opacity: 0.6; font-size: 2rem; line-height: 1; font-weight: 300; margin-bottom: 30px; transition: opacity 0.2s; background: none; border: none; color: white; }
-        .sidebar-close:hover { opacity: 1; }
-        .sidebar h3 { font-size: 1.5rem; font-weight: 400; margin-bottom: 20px; letter-spacing: 2px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 15px; }
-        .action-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 300; transition: all 0.2s; margin-top: 10px; font-size: 0.95rem; width: 100%; letter-spacing: 1px; }
-        .action-btn:hover { background: rgba(255,255,255,0.2); }
-        .danger-btn { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #ff6b6b; margin-top: 30px; }
-        .danger-btn:hover { background: rgba(239, 68, 68, 0.3); }
 
-        .dashboard-layout { display: flex; align-items: stretch; justify-content: center; gap: 20px; width: 100%; flex-wrap: wrap; }
+        /* 小細直線設計 */
+        .nav-line {
+            width: 16px;
+            height: 3px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .nav-line.active {
+            width: 32px;
+            background: #9be7e4;
+            box-shadow: 0 0 8px rgba(155,231,228,0.6);
+        }
 
+        /* 共用卡片樣式 */
         .glass-card {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid rgba(255, 255, 255, 0.35); border-left: 1px solid rgba(255, 255, 255, 0.35);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08); border-right: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px; box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.18); transition: all 0.3s ease;
+            border-radius: 24px; box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.15); transition: all 0.3s ease;
+            padding: 22px 20px;
+            width: 100%;
         }
 
-        .hero-card { flex: 1; min-width: 300px; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 22px 18px; }
+        /* --- [中間] 首頁樣式 --- */
+        .hero-card { display: flex; flex-direction: column; align-items: center; text-align: center; }
         
         @keyframes breatheGlow { 0% { box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.2); transform: scale(1); } 50% { box-shadow: 0 0 60px 15px rgba(150, 240, 220, 0.3); transform: scale(1.01); } 100% { box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.2); transform: scale(1); } }
         .breathe-glow { animation: breatheGlow 2.5s ease-in-out; }
         
-        .time-display { font-size: 4.5rem; font-weight: 300; letter-spacing: 2px; line-height: 1; margin-bottom: 6px; text-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .time-display { font-size: 5rem; font-weight: 300; letter-spacing: 2px; line-height: 1; margin-bottom: 8px; text-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .greeting-date-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; opacity: 0.85; font-weight: 300; }
         .greeting, .date-display { font-size: 0.9rem; font-weight: 300; letter-spacing: 1px; }
         .dot-separator { width: 4px; height: 4px; background: white; border-radius: 50%; opacity: 0.5; }
         
         .tasks-container { width: 100%; text-align: left; }
-        
-        #active-task-list { width: 100%; max-height: 140px; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; justify-content: flex-start; transition: all 0.3s ease; }
+        #active-task-list { width: 100%; max-height: 160px; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; justify-content: flex-start; transition: all 0.3s ease; }
         #active-task-list::-webkit-scrollbar { width: 4px; }
         #active-task-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
         #active-task-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
-        #active-task-list .task-item { flex-shrink: 0; }
-        
-        .task-item { display: flex; flex-direction: column; margin-bottom: 10px; transition: all 0.3s ease; animation: fadeIn 0.4s ease; }
+        .task-item { display: flex; flex-direction: column; margin-bottom: 10px; transition: all 0.3s ease; animation: fadeIn 0.4s ease; flex-shrink: 0; }
         .task-item.animating-out { opacity: 0; transform: scale(0.95); }
         .task-header { display: flex; align-items: center; width: 100%; }
         .task-circle { width: 16px; height: 16px; border: 1.5px solid rgba(255, 255, 255, 0.7); border-radius: 50%; margin-right: 10px; cursor: pointer; flex-shrink: 0; transition: all 0.3s; }
-        .task-circle:hover { background: rgba(255,255,255,0.2); }
         .task-circle.completed { background: #4ADE80; border-color: #4ADE80; box-shadow: 0 0 10px rgba(74, 222, 128, 0.5); }
-        .task-title { font-size: 0.9rem; font-weight: 300; flex-grow: 1; transition: all 0.3s; display: flex; align-items: center; flex-wrap: wrap; cursor: pointer; user-select: none; letter-spacing: 0.3px; }
+        .task-title { font-size: 0.95rem; font-weight: 300; flex-grow: 1; transition: all 0.3s; display: flex; align-items: center; flex-wrap: wrap; cursor: pointer; user-select: none; letter-spacing: 0.3px; }
         .completed .task-title { text-decoration: line-through; opacity: 0.4; }
         
         .countdown-badge { font-size: 0.7rem; font-weight: 400; padding: 2px 7px; border-radius: 20px; margin-left: 6px; letter-spacing: 0.5px; font-family: 'Noto Serif JP', serif; white-space: nowrap; }
@@ -139,219 +155,224 @@
         .badge-urgent { background: rgba(239, 68, 68, 0.9); color: white; }
         
         .task-detail-btn { background: none; border: none; color: white; cursor: pointer; opacity: 0.4; margin-left: 6px; display: inline-flex; align-items: center; transition: transform 0.3s ease; }
-        .task-detail-btn:hover { opacity: 0.8; }
-        .task-detail-btn.open { transform: rotate(180deg); }
         .task-notes { display: none; font-size: 0.82rem; font-weight: 300; opacity: 0.7; margin-left: 26px; margin-top: 5px; padding-left: 8px; border-left: 1px solid rgba(255,255,255,0.3); font-family: 'Noto Serif JP', serif; }
         .task-notes.show { display: block; animation: fadeIn 0.3s ease; }
-        .task-delete-btn { background: none; border: none; color: #ff6b6b; cursor: pointer; opacity: 0.6; transition: opacity 0.2s; font-size: 1.1rem; margin-left: 6px; font-weight: 300; }
-        .add-task-input { background: transparent; border: none; color: white; width: 100%; padding: 4px 0; font-size: 0.82rem; font-weight: 300; outline: none; margin-top: 4px; opacity: 0.6; transition: opacity 0.3s; }
-        .add-task-input::placeholder { color: rgba(255,255,255,0.7); font-weight: 300; }
-        .add-task-input:focus, .add-task-input:hover { opacity: 1; }
+        .task-delete-btn { background: none; border: none; color: #ff6b6b; cursor: pointer; opacity: 0.6; font-size: 1.2rem; margin-left: 6px; font-weight: 300; }
+        .add-task-input { background: transparent; border: none; color: white; width: 100%; padding: 4px 0; font-size: 0.85rem; font-weight: 300; outline: none; margin-top: 4px; opacity: 0.6; transition: opacity 0.3s; }
+        .add-task-input::placeholder { color: rgba(255,255,255,0.7); }
+        .add-task-input:focus { opacity: 1; }
         
         .completed-wrapper { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.15); display: none; }
         .completed-wrapper.visible { display: block; }
-        .completed-header { display: flex; align-items: center; cursor: pointer; opacity: 0.6; font-size: 0.85rem; font-weight: 300; transition: opacity 0.2s; letter-spacing: 1px; }
-        .completed-header:hover { opacity: 0.9; }
+        .completed-header { display: flex; align-items: center; cursor: pointer; opacity: 0.6; font-size: 0.85rem; font-weight: 300; letter-spacing: 1px; }
         .completed-arrow { margin-right: 6px; transition: transform 0.3s ease; display: inline-flex; }
         .completed-arrow.open { transform: rotate(90deg); }
-        .completed-task-list { display: none; margin-top: 8px; max-height: 120px; overflow-y: auto; padding-right: 5px; }
+        .completed-task-list { display: none; margin-top: 8px; max-height: 100px; overflow-y: auto; padding-right: 5px; }
         .completed-task-list.show { display: block; animation: fadeIn 0.3s ease; }
 
-        /* 泡泡區域與邊界留白 */
-        .right-panel { position: relative; width: 330px; height: auto; min-height: 200px; }
+        /* 三顆泡泡區塊 */
+        .bubbles-panel {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
 
         .floating-bubble {
-            position: absolute; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%;
+            position: relative;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.02));
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.4);
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             color: white; padding: 10px;
-            animation: float 4s ease-in-out infinite; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;
+            animation: float 4s ease-in-out infinite; transition: transform 0.3s, box-shadow 0.3s;
+            width: 32%; aspect-ratio: 1/1; max-width: 120px; cursor: pointer;
         }
-        .floating-bubble:hover { transform: scale(1.05) !important; border-color: rgba(255,255,255,0.7); z-index: 10; }
         
-        .floating-bubble strong { font-size: 0.85rem; font-weight: 400; margin-bottom: 2px; letter-spacing: 0.5px; }
-        .floating-bubble .sub { color: rgba(255,255,255,0.8); font-size: 0.72rem; font-family: 'Noto Serif JP', serif; word-break: break-word; }
-        .floating-bubble .val { font-size: 0.9rem; margin: 2px 0; font-weight: 300; word-break: break-word; }
+        .floating-bubble strong { font-size: 0.75rem; font-weight: 400; margin-bottom: 2px; letter-spacing: 0.5px; }
+        .floating-bubble .sub { color: rgba(255,255,255,0.8); font-size: 0.65rem; font-family: 'Noto Serif JP', serif; display: none; }
+        .floating-bubble .val { font-size: 0.85rem; margin: 2px 0; font-weight: 300; }
         .edit-icon { opacity: 0.5; font-size: 0.75rem; cursor: pointer; margin-left: 3px; }
 
-        .b-weather { width: 130px; height: 130px; top: 0%; left: 0%; animation-delay: 0s; }
-        .b-tech { width: 145px; height: 145px; top: 20%; right: 0%; animation-delay: -1.5s; padding: 10px; }
-        .b-fitness { width: 125px; height: 125px; bottom: 0%; left: 8%; animation-delay: -3s; }
+        .b-weather { animation-delay: 0s; }
+        .b-tech { animation-delay: -1.5s; padding: 6px; }
+        .b-fitness { animation-delay: -3s; }
+        #val-fitness-next { font-size: 0.85rem !important; color: #9be7e4; letter-spacing: 0.5px; }
 
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-6px); } 100% { transform: translateY(0px); } }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 行事曆 Agenda：卡片縮小與空氣感增加 */
-        .calendar-card { width: 100%; padding: 22px; }
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
-        .calendar-header h2 { font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; display: flex; align-items: center; }
-        .add-event-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.4); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1rem; font-weight: 300; margin-left: 10px; transition: all 0.2s; }
-        .add-event-btn:hover { background: rgba(255,255,255,0.3); }
-        .auth-section { text-align: center; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 14px; }
-        .google-btn { background: white; color: #333; border: none; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.2s ease; }
-        .agenda-item { display: flex; align-items: center; margin-bottom: 8px; background: rgba(0, 0, 0, 0.12); padding: 10px 14px; border-radius: 12px; transition: transform 0.2s ease; border-left: 3px solid transparent; }
-        .agenda-time { font-size: 0.9rem; font-weight: 400; width: 85px; flex-shrink: 0; border-right: 1px solid rgba(255, 255, 255, 0.2); margin-right: 12px; }
-        .agenda-content { flex-grow: 1; }
-        .agenda-content h4 { font-size: 0.9rem; font-weight: 300; margin-bottom: 2px; color: white; letter-spacing: 0.5px; }
-        .agenda-content p { font-size: 0.78rem; font-weight: 300; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
-
-        /* Fitness Space */
-        .fitness-space { width: 100%; display: flex; flex-direction: column; gap: 16px; }
-        .fit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-        .fit-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.02)); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); border-radius: 18px; padding: 16px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .fit-card h3 { font-size: 1.05rem; font-weight: 400; margin-bottom: 10px; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 6px;}
-        .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: rgba(0,0,0,0.15); border-radius: 8px; margin-bottom: 6px; cursor: pointer; }
-        .menu-name { font-size: 0.88rem; font-weight: 400; }
-        .menu-reps { font-size: 0.75rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
-        .menu-weight { font-size: 0.8rem; font-weight: 300; background: rgba(255,255,255,0.15); padding: 2px 6px; border-radius: 6px; }
-
-        /* Modal UI */
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-overlay.show { display: flex; }
-        .modal-card { background: rgba(25, 30, 35, 0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 22px 18px; width: 400px; max-width: 90%; color: white; box-shadow: 0 20px 50px rgba(0,0,0,0.5); font-weight: 300; }
-        .modal-card h3 { margin-bottom: 16px; text-align: center; font-size: 1.2rem; font-weight: 400; letter-spacing: 1px; }
+        /* --- [左一/左二] Fitness 訓練空間樣式 --- */
+        .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .dash-head h2 { font-size: 1.35rem; font-weight: 400; letter-spacing: 1px; }
+        .add-event-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.4); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.1rem; font-weight: 300; transition: all 0.2s; }
         
-        .fit-input-group { display: flex; gap: 8px; margin-bottom: 10px; }
-        .form-group { margin-bottom: 10px; flex: 1; }
-        .form-group label { display: block; font-size: 0.78rem; margin-bottom: 4px; opacity: 0.7; letter-spacing: 0.5px; }
-        .form-group input, .form-group textarea { width: 100%; padding: 8px 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 8px; font-size: 0.88rem; font-weight: 300; outline: none; font-family: 'Noto Serif JP', serif;}
-        
-        .modal-actions { display: flex; justify-content: flex-end; margin-top: 18px; gap: 8px; }
-        .modal-btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 400; font-size: 0.85rem; letter-spacing: 1px; }
-        .btn-cancel { background: rgba(255,255,255,0.1); color: white; }
-        .btn-save { background: white; color: black; }
-        .btn-delete { background: rgba(239,68,68,0.15); color: #ff6b6b; border: 1px solid rgba(239,68,68,0.4); margin-right: auto; }
-
-        .batch-row { display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); padding: 6px 8px; border-radius: 8px; margin-bottom: 6px; }
-        .batch-input { width: 48px; padding: 5px 4px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); color: white; border-radius: 6px; text-align: center; font-size: 0.85rem; font-family: 'Noto Serif JP', serif; }
-        .batch-input.b-name { flex: 1; width: auto; text-align: left; padding: 5px 8px; }
-        .row-del { background: none; border: none; color: #ff6b6b; cursor: pointer; opacity: 0.6; font-size: 1rem; }
-        .add-row-btn { width: 100%; background: none; border: 1px dashed rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); padding: 6px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; margin-top: 4px; }
-
-        .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-        .dash-head h2 { font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; }
-        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
-        .dash-tile { background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02)); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 130px; }
-        .dash-cap { font-size: 0.75rem; opacity: 0.7; letter-spacing: 0.5px; font-family: 'Noto Serif JP', serif; margin-top: 3px; }
+        .dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .dash-tile { background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 140px; }
+        .dash-cap { font-size: 0.78rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; margin-top: 6px; }
         .dash-big { font-size: 1.8rem; font-weight: 300; color: #9be7e4; line-height: 1.1; letter-spacing: 1px; }
-        .chips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 6px; }
-        .chip { font-size: 0.68rem; padding: 2px 6px; border-radius: 14px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); font-family: 'Noto Serif JP', serif; font-weight: 300; }
-        .w-num { font-size: 1.6rem; font-weight: 300; cursor: pointer; color: #9be7e4; text-decoration: underline dotted; text-underline-offset: 4px; }
-        .w-track { position: relative; width: 100%; height: 4px; background: rgba(255,255,255,0.15); border-radius: 4px; margin: 14px 0 14px; }
-        .w-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #9be7e4; border-radius: 4px; box-shadow: 0 0 8px rgba(155,231,228,0.6); }
-        .w-mark { position: absolute; top: -3px; width: 2px; height: 10px; background: rgba(255,255,255,0.7); }
-        .w-mark span { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; opacity: 0.75; white-space: nowrap; font-family: 'Noto Serif JP', serif; }
-        .lift-row { display: flex; justify-content: space-between; align-items: baseline; width: 100%; padding: 4px 0; font-family: 'Noto Serif JP', serif; font-weight: 300; font-size: 0.85rem; }
-        .lift-row + .lift-row { border-top: 1px solid rgba(255,255,255,0.12); }
-        .lift-row b { font-size: 1.15rem; font-weight: 300; color: #9be7e4; }
-        details.hist { margin-top: 8px; opacity: 0.7; font-family: 'Noto Serif JP', serif; font-size: 0.78rem; font-weight: 300; }
-        details.hist summary { cursor: pointer; }
-        details.hist li { list-style: none; margin-top: 3px; }
-        .row-mv { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; width: 26px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 0.6rem; flex-shrink: 0; }
-
-        .week-row { background: rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 8px 12px; margin-bottom: 6px; }
-        .week-head { display: flex; justify-content: space-between; align-items: center; font-family: 'Noto Serif JP', serif; font-size: 0.8rem; opacity: 0.85; margin-bottom: 4px; }
+        .chips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 8px; }
+        .chip { font-size: 0.7rem; padding: 3px 8px; border-radius: 14px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); font-family: 'Noto Serif JP', serif; }
+        .w-num { font-size: 1.7rem; font-weight: 300; cursor: pointer; color: #9be7e4; text-decoration: underline dotted; text-underline-offset: 4px; }
+        .w-track { position: relative; width: 80%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 5px; margin: 18px 0 14px; }
+        .w-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #9be7e4; border-radius: 5px; box-shadow: 0 0 8px rgba(155,231,228,0.6); }
+        .w-mark { position: absolute; top: -3px; width: 2px; height: 11px; background: rgba(255,255,255,0.8); }
+        .w-mark span { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; opacity: 0.8; font-family: 'Noto Serif JP', serif; }
+        
+        /* Weekly Progress 整併到 Dash 空間 */
+        .weekly-container { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 16px; }
+        .week-row { background: rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
+        .week-head { display: flex; justify-content: space-between; align-items: center; font-family: 'Noto Serif JP', serif; font-size: 0.82rem; opacity: 0.85; margin-bottom: 6px; }
         .week-bar { display: flex; gap: 3px; }
-        .week-seg { flex: 1; height: 30px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; color: rgba(255,255,255,0.35); cursor: pointer; font-family: 'Noto Serif JP', serif; }
+        .week-seg { flex: 1; height: 32px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; color: rgba(255,255,255,0.4); cursor: pointer; font-family: 'Noto Serif JP', serif; }
         .week-seg:first-child { border-radius: 6px 3px 3px 6px; }
         .week-seg:last-child { border-radius: 3px 6px 6px 3px; }
         .week-seg.done { background: rgba(155,231,228,0.25); border-color: #9be7e4; color: #9be7e4; font-weight: 700; }
 
-        .day-title { display: flex; flex-direction: column; line-height: 1.2; }
-        .day-title small { font-size: 0.72rem; opacity: 0.7; font-weight: 300; white-space: nowrap; font-family: 'Noto Serif JP', serif; }
-        .time-block { display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 10px; }
-        .carousel-wrap { position: relative; }
-        .car-btn, .car-dots { display: none; }
+        /* 左二：具體菜單 */
+        .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(0,0,0,0.15); border-radius: 10px; margin-bottom: 8px; cursor: pointer; }
+        .menu-name { font-size: 0.9rem; font-weight: 400; }
+        .menu-reps { font-size: 0.75rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
+        .menu-weight { font-size: 0.85rem; font-weight: 300; background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 8px; }
+        .day-title { display: flex; flex-direction: column; line-height: 1.2; font-size: 1.15rem; font-weight: 400;}
+        .day-title small { font-size: 0.75rem; opacity: 0.7; font-weight: 300; font-family: 'Noto Serif JP', serif; margin-top: 2px;}
 
-        /* 手機版：留出邊框空氣感，調整視覺比例 */
-        @media (max-width: 768px) {
-            .app-container { 
-                padding: 16px 18px 40px; /* 手機邊框左右留白 18px，帶來優雅的呼吸感 */
-                gap: 22px; 
-            }
-            .dashboard-layout { flex-direction: column; gap: 14px; }
-            .hero-card { min-width: 0; width: 100%; padding: 16px 14px; border-radius: 20px; }
-            .time-display { font-size: 4rem; } /* 適當縮小時鐘 */
-            
-            /* 泡泡區域增加上下垂直距離，給予獨立呼吸空間 */
-            .right-panel { 
-                display: flex; 
-                width: 100%; 
-                max-width: none; 
-                height: auto; 
-                min-height: 0; 
-                justify-content: space-between; 
-                gap: 8px; 
-                padding: 10px 4px 6px; /* 加大上下留白 */
-            }
-            .floating-bubble { 
-                position: relative; 
-                top: auto; left: auto; right: auto; bottom: auto; 
-                width: calc((100% - 16px) / 3); 
-                height: auto; 
-                aspect-ratio: 1 / 1; 
-                max-width: 105px; 
-                padding: 6px; 
-            }
-            .floating-bubble strong { font-size: 0.68rem; margin-bottom: 2px; }
-            .floating-bubble .val { font-size: 0.75rem; margin: 2px 0; }
-            .floating-bubble .sub { font-size: 0.58rem; }
-            .b-weather .sub, .b-tech .sub { display: none; }
-            .b-tech .val { font-size: 0.65rem; line-height: 1.2; }
-            #val-fitness-next { font-size: 0.78rem !important; letter-spacing: 0 !important; }
+        /* --- [右一] 行事曆 Agenda --- */
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+        .calendar-header h2 { font-size: 1.35rem; font-weight: 400; letter-spacing: 1px; display: flex; align-items: center; }
+        .auth-section { text-align: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.15); margin-bottom: 16px; }
+        .google-btn { background: white; color: #333; border: none; padding: 10px 20px; border-radius: 20px; font-size: 0.95rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .agenda-item { display: flex; align-items: center; margin-bottom: 10px; background: rgba(0, 0, 0, 0.15); padding: 12px 14px; border-radius: 14px; border-left: 3px solid transparent; }
+        .agenda-time { font-size: 0.95rem; font-weight: 400; width: 90px; flex-shrink: 0; border-right: 1px solid rgba(255, 255, 255, 0.2); margin-right: 14px; }
+        .agenda-content h4 { font-size: 0.95rem; font-weight: 300; margin-bottom: 3px; color: white; }
+        .agenda-content p { font-size: 0.8rem; font-weight: 300; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
 
-            /* 菜單切換 */
-            #program-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; scrollbar-width: none; }
-            #program-carousel::-webkit-scrollbar { display: none; }
-            #program-carousel > .fit-card { flex: 0 0 100%; scroll-snap-align: center; }
-            .car-btn { display: flex; position: absolute; top: 50%; transform: translateY(-50%); z-index: 5; width: 24px; height: 36px; align-items: center; justify-content: center; border-radius: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25); color: white; font-size: 1.2rem; line-height: 1; cursor: pointer; }
-            .car-btn.prev { left: 2px; }
-            .car-btn.next { right: 2px; }
-            .car-dots { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
-            .car-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: all 0.3s; }
-            .car-dot.on { background: #9be7e4; width: 14px; border-radius: 4px; }
-            #program-carousel .fit-card { padding: 14px 24px; }
-        }
+        /* --- [右二] Settings --- */
+        .action-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 14px; border-radius: 12px; cursor: pointer; font-weight: 300; margin-top: 10px; font-size: 1rem; width: 100%; letter-spacing: 1px; }
+        .danger-btn { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #ff6b6b; margin-top: 30px; }
+
+        /* Modal UI 共用 */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-overlay.show { display: flex; }
+        .modal-card { background: rgba(25, 30, 35, 0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 24px 20px; width: 420px; max-width: 90%; color: white; box-shadow: 0 20px 50px rgba(0,0,0,0.5); font-weight: 300; max-height: 85dvh; overflow-y: auto;}
+        .modal-card h3 { margin-bottom: 18px; text-align: center; font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; }
+        .form-group { margin-bottom: 12px; flex: 1; }
+        .form-group label { display: block; font-size: 0.8rem; margin-bottom: 6px; opacity: 0.7; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-size: 0.9rem; outline: none; font-family: 'Noto Serif JP', serif;}
+        .modal-actions { display: flex; justify-content: flex-end; margin-top: 20px; gap: 10px; }
+        .modal-btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 400; font-size: 0.9rem; }
+        .btn-cancel { background: rgba(255,255,255,0.1); color: white; }
+        .btn-save { background: white; color: black; }
+        .btn-delete { background: rgba(239,68,68,0.15); color: #ff6b6b; border: 1px solid rgba(239,68,68,0.4); margin-right: auto; }
+        
+        .batch-row { display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 10px; margin-bottom: 6px; }
+        .batch-input { width: 50px; padding: 6px 4px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); color: white; border-radius: 6px; text-align: center; font-size: 0.9rem; font-family: 'Noto Serif JP', serif; }
+        .batch-input.b-name { flex: 1; width: auto; text-align: left; padding: 6px 8px; }
+        .row-del { background: none; border: none; color: #ff6b6b; font-size: 1.2rem; }
+        .row-mv { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; width: 28px; height: 30px; border-radius: 6px; font-size: 0.65rem; }
+        .add-row-btn { width: 100%; background: none; border: 1px dashed rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); padding: 8px; border-radius: 10px; margin-top: 4px; }
     </style>
 </head>
 <body>
 
-    <!-- 固定背景 -->
     <div class="bg-fixed"></div>
 
-    <!-- 主應用程式內容容器 -->
-    <div class="app-container">
+    <!-- 底部導航拉桿 -->
+    <div class="bottom-nav">
+        <div class="nav-line" onclick="goToScreen(0)" title="訓練菜單"></div>
+        <div class="nav-line" onclick="goToScreen(1)" title="訓練儀表板"></div>
+        <div class="nav-line active" onclick="goToScreen(2)" title="主畫面"></div>
+        <div class="nav-line" onclick="goToScreen(3)" title="行程表"></div>
+        <div class="nav-line" onclick="goToScreen(4)" title="設定"></div>
+    </div>
 
-        <!-- 頂部列：放設定按鈕，隨頁面自然滾動 -->
-        <div class="top-bar">
-            <div class="settings-btn" onclick="toggleSettings()" title="Settings">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    <!-- 橫向滑動主容器 -->
+    <div class="app-slider" id="app-slider">
+        
+        <!-- [左二] Screen 0: 訓練菜單 (垂直捲動) -->
+        <section class="screen" id="screen-0">
+            <div class="content-container">
+                <div class="glass-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
+                        <span class="day-title">Day 1<small>胸＋腿</small></span>
+                        <button class="add-event-btn" onclick="openBatchModal('day1')">📋</button>
+                    </div>
+                    <div class="menu-action" onclick="quickLog('槓鈴臥推', '3', '10', '30')"><div><div class="menu-name">槓鈴臥推</div><div class="menu-reps">3 × 6–10</div></div><div class="menu-weight">30 kg</div></div>
+                    <div class="menu-action" onclick="quickLog('上斜啞鈴臥推', '2', '12', '')"><div><div class="menu-name">上斜啞鈴臥推</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight">依狀態</div></div>
+                    <div class="menu-action" onclick="quickLog('腿推', '3', '12', '80')"><div><div class="menu-name">腿推</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight">80 kg</div></div>
+                    <div class="menu-action" onclick="quickLog('腿屈伸 或 腿後勾', '2', '15', '')"><div><div class="menu-name">腿屈伸 / 腿後勾</div><div class="menu-reps">2 × 10–15</div></div><div class="menu-weight">依狀態</div></div>
+                </div>
+                
+                <div class="glass-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
+                        <span class="day-title">Day 2<small>背＋二頭</small></span>
+                        <button class="add-event-btn" onclick="openBatchModal('day2')">📋</button>
+                    </div>
+                    <div class="menu-action" onclick="quickLog('獨立握把划船機', '3', '12', '')"><div><div class="menu-name">獨立握把划船機</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight">依狀態</div></div>
+                    <div class="menu-action" onclick="quickLog('一般啞鈴二頭彎舉', '2', '12', '8')"><div><div class="menu-name">一般啞鈴二頭彎舉</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight">8 kg</div></div>
+                    <div class="menu-action" onclick="quickLog('槌式彎舉', '2', '12', '')"><div><div class="menu-name">槌式彎舉</div><div class="menu-reps">2 × 10–12</div></div><div class="menu-weight">依狀態</div></div>
+                </div>
+
+                <div class="glass-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
+                        <span class="day-title">Day 3<small>肩＋三頭</small></span>
+                        <button class="add-event-btn" onclick="openBatchModal('day3')">📋</button>
+                    </div>
+                    <div class="menu-action" onclick="quickLog('肩推', '3', '10', '')"><div><div class="menu-name">肩推</div><div class="menu-reps">3 × 8–10</div></div><div class="menu-weight">依狀態</div></div>
+                    <div class="menu-action" onclick="quickLog('側平舉', '3', '15', '')"><div><div class="menu-name">側平舉</div><div class="menu-reps">2-3 × 12–15</div></div><div class="menu-weight">依狀態</div></div>
+                    <div class="menu-action" onclick="quickLog('三頭滑輪下壓', '2', '15', '')"><div><div class="menu-name">三頭滑輪下壓</div><div class="menu-reps">1-2 × 10–15 ⚠️</div></div><div class="menu-weight">輕量起</div></div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="sidebar" id="settings-sidebar">
-            <button class="sidebar-close" onclick="toggleSettings()">×</button>
-            <h3>Settings</h3>
-            
-            <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 10px; font-weight: 300;">健身資料管理 (本機＋Google 雲端備份)</p>
-            <button class="action-btn" onclick="exportFitnessData()">⬇️ 匯出健身資料 (JSON)</button>
-            <button class="action-btn" onclick="document.getElementById('import-file').click()">⬆️ 匯入健身資料</button>
-            <input type="file" id="import-file" style="display:none" accept=".json" onchange="importFitnessData(event)">
-            <button class="action-btn" onclick="cloudBackup(true)">☁️ 立即備份到 Google</button>
-            <button class="action-btn" onclick="cloudRestore(true)">☁️ 從 Google 還原</button>
-            <p id="cloud-status" style="font-size: 0.8rem; opacity: 0.6; margin-top: 10px; font-weight: 300; line-height: 1.5;">登入 Google 後會自動備份與同步</p>
-            
-            <hr style="border-color: rgba(255,255,255,0.1); margin: 30px 0;">
-            
-            <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 10px; font-weight: 300;">Google 系統異常排除</p>
-            <button class="danger-btn" onclick="clearDataAndReload()">登出 / 清除授權快取</button>
-        </div>
+        <!-- [左一] Screen 1: My Training Space (儀表板) -->
+        <section class="screen" id="screen-1">
+            <div class="content-container">
+                <div class="glass-card">
+                    <div class="dash-head">
+                        <h2>My Training Space</h2>
+                        <button class="add-event-btn" onclick="openFitModal()">+</button>
+                    </div>
 
-        <!-- 首屏：儀表板 (時鐘 + 任務 + 泡泡) -->
-        <section class="screen">
-            <div class="dashboard-layout">
+                    <div class="dash-grid">
+                        <div class="dash-tile">
+                            <div id="dash-ring"></div>
+                            <div class="dash-cap">This week</div>
+                        </div>
+
+                        <div class="dash-tile" style="cursor: pointer;" onclick="openNewSession(getNextDay(), new Date().toLocaleDateString('en-CA'))">
+                            <div class="dash-cap" style="margin: 0 0 4px;">Next</div>
+                            <div class="dash-big" id="dash-next-day">Day 1</div>
+                            <div class="dash-cap" id="dash-next-label">胸＋腿</div>
+                            <div class="chips" id="dash-next-chips"></div>
+                        </div>
+                    </div>
+
+                    <!-- 體重獨立一塊 -->
+                    <div class="dash-tile" style="margin-top: 12px; min-height: auto; padding: 20px 16px;">
+                        <div class="w-num" id="display-weight" onclick="updateWeight()">59.0 kg</div>
+                        <div class="w-track" id="dash-w-track"></div>
+                        <div class="dash-cap" style="margin-top: 0;">目標 62 → 66 kg</div>
+                    </div>
+
+                    <!-- Weekly Progress 取代原本的 Best 區域 -->
+                    <div class="weekly-container">
+                        <h3 style="margin-bottom: 12px; font-weight: 400; letter-spacing: 1px; font-size: 1.05rem;">Weekly Progress</h3>
+                        <div id="fitness-logs-container"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- [中間] Screen 2: 主視覺畫面 (Home) -->
+        <section class="screen" id="screen-2">
+            <div class="content-container" style="justify-content: center; min-height: 100%;">
+                
                 <div class="glass-card hero-card" id="main-hero-card">
                     <div class="time-block">
                         <div class="time-display" id="clock">00:00</div>
@@ -363,17 +384,12 @@
                     </div>
                     
                     <div class="tasks-container">
-                        <div id="active-task-list">
-                            <p style="opacity: 0.7; font-weight: 300; text-align: center; margin-top: 15px; font-size: 0.85rem;">同步資料中...</p>
-                        </div>
-                        
+                        <div id="active-task-list"><p style="opacity: 0.7; font-weight: 300; text-align: center; margin-top: 15px; font-size: 0.85rem;">同步資料中...</p></div>
                         <input type="text" id="new-task-input" class="add-task-input" placeholder="+ Press Enter to add task..." onkeypress="handleAddTask(event)" style="display: none;">
 
                         <div id="completed-wrapper" class="completed-wrapper">
                             <div class="completed-header" onclick="toggleCompletedSection()">
-                                <span id="completed-arrow" class="completed-arrow">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                </span>
+                                <span id="completed-arrow" class="completed-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
                                 Completed (<span id="completed-count">0</span>)
                             </div>
                             <div id="completed-task-list" class="completed-task-list task-list"></div>
@@ -381,323 +397,162 @@
                     </div>
                 </div>
 
-                <!-- 右側透明泡泡 -->
-                <div class="right-panel">
-                    <div class="floating-bubble b-weather" id="card-weather">
-                        <strong>Location <span class="edit-icon" onclick="editCity(event)" title="修改城市">✎</span></strong>
-                        <div class="val" id="val-weather-city" style="display:block;">Douliu</div>
-                        <input type="text" id="input-city" class="add-task-input" style="display:none; font-size: 0.85rem; margin-bottom: 4px; padding: 0; text-align: center;" placeholder="輸入城市" onkeypress="saveCity(event)">
+                <!-- 三顆浮動泡泡並排 -->
+                <div class="bubbles-panel">
+                    <div class="floating-bubble b-weather" onclick="goToScreen(2)">
+                        <strong>Location <span class="edit-icon" onclick="editCity(event)">✎</span></strong>
+                        <div class="val" id="val-weather-city">Douliu</div>
+                        <input type="text" id="input-city" class="add-task-input" style="display:none; font-size: 0.85rem; padding: 0; text-align: center;" onkeypress="saveCity(event)">
                         <div class="val" id="val-weather-temp">--°C</div>
-                        <div class="sub" id="sub-weather">氣象資料中...</div>
+                        <div class="sub" id="sub-weather">氣象資料中</div>
                     </div>
 
-                    <div class="floating-bubble b-tech" id="card-news" title="點擊閱讀新聞">
+                    <div class="floating-bubble b-tech" onclick="window.open('https://technews.tw/feed/', '_blank')">
                         <strong>Tech News</strong>
                         <div class="val" id="val-news" style="line-height: 1.2;">連線科技新報...</div>
-                        <div class="sub" id="sub-news">讀取最新頭條中</div>
+                        <div class="sub" id="sub-news">讀取頭條</div>
                     </div>
 
-                    <div class="floating-bubble b-fitness" id="card-fitness" onclick="scrollToFitness()" title="進入健身空間">
+                    <div class="floating-bubble b-fitness" onclick="goToScreen(1)">
                         <strong>Training</strong>
-                        <div class="val" id="val-fitness-next" style="font-size: 0.88rem; font-weight: 400; color: #9be7e4; letter-spacing: 0.5px;">Next</div>
+                        <div class="val" id="val-fitness-next">Next</div>
                         <div class="sub" id="sub-fitness-status">讀取中</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 第二屏：行事曆 Agenda -->
-        <section class="screen" id="agenda-section">
-            <div class="glass-card calendar-card">
-                <div class="calendar-header">
-                    <h2>Agenda <button class="add-event-btn" onclick="openEventModal()" title="新增行程">+</button></h2>
-                    <div id="calendar-date" class="date-display" style="opacity: 0.8; font-size: 0.82rem;"></div>
+        <!-- [右一] Screen 3: 行事曆 Agenda -->
+        <section class="screen" id="screen-3">
+            <div class="content-container">
+                <div class="glass-card calendar-card">
+                    <div class="calendar-header">
+                        <h2>Agenda <button class="add-event-btn" onclick="openEventModal()">+</button></h2>
+                        <div id="calendar-date" class="date-display" style="opacity: 0.8; font-size: 0.82rem;"></div>
+                    </div>
+                    <div class="auth-section" id="auth-container">
+                        <p style="margin-bottom: 10px; font-weight: 300; font-size: 0.85rem;">請登入取得行程</p>
+                        <button type="button" class="google-btn" onclick="handleAuthClick()">Log in with Google</button>
+                    </div>
+                    <div id="agenda-list"></div>
                 </div>
-                <div class="auth-section" id="auth-container">
-                    <p style="margin-bottom: 10px; font-weight: 300; font-size: 0.85rem;">連結 Google 帳號取得任務與行程</p>
-                    <button type="button" class="google-btn" onclick="handleAuthClick()">Log in with Google</button>
-                </div>
-                <div id="agenda-list"></div>
             </div>
         </section>
 
-        <!-- 第三屏：健身空間 -->
-        <section class="screen" id="fitness-section">
-            <div class="fitness-space">
-                <div class="glass-card" style="padding: 18px;">
-                    <div class="dash-head">
-                        <h2>My Training Space</h2>
-                        <button class="add-event-btn" onclick="openFitModal()" title="新增單一紀錄">+</button>
-                    </div>
-
-                    <div class="dash-grid">
-                        <div class="dash-tile">
-                            <div id="dash-ring"></div>
-                            <div class="dash-cap">This week</div>
-                        </div>
-
-                        <div class="dash-tile" style="cursor: pointer;" onclick="openNewSession(getNextDay(), new Date().toLocaleDateString('en-CA'))" title="點擊開始記錄">
-                            <div class="dash-cap" style="margin: 0 0 4px;">Next</div>
-                            <div class="dash-big" id="dash-next-day">Day 1</div>
-                            <div class="dash-cap" id="dash-next-label">胸＋腿</div>
-                            <div class="chips" id="dash-next-chips"></div>
-                        </div>
-
-                        <div class="dash-tile">
-                            <div class="w-num" id="display-weight" onclick="updateWeight()" title="點擊修改體重">59.0 kg</div>
-                            <div class="w-track" id="dash-w-track"></div>
-                            <div class="dash-cap" style="margin-top: 0;">目標 62 → 66 kg</div>
-                        </div>
-
-                        <div class="dash-tile">
-                            <div class="lift-row"><span>臥推</span><b id="best-bench">35</b></div>
-                            <div class="lift-row"><span>腿推</span><b id="best-leg">86</b></div>
-                            <div class="dash-cap">Best (kg)</div>
-                        </div>
-                    </div>
-
-                    <details class="hist">
-                        <summary>過往摘要</summary>
-                        <ul>
-                            <li>9月 三頭 / 肩推 / 臥推 / 腿推 / 下拉 / 划船</li>
-                            <li>7-8月 臥推 / 二頭 / 三頭 / 腿推 / 飛鳥</li>
-                            <li>6月 臥推 / 腿推 / 二頭 / 下拉 / 平舉</li>
-                        </ul>
-                    </details>
-                </div>
-
-                <!-- 三日菜單區 -->
-                <div class="carousel-wrap">
-                    <button class="car-btn prev" onclick="carouselGo(-1)" aria-label="上一天">‹</button>
-                    <button class="car-btn next" onclick="carouselGo(1)" aria-label="下一天">›</button>
-                    <div class="fit-grid" id="program-carousel">
-                        <div class="fit-card">
-                            <h3><span class="day-title">Day 1<small>胸＋腿</small></span><button class="add-event-btn" style="width:28px; height:28px; font-size: 0.85rem;" onclick="openBatchModal('day1')" title="一鍵記錄 Day 1 菜單">📋</button></h3>
-                            <div class="menu-action" onclick="quickLog('槓鈴臥推', '3', '10', '30')">
-                                <div><div class="menu-name">槓鈴臥推</div><div class="menu-reps">3 × 6–10</div></div>
-                                <div class="menu-weight">30 kg</div>
-                            </div>
-                            <div class="menu-action" onclick="quickLog('上斜啞鈴臥推', '2', '12', '')">
-                                <div><div class="menu-name">上斜啞鈴臥推</div><div class="menu-reps">2 × 8–12</div></div>
-                                <div class="menu-weight">依狀態</div>
-                            </div>
-                            <div class="menu-action" onclick="quickLog('腿推', '3', '12', '80')">
-                                <div><div class="menu-name">腿推</div><div class="menu-reps">3 × 8–12</div></div>
-                                <div class="menu-weight">80 kg</div>
-                            </div>
-                            <div class="menu-action" onclick="quickLog('腿屈伸 或 腿後勾', '2', '15', '')">
-                                <div><div class="menu-name">腿屈伸 / 腿後勾</div><div class="menu-reps">2 × 10–15</div></div>
-                                <div class="menu-weight">依狀態</div>
-                            </div>
-                        </div>
-
-                        <div class="fit-card">
-                            <h3><span class="day-title">Day 2<small>背＋二頭</small></span><button class="add-event-btn" style="width:28px; height:28px; font-size: 0.85rem;" onclick="openBatchModal('day2')" title="一鍵記錄 Day 2 菜單">📋</button></h3>
-                            <div class="menu-action" onclick="quickLog('獨立握把划船機', '3', '12', '')">
-                                <div><div class="menu-name">獨立握把划船機</div><div class="menu-reps">3 × 8–12</div></div>
-                                <div class="menu-weight">依狀態</div>
-                            </div>
-                            <div class="menu-action" onclick="quickLog('一般啞鈴二頭彎舉', '2', '12', '8')">
-                                <div><div class="menu-name">一般啞鈴二頭彎舉</div><div class="menu-reps">2 × 8–12</div></div>
-                                <div class="menu-weight">8 kg</div>
-                            </div>
-                            <div class="menu-action" onclick="quickLog('槌式彎舉', '2', '12', '')">
-                                <div><div class="menu-name">槌式彎舉</div><div class="menu-reps">2 × 10–12</div></div>
-                                <div class="menu-weight">依狀態</div>
-                            </div>
-                        </div>
-
-                        <div class="fit-card">
-                            <h3><span class="day-title">Day 3<small>肩＋三頭</small></span><button class="add-event-btn" style="width:28px; height:28px; font-size: 0.85rem;" onclick="openBatchModal('day3')" title="一鍵記錄 Day 3 菜單">📋</button></h3>
-                            <div class="menu-action" onclick="quickLog('肩推', '3', '10', '')">
-                                <div><div class="menu-name">肩推</div><div class="menu-reps">3 × 8–10</div></div>
-                                <div class="menu-weight">依狀態</div>
-                            </div>
-                            <div class="menu-action" onclick="quickLog('側平舉', '3', '15', '')">
-                                <div><div class="menu-name">側平舉</div><div class="menu-reps">2-3 × 12–15</div></div>
-                                <div class="menu-weight">依狀態</div>
-                            </div>
-                            <div class="menu-action" onclick="quickLog('三頭滑輪下壓', '2', '15', '')" title="輕重量起始。若明顯無力請暫停">
-                                <div><div class="menu-name">三頭滑輪下壓</div><div class="menu-reps">1-2 × 10–15 ⚠️</div></div>
-                                <div class="menu-weight">輕量起</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="car-dots" id="car-dots"></div>
-                </div>
-
-                <!-- 每週進度 -->
-                <div class="glass-card" style="padding: 18px;">
-                    <h3 style="margin-bottom: 12px; font-weight: 400; letter-spacing: 1px; font-size: 1.05rem;">Weekly Progress</h3>
-                    <div id="fitness-logs-container"></div>
+        <!-- [右二] Screen 4: Settings -->
+        <section class="screen" id="screen-4">
+            <div class="content-container">
+                <div class="glass-card">
+                    <h2 style="font-size: 1.35rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 12px;">Settings</h2>
+                    
+                    <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 8px; font-weight: 300;">健身資料管理</p>
+                    <button class="action-btn" onclick="exportFitnessData()">⬇️ 匯出本機資料</button>
+                    <button class="action-btn" onclick="document.getElementById('import-file').click()">⬆️ 匯入本機資料</button>
+                    <input type="file" id="import-file" style="display:none" accept=".json" onchange="importFitnessData(event)">
+                    
+                    <div style="margin-top: 24px;"></div>
+                    <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 8px; font-weight: 300;">Google 雲端備份</p>
+                    <button class="action-btn" onclick="cloudBackup(true)">☁️ 備份到 Google</button>
+                    <button class="action-btn" onclick="cloudRestore(true)">☁️ 從 Google 還原</button>
+                    <p id="cloud-status" style="font-size: 0.75rem; opacity: 0.6; margin-top: 8px; font-weight: 300; line-height: 1.4;">登入 Google 後自動同步</p>
+                    
+                    <div style="margin-top: 30px;"></div>
+                    <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 8px; font-weight: 300;">系統除錯</p>
+                    <button class="danger-btn action-btn" onclick="clearDataAndReload()">登出 / 清除授權快取</button>
                 </div>
             </div>
         </section>
 
     </div>
 
-    <!-- Google 行事曆 Modal -->
-    <div class="modal-overlay" id="event-modal">
-        <div class="modal-card">
-            <h3>New Event</h3>
-            <div class="form-group"><label>行程標題</label><input type="text" id="evt-title"></div>
-            <div class="form-group"><label>開始時間</label><input type="datetime-local" id="evt-start"></div>
-            <div class="form-group"><label>結束時間</label><input type="datetime-local" id="evt-end"></div>
-            <div class="modal-actions">
-                <button class="modal-btn btn-cancel" onclick="closeEventModal()">Cancel</button>
-                <button class="modal-btn btn-save" onclick="saveNewEvent()">Save</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 健身單一紀錄 Modal -->
-    <div class="modal-overlay" id="fit-modal">
-        <div class="modal-card">
-            <h3>Log Workout</h3>
-            <div class="fit-input-group">
-                <div class="form-group" style="flex: 1.5;">
-                    <label>動作名稱</label>
-                    <input type="text" id="fit-name" placeholder="例如：槓鈴臥推">
-                </div>
-                <div class="form-group" style="flex: 1;">
-                    <label>📅 訓練日期</label>
-                    <input type="date" id="fit-date">
-                </div>
-            </div>
-            <div class="fit-input-group">
-                <div class="form-group"><label>組數</label><input type="number" id="fit-sets" placeholder="3"></div>
-                <div class="form-group"><label>次數</label><input type="number" id="fit-reps" placeholder="8"></div>
-                <div class="form-group"><label>重量 (kg)</label><input type="number" id="fit-weight" placeholder="30" step="0.5"></div>
-            </div>
-            <div class="form-group">
-                <label>備註 (選填：感受、狀態)</label>
-                <textarea id="fit-note" rows="2" placeholder="例如：狀況不錯，保留兩下餘力"></textarea>
-            </div>
-            <div class="modal-actions">
-                <button class="modal-btn btn-cancel" onclick="closeFitModal()">Cancel</button>
-                <button class="modal-btn btn-save" onclick="saveFitLog()">Save</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 當天紀錄 Modal -->
-    <div class="modal-overlay" id="session-modal">
-        <div class="modal-card" style="width: 560px;">
-            <h3 id="session-title">Log Day 1</h3>
-            <div class="form-group" style="margin-bottom: 14px;">
-                <label>📅 訓練日期</label>
-                <input type="date" id="session-date">
-            </div>
-            <div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div>
-            <button class="add-row-btn" onclick="addSessionRow()">+ 新增動作</button>
-            <div class="modal-actions">
-                <button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除當天</button>
-                <button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button>
-                <button class="modal-btn btn-save" onclick="saveSession()">Save</button>
-            </div>
-        </div>
-    </div>
+    <!-- Modal 區域保留不變 -->
+    <div class="modal-overlay" id="event-modal"><div class="modal-card"><h3>New Event</h3><div class="form-group"><label>行程標題</label><input type="text" id="evt-title"></div><div class="form-group"><label>開始時間</label><input type="datetime-local" id="evt-start"></div><div class="form-group"><label>結束時間</label><input type="datetime-local" id="evt-end"></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeEventModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveNewEvent()">Save</button></div></div></div>
+    
+    <div class="modal-overlay" id="fit-modal"><div class="modal-card"><h3>Log Workout</h3><div class="fit-input-group"><div class="form-group" style="flex: 1.5;"><label>動作名稱</label><input type="text" id="fit-name"></div><div class="form-group" style="flex: 1;"><label>日期</label><input type="date" id="fit-date"></div></div><div class="fit-input-group"><div class="form-group"><label>組</label><input type="number" id="fit-sets"></div><div class="form-group"><label>次</label><input type="number" id="fit-reps"></div><div class="form-group"><label>kg</label><input type="number" id="fit-weight" step="0.5"></div></div><div class="form-group"><label>備註</label><textarea id="fit-note" rows="2"></textarea></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeFitModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveFitLog()">Save</button></div></div></div>
+    
+    <div class="modal-overlay" id="session-modal"><div class="modal-card" style="width: 500px;"><h3 id="session-title">Log Day</h3><div class="form-group" style="margin-bottom: 14px;"><label>日期</label><input type="date" id="session-date"></div><div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div><button class="add-row-btn" onclick="addSessionRow()">+ 新增動作</button><div class="modal-actions"><button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除整天</button><button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveSession()">Save</button></div></div></div>
 
     <script>
-        // --- 0. 側邊欄與 Google 清除 ---
-        document.addEventListener('click', e => {
-            const sb = document.getElementById('settings-sidebar');
-            if (sb.classList.contains('open') && !sb.contains(e.target) && !e.target.closest('.settings-btn')) sb.classList.remove('open');
+        /* === UI Navigation Logic === */
+        const slider = document.getElementById('app-slider');
+        const navLines = document.querySelectorAll('.nav-line');
+        
+        function goToScreen(index) {
+            slider.scrollTo({ left: window.innerWidth * index, behavior: 'smooth' });
+        }
+
+        slider.addEventListener('scroll', () => {
+            const index = Math.round(slider.scrollLeft / window.innerWidth);
+            navLines.forEach((line, i) => line.classList.toggle('active', i === index));
         });
-        function toggleSettings() { document.getElementById('settings-sidebar').classList.toggle('open'); }
+
+        // 初始化時直接跳到第 3 個畫面 (index 2: 主視覺Home)
+        window.addEventListener('load', () => {
+            // 用 setTimeout 確保 CSS 渲染完畢後再定位，無動畫瞬間移動
+            setTimeout(() => {
+                slider.scrollTo({ left: window.innerWidth * 2, behavior: 'instant' });
+            }, 50);
+        });
+
+
+        /* === Data & Logic === */
         function clearDataAndReload() { localStorage.removeItem('google_calendar_token'); location.reload(); }
 
-        // --- 1. 即時資料 API (天氣) ---
+        // 天氣 API
         let userCity = localStorage.getItem('user_city_name') || 'Douliu';
         let userLat = localStorage.getItem('user_city_lat') || '23.709';
         let userLng = localStorage.getItem('user_city_lng') || '120.543';
-
         document.getElementById('val-weather-city').innerText = userCity;
 
         function editCity(e) {
-            e.stopPropagation(); 
-            document.getElementById('val-weather-city').style.display = 'none';
-            const input = document.getElementById('input-city');
-            input.style.display = 'block';
-            input.focus();
+            e.stopPropagation(); document.getElementById('val-weather-city').style.display = 'none';
+            const input = document.getElementById('input-city'); input.style.display = 'block'; input.focus();
         }
-
         async function saveCity(event) {
             if (event.key === 'Enter') {
                 const cityName = event.target.value.trim();
-                if (!cityName) {
-                    document.getElementById('val-weather-city').style.display = 'block';
-                    document.getElementById('input-city').style.display = 'none';
-                    return;
-                }
-                document.getElementById('val-weather-temp').innerText = '搜尋中...';
-                document.getElementById('sub-weather').innerText = '';
+                if (!cityName) { document.getElementById('val-weather-city').style.display = 'block'; document.getElementById('input-city').style.display = 'none'; return; }
+                document.getElementById('val-weather-temp').innerText = '...';
                 try {
                     const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=zh`);
                     const geoData = await geoRes.json();
-                    if(!geoData.results || geoData.results.length === 0) { alert("找不到該城市"); } else {
+                    if(geoData.results) {
                         userLat = geoData.results[0].latitude; userLng = geoData.results[0].longitude; userCity = geoData.results[0].name; 
-                        localStorage.setItem('user_city_name', userCity); localStorage.setItem('user_city_lat', userLat); localStorage.setItem('user_city_lng', userLng); touchLocal(); scheduleBackup();
+                        localStorage.setItem('user_city_name', userCity); localStorage.setItem('user_city_lat', userLat); localStorage.setItem('user_city_lng', userLng); scheduleBackup();
                         document.getElementById('val-weather-city').innerText = userCity; fetchLiveWeather(); 
                     }
-                } catch (e) { alert("地點搜尋失敗"); }
-                document.getElementById('val-weather-city').style.display = 'block';
-                document.getElementById('input-city').style.display = 'none';
-                document.getElementById('input-city').value = '';
+                } catch (e) {}
+                document.getElementById('val-weather-city').style.display = 'block'; document.getElementById('input-city').style.display = 'none'; document.getElementById('input-city').value = '';
             }
         }
-
         async function fetchLiveWeather() {
             try {
                 const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLng}&current=temperature_2m,apparent_temperature&daily=precipitation_probability_max&timezone=Asia/Taipei`);
                 const data = await res.json();
-                const currentTemp = Math.round(data.current.temperature_2m);
-                const apparentTemp = Math.round(data.current.apparent_temperature);
-                const rainProb = data.daily.precipitation_probability_max[0] || 0; 
-                
-                document.getElementById('val-weather-temp').innerHTML = `${currentTemp}°C <span style="font-size: 0.72rem; opacity: 0.8; margin-left: 3px;">降雨 ${rainProb}%</span>`;
-                
-                let advice = "";
-                if (rainProb >= 40) advice = `體感 ${apparentTemp}°C，記得帶傘`;
-                else if (apparentTemp >= 30) advice = `體感 ${apparentTemp}°C，注意防曬`;
-                else if (apparentTemp <= 18) advice = `體感偏涼 (${apparentTemp}°C)，注意保暖`;
-                else advice = `舒適 (${apparentTemp}°C)，適合外出`;
-                document.getElementById('sub-weather').innerText = advice;
-            } catch (e) { console.error("天氣抓取失敗", e); }
+                document.getElementById('val-weather-temp').innerHTML = `${Math.round(data.current.temperature_2m)}°C <span style="font-size: 0.65rem; opacity:0.8;">雨 ${data.daily.precipitation_probability_max[0]}%</span>`;
+            } catch (e) { }
         }
-
+        
         async function fetchLiveNews() {
             try {
-                const rssUrl = encodeURIComponent('https://technews.tw/feed/');
-                const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`);
+                const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://technews.tw/feed/')}`);
                 const data = await res.json();
-                if(data.items && data.items.length > 0) {
-                    const latest = data.items[0];
-                    const shortTitle = latest.title.length > 22 ? latest.title.substring(0, 22) + '...' : latest.title;
-                    document.getElementById('val-news').innerText = shortTitle;
-                    document.getElementById('sub-news').innerText = "點擊閱讀科技新報";
-                    document.getElementById('card-news').onclick = () => window.open(latest.link, '_blank');
-                }
-            } catch (e) { console.error("新聞抓取失敗", e); }
+                if(data.items && data.items.length > 0) { document.getElementById('val-news').innerText = data.items[0].title.substring(0, 20) + '...'; }
+            } catch (e) {}
         }
-
         fetchLiveWeather(); fetchLiveNews();
 
-        // --- 3. 時鐘與滾動 ---
+        // 時鐘
         function updateTime() {
             const now = new Date();
             document.getElementById('clock').textContent = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
             const dateStr = `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][now.getDay()]}, ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
             document.getElementById('date').textContent = dateStr; document.getElementById('calendar-date').textContent = dateStr;
-            const hour = now.getHours(); const greeting = (hour >= 5 && hour < 18) ? "Bonjour" : "Bonsoir";
-            document.getElementById('greeting-text').textContent = `${greeting}, Léon`;
+            document.getElementById('greeting-text').textContent = `${(now.getHours() >= 5 && now.getHours() < 18) ? "Bonjour" : "Bonsoir"}, Léon`;
         }
         setInterval(updateTime, 1000); updateTime();
         
-        function scrollToAgenda() { document.getElementById('agenda-section').scrollIntoView({ behavior: 'smooth' }); }
-        function scrollToFitness() { document.getElementById('fitness-section').scrollIntoView({ behavior: 'smooth' }); }
-
-        // --- 4. 健身空間 (Local Storage & Logic) ---
+        // 健身資料
         let fitnessData = JSON.parse(localStorage.getItem('leon_fitness_data')) || { weight: 59.0, logs: [] };
         if (!localStorage.getItem('leon_local_updated') && fitnessData.logs.length) localStorage.setItem('leon_local_updated', Date.now().toString());
 
@@ -707,617 +562,155 @@
             day3: { title: "Day 3: Shoulders & Triceps", items: [{name: "肩推", sets: 3, reps: 10}, {name: "側平舉", sets: 3, reps: 15}, {name: "三頭滑輪下壓", sets: 2, reps: 15}] }
         };
         const dayLabels = { 1: "胸＋腿", 2: "背＋二頭", 3: "肩＋三頭" };
-        const dayKeywords = {
-            1: ["臥推", "腿推", "腿屈伸", "腿後勾", "飛鳥"],
-            2: ["划船", "二頭", "槌式", "下拉"],
-            3: ["肩推", "側平舉", "三頭", "平舉"]
-        };
-
+        const dayKeywords = { 1: ["臥推", "腿推", "腿屈伸", "腿後勾", "飛鳥"], 2: ["划船", "二頭", "槌式", "下拉"], 3: ["肩推", "側平舉", "三頭", "平舉"] };
         const dateKeyOf = (iso) => new Date(iso).toLocaleDateString('en-CA');
+        function getMonday(d) { d = new Date(d); const day = d.getDay(); d.setDate(d.getDate() - day + (day === 0 ? -6 : 1)); d.setHours(0, 0, 0, 0); return d; }
 
-        function detectDay(names) {
-            let best = 0, bestCount = 0;
-            [1, 2, 3].forEach(d => {
-                const c = names.filter(n => dayKeywords[d].some(kw => n.includes(kw))).length;
-                if (c > bestCount) { bestCount = c; best = d; }
-            });
-            return best;
-        }
-
-        function getNextDay() {
-            if (fitnessData.logs.length === 0) return 1;
-            const latestKey = dateKeyOf(fitnessData.logs[0].date);
-            const names = fitnessData.logs.filter(l => dateKeyOf(l.date) === latestKey).map(l => l.name);
-            const last = detectDay(names);
-            return last === 0 ? 1 : (last % 3) + 1;
-        }
-
+        function detectDay(names) { let best = 0, bestCount = 0; [1, 2, 3].forEach(d => { const c = names.filter(n => dayKeywords[d].some(kw => n.includes(kw))).length; if (c > bestCount) { bestCount = c; best = d; } }); return best; }
+        function getNextDay() { if (fitnessData.logs.length === 0) return 1; const last = detectDay(fitnessData.logs.filter(l => dateKeyOf(l.date) === dateKeyOf(fitnessData.logs[0].date)).map(l => l.name)); return last === 0 ? 1 : (last % 3) + 1; }
         function lastLogFor(name) { return fitnessData.logs.find(l => l.name === name); }
 
         function initFitness() {
             document.getElementById('display-weight').innerText = `${fitnessData.weight} kg`;
             const next = getNextDay();
-            document.getElementById('val-fitness-next').innerText = `Next · Day ${next}`;
-            document.getElementById('sub-fitness-status').innerText = dayLabels[next];
-            renderFitDash();
+            document.getElementById('val-fitness-next').innerText = `Next · D${next}`;
+            
+            const wk = getMonday(new Date()).toLocaleDateString('en-CA');
+            const days = new Set(fitnessData.logs.filter(l => getMonday(new Date(l.date)).toLocaleDateString('en-CA') === wk).map(l => dateKeyOf(l.date)));
+            const C = 2 * Math.PI * 36, arc = C / 3 - 8; let arcs = '';
+            for (let i = 0; i < 3; i++) { const on = i < days.size; arcs += `<circle cx="45" cy="45" r="36" fill="none" stroke-width="8" stroke-linecap="round" stroke="${on ? '#9be7e4' : 'rgba(255,255,255,0.15)'}" stroke-dasharray="${arc} ${C - arc}" transform="rotate(${-90 + i * 120 + 5} 45 45)"/>`; }
+            document.getElementById('dash-ring').innerHTML = `<svg width="90" height="90" viewBox="0 0 90 90">${arcs}<text x="45" y="52" text-anchor="middle" fill="#fff" font-size="22" font-weight="300">${days.size}/3</text></svg>`;
+
+            document.getElementById('dash-next-day').innerText = `Day ${next}`;
+            document.getElementById('dash-next-label').innerText = dayLabels[next] + (days.has(new Date().toLocaleDateString('en-CA')) ? ' ✓' : '');
+            document.getElementById('dash-next-chips').innerHTML = workoutPrograms['day' + next].items.map(i => `<span class="chip">${i.name.substring(0,4)}</span>`).join('');
+
+            const cur = parseFloat(fitnessData.weight) || 0; const pos = v => Math.max(0, Math.min(100, (v - Math.min(55, Math.floor(cur)-1)) / (70 - Math.min(55, Math.floor(cur)-1)) * 100));
+            document.getElementById('dash-w-track').innerHTML = `<div class="w-fill" style="width:${pos(cur)}%"></div><div class="w-mark" style="left:${pos(62)}%"><span>62</span></div><div class="w-mark" style="left:${pos(66)}%"><span>66</span></div>`;
             renderWeeklyFitnessLogs();
         }
 
-        function renderFitDash() {
-            const wk = getMonday(new Date()).toLocaleDateString('en-CA');
-            const days = new Set(fitnessData.logs.filter(l => getMonday(new Date(l.date)).toLocaleDateString('en-CA') === wk).map(l => dateKeyOf(l.date)));
-            const C = 2 * Math.PI * 42, arc = C / 3 - 12;
-            let arcs = '';
-            for (let i = 0; i < 3; i++) {
-                const on = i < days.size;
-                arcs += `<circle cx="55" cy="55" r="42" fill="none" stroke-width="9" stroke-linecap="round" stroke="${on ? '#9be7e4' : 'rgba(255,255,255,0.15)'}" ${on ? 'style="filter: drop-shadow(0 0 6px rgba(155,231,228,0.7));"' : ''} stroke-dasharray="${arc} ${C - arc}" transform="rotate(${-90 + i * 120 + 6} 55 55)"/>`;
-            }
-            document.getElementById('dash-ring').innerHTML = `<svg width="90" height="90" viewBox="0 0 110 110">${arcs}<text x="55" y="63" text-anchor="middle" fill="#fff" font-size="26" font-weight="300">${days.size}/3</text></svg>`;
+        function updateWeight() { const newW = prompt("最新體重 (kg)：", fitnessData.weight); if (newW && !isNaN(newW)) { fitnessData.weight = parseFloat(newW).toFixed(1); saveFitnessData(); initFitness(); } }
 
-            const next = getNextDay();
-            document.getElementById('dash-next-day').innerText = `Day ${next}`;
-            const todayDone = days.has(new Date().toLocaleDateString('en-CA'));
-            document.getElementById('dash-next-label').innerText = dayLabels[next] + (todayDone ? '・今日已記錄 ✓' : '');
-            document.getElementById('dash-next-chips').innerHTML = workoutPrograms['day' + next].items.map(i => `<span class="chip">${i.name}</span>`).join('');
-
-            const cur = parseFloat(fitnessData.weight) || 0;
-            const min = Math.min(55, Math.floor(cur) - 1), max = 70;
-            const pos = v => Math.max(0, Math.min(100, (v - min) / (max - min) * 100));
-            document.getElementById('dash-w-track').innerHTML =
-                `<div class="w-fill" style="width:${pos(cur)}%"></div>` +
-                `<div class="w-mark" style="left:${pos(62)}%"><span>62</span></div>` +
-                `<div class="w-mark" style="left:${pos(66)}%"><span>66</span></div>`;
-
-            const best = (kw, base) => fitnessData.logs.filter(l => l.name.includes(kw)).reduce((m, l) => Math.max(m, parseFloat(l.weight) || 0), base);
-            document.getElementById('best-bench').innerText = best('臥推', 35);
-            document.getElementById('best-leg').innerText = best('腿推', 86);
-        }
-
-        function updateWeight() {
-            const newW = prompt("請輸入最新體重 (kg)：", fitnessData.weight);
-            if (newW && !isNaN(newW)) {
-                fitnessData.weight = parseFloat(newW).toFixed(1);
-                saveFitnessData();
-                initFitness(); 
-            }
-        }
-
-        function openFitModal() {
-            document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA');
-            ['fit-name', 'fit-sets', 'fit-reps', 'fit-weight', 'fit-note'].forEach(id => document.getElementById(id).value = '');
-            document.getElementById('fit-modal').classList.add('show');
-        }
+        /* Modal 動作控制 */
+        function openFitModal() { document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA'); ['fit-name', 'fit-sets', 'fit-reps', 'fit-weight', 'fit-note'].forEach(id => document.getElementById(id).value = ''); document.getElementById('fit-modal').classList.add('show'); }
         function closeFitModal() { document.getElementById('fit-modal').classList.remove('show'); }
-
-        function quickLog(name, sets, reps, weight) {
-            const last = lastLogFor(name);
-            document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA');
-            document.getElementById('fit-name').value = name;
-            document.getElementById('fit-sets').value = last ? last.sets : sets;
-            document.getElementById('fit-reps').value = last ? last.reps : reps;
-            document.getElementById('fit-weight').value = last ? (parseFloat(last.weight) > 0 ? last.weight : '') : weight;
-            document.getElementById('fit-note').value = '';
-            document.getElementById('fit-modal').classList.add('show');
-        }
-
-        function getPreservedTimeIsoString(dateVal) {
-            if (!dateVal) return new Date().toISOString();
-            const now = new Date();
-            const [y, m, d] = dateVal.split('-');
-            now.setFullYear(y, m - 1, d); 
-            return now.toISOString();
-        }
-
-        function sortLogs() { fitnessData.logs.sort((a, b) => new Date(b.date) - new Date(a.date)); }
-
+        function quickLog(name, sets, reps, weight) { const last = lastLogFor(name); document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA'); document.getElementById('fit-name').value = name; document.getElementById('fit-sets').value = last ? last.sets : sets; document.getElementById('fit-reps').value = last ? last.reps : reps; document.getElementById('fit-weight').value = last ? (parseFloat(last.weight) > 0 ? last.weight : '') : weight; document.getElementById('fit-note').value = ''; document.getElementById('fit-modal').classList.add('show'); }
         function saveFitLog() {
-            const dateVal = document.getElementById('fit-date').value;
-            const name = document.getElementById('fit-name').value.trim();
-            const sets = document.getElementById('fit-sets').value.trim();
-            const reps = document.getElementById('fit-reps').value.trim();
-            const weight = document.getElementById('fit-weight').value.trim();
-            const note = document.getElementById('fit-note').value.trim();
-
-            if (!name || !sets || !reps) { alert("請填寫完整的動作、組數與次數"); return; }
-
-            fitnessData.logs.unshift({
-                id: Date.now().toString(),
-                date: getPreservedTimeIsoString(dateVal), 
-                name, sets, reps, weight: weight || "0", note
-            });
-            sortLogs();
-            saveFitnessData();
-            closeFitModal();
-            initFitness();
+            const dateVal = document.getElementById('fit-date').value; const name = document.getElementById('fit-name').value.trim(); const sets = document.getElementById('fit-sets').value; const reps = document.getElementById('fit-reps').value; const weight = document.getElementById('fit-weight').value;
+            if (!name || !sets || !reps) { alert("請填寫動作/組數/次數"); return; }
+            fitnessData.logs.unshift({ id: Date.now().toString(), date: dateVal ? new Date(dateVal).toISOString() : new Date().toISOString(), name, sets, reps, weight: weight || "0", note: document.getElementById('fit-note').value });
+            fitnessData.logs.sort((a, b) => new Date(b.date) - new Date(a.date)); saveFitnessData(); closeFitModal(); initFitness();
         }
 
         let sessionCtx = { mode: 'new', ids: [] };
-
-        function addSessionRow(r) {
-            r = r || {};
-            const row = document.createElement('div');
-            row.className = 'batch-row';
-            row.innerHTML = `
-                <input type="text" class="batch-input b-name" placeholder="動作名稱">
-                <input type="number" class="batch-input b-sets" placeholder="組">
-                <input type="number" class="batch-input b-reps" placeholder="次">
-                <input type="number" class="batch-input b-weight" placeholder="kg" step="0.5">
-                <button class="row-mv" title="上移" onclick="moveRow(this, -1)">▲</button>
-                <button class="row-mv" title="下移" onclick="moveRow(this, 1)">▼</button>
-                <button class="row-del" title="移除" onclick="this.parentElement.remove()">×</button>`;
-            row.querySelector('.b-name').value = r.name || '';
-            row.querySelector('.b-sets').value = r.sets || '';
-            row.querySelector('.b-reps').value = r.reps || '';
-            row.querySelector('.b-weight').value = r.weight || '';
+        function addSessionRow(r = {}) {
+            const row = document.createElement('div'); row.className = 'batch-row';
+            row.innerHTML = `<input type="text" class="batch-input b-name"><input type="number" class="batch-input b-sets"><input type="number" class="batch-input b-reps"><input type="number" class="batch-input b-weight" step="0.5"><button class="row-mv" onclick="moveRow(this, -1)">▲</button><button class="row-mv" onclick="moveRow(this, 1)">▼</button><button class="row-del" onclick="this.parentElement.remove()">×</button>`;
+            row.querySelector('.b-name').value = r.name || ''; row.querySelector('.b-sets').value = r.sets || ''; row.querySelector('.b-reps').value = r.reps || ''; row.querySelector('.b-weight').value = r.weight || '';
             document.getElementById('batch-list').appendChild(row);
         }
-
-        function moveRow(btn, dir) {
-            const row = btn.closest('.batch-row');
-            if (dir < 0 && row.previousElementSibling) row.parentElement.insertBefore(row, row.previousElementSibling);
-            else if (dir > 0 && row.nextElementSibling) row.parentElement.insertBefore(row.nextElementSibling, row);
-        }
-
-        function showSessionModal(title, dateStr, rows, mode, ids) {
-            sessionCtx = { mode, ids };
-            document.getElementById('session-title').innerText = title;
-            document.getElementById('session-date').value = dateStr;
-            document.getElementById('session-delete').style.display = mode === 'edit' ? 'block' : 'none';
-            document.getElementById('batch-list').innerHTML = '';
-            rows.forEach(r => addSessionRow(r));
+        function moveRow(btn, dir) { const row = btn.closest('.batch-row'); if (dir < 0 && row.previousElementSibling) row.parentElement.insertBefore(row, row.previousElementSibling); else if (dir > 0 && row.nextElementSibling) row.parentElement.insertBefore(row.nextElementSibling, row); }
+        
+        function openNewSession(dayNum, dateStr) {
+            sessionCtx = { mode: 'new', ids: [] }; document.getElementById('session-title').innerText = 'Log ' + workoutPrograms['day' + dayNum].title; document.getElementById('session-date').value = dateStr; document.getElementById('session-delete').style.display = 'none'; document.getElementById('batch-list').innerHTML = '';
+            workoutPrograms['day' + dayNum].items.forEach(item => { const last = lastLogFor(item.name); addSessionRow({ name: item.name, sets: last ? last.sets : item.sets, reps: last ? last.reps : item.reps, weight: last && parseFloat(last.weight) > 0 ? last.weight : '' }); });
             document.getElementById('session-modal').classList.add('show');
         }
-
-        function openNewSession(dayNum, dateStr) {
-            const prog = workoutPrograms['day' + dayNum];
-            const rows = prog.items.map(item => {
-                const last = lastLogFor(item.name);
-                return {
-                    name: item.name,
-                    sets: last ? last.sets : item.sets,
-                    reps: last ? last.reps : item.reps,
-                    weight: last && parseFloat(last.weight) > 0 ? last.weight : ''
-                };
-            });
-            showSessionModal('Log ' + prog.title, dateStr, rows, 'new', []);
-        }
         function openBatchModal(dayKey) { openNewSession(parseInt(dayKey.replace('day', '')), new Date().toLocaleDateString('en-CA')); }
-
         function openEditSession(dateKey) {
             const dayLogs = fitnessData.logs.filter(l => dateKeyOf(l.date) === dateKey).sort((a, b) => new Date(a.date) - new Date(b.date));
-            const d = new Date(dateKey + 'T00:00:00');
-            const wd = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()];
-            showSessionModal(`${d.getMonth() + 1}/${d.getDate()} (${wd}) 訓練紀錄`, dateKey,
-                dayLogs.map(l => ({ name: l.name, sets: l.sets, reps: l.reps, weight: parseFloat(l.weight) > 0 ? l.weight : '' })),
-                'edit', dayLogs.map(l => l.id));
+            sessionCtx = { mode: 'edit', ids: dayLogs.map(l=>l.id) }; document.getElementById('session-title').innerText = `${dateKey.substring(5)} 訓練紀錄`; document.getElementById('session-date').value = dateKey; document.getElementById('session-delete').style.display = 'block'; document.getElementById('batch-list').innerHTML = '';
+            dayLogs.forEach(l => addSessionRow({ name: l.name, sets: l.sets, reps: l.reps, weight: parseFloat(l.weight) > 0 ? l.weight : '' })); document.getElementById('session-modal').classList.add('show');
         }
-
         function closeSessionModal() { document.getElementById('session-modal').classList.remove('show'); }
-
         function saveSession() {
-            const dateVal = document.getElementById('session-date').value;
-            if (!dateVal) { alert("請選擇訓練日期"); return; }
-            const rows = [...document.querySelectorAll('#batch-list .batch-row')];
-            const base = new Date(getPreservedTimeIsoString(dateVal)).getTime();
-            const newLogs = [];
-            rows.forEach((row, idx) => {
-                const name = row.querySelector('.b-name').value.trim();
-                const sets = row.querySelector('.b-sets').value;
-                const reps = row.querySelector('.b-reps').value;
-                const weight = row.querySelector('.b-weight').value;
-                if (!name) return;
-                newLogs.push({
-                    id: Date.now().toString() + idx,
-                    date: new Date(base + idx).toISOString(),
-                    name, sets: sets || "1", reps: reps || "1", weight: weight || "0", note: ""
-                });
-            });
-            if (newLogs.length === 0) { alert("至少要有一個動作；若要整天移除請按「刪除當天」"); return; }
-            fitnessData.logs = fitnessData.logs.filter(l => !sessionCtx.ids.includes(l.id)).concat(newLogs);
-            sortLogs();
-            saveFitnessData();
-            closeSessionModal();
-            initFitness();
+            const dateVal = document.getElementById('session-date').value; if (!dateVal) return;
+            const newLogs = [...document.querySelectorAll('#batch-list .batch-row')].map((row, idx) => {
+                const name = row.querySelector('.b-name').value.trim(); if(!name) return null;
+                return { id: Date.now().toString() + idx, date: new Date(new Date(dateVal).getTime() + idx).toISOString(), name, sets: row.querySelector('.b-sets').value || "1", reps: row.querySelector('.b-reps').value || "1", weight: row.querySelector('.b-weight').value || "0", note: "" };
+            }).filter(Boolean);
+            if (newLogs.length === 0) { alert("至少需一個動作"); return; }
+            fitnessData.logs = fitnessData.logs.filter(l => !sessionCtx.ids.includes(l.id)).concat(newLogs); fitnessData.logs.sort((a, b) => new Date(b.date) - new Date(a.date)); saveFitnessData(); closeSessionModal(); initFitness();
         }
-
-        function deleteSession() {
-            if (!confirm("確定要刪除這一天的訓練紀錄嗎？")) return;
-            fitnessData.logs = fitnessData.logs.filter(l => !sessionCtx.ids.includes(l.id));
-            saveFitnessData();
-            closeSessionModal();
-            initFitness();
-        }
-
-        function getMonday(d) {
-            d = new Date(d);
-            const day = d.getDay();
-            d.setDate(d.getDate() - day + (day === 0 ? -6 : 1));
-            d.setHours(0, 0, 0, 0);
-            return d;
-        }
+        function deleteSession() { if(confirm("刪除整天紀錄？")) { fitnessData.logs = fitnessData.logs.filter(l => !sessionCtx.ids.includes(l.id)); saveFitnessData(); closeSessionModal(); initFitness(); } }
 
         function renderWeeklyFitnessLogs() {
-            const container = document.getElementById('fitness-logs-container');
-            const weeks = {};
-            const today = new Date();
-            const todayKey = today.toLocaleDateString('en-CA');
-            const curWeekKey = getMonday(today).toLocaleDateString('en-CA');
-            weeks[curWeekKey] = {};
-
-            fitnessData.logs.forEach(log => {
-                const wk = getMonday(new Date(log.date)).toLocaleDateString('en-CA');
-                const dk = dateKeyOf(log.date);
-                if (!weeks[wk]) weeks[wk] = {};
-                if (!weeks[wk][dk]) weeks[wk][dk] = [];
-                weeks[wk][dk].push(log);
-            });
-
-            const nextDay = getNextDay();
-            const fmt = (d) => `${d.getMonth() + 1}/${d.getDate()}`;
-            let html = '';
-
-            Object.keys(weeks).sort().reverse().slice(0, 6).forEach(wk => {
-                const mon = new Date(wk + 'T00:00:00');
-                const sun = new Date(mon); sun.setDate(sun.getDate() + 6);
-                const dateKeys = Object.keys(weeks[wk]).sort();
-                const total = Math.max(3, dateKeys.length);
-                const emptyDefaultDate = wk === curWeekKey ? todayKey : sun.toLocaleDateString('en-CA');
-
-                let segs = '';
-                for (let i = 0; i < total; i++) {
-                    if (i < dateKeys.length) {
-                        const dk = dateKeys[i];
-                        const logs = weeks[wk][dk];
-                        const d = new Date(dk + 'T00:00:00');
-                        const dayNum = detectDay(logs.map(l => l.name));
-                        const tip = logs.map(l => `${l.name} ${l.sets}×${l.reps}${parseFloat(l.weight) > 0 ? ' @' + l.weight + 'kg' : ''}`).join('\n');
-                        segs += `<div class="week-seg done" title="${tip}" onclick="openEditSession('${dk}')">${dayNum ? 'D' + dayNum + ' · ' : ''}${fmt(d)}</div>`;
-                    } else {
-                        segs += `<div class="week-seg" title="新增一次訓練" onclick="openNewSession(${nextDay}, '${emptyDefaultDate}')">+</div>`;
-                    }
+            const weeks = {}; const curWeekKey = getMonday(new Date()).toLocaleDateString('en-CA'); weeks[curWeekKey] = {};
+            fitnessData.logs.forEach(log => { const wk = getMonday(new Date(log.date)).toLocaleDateString('en-CA'); const dk = dateKeyOf(log.date); if (!weeks[wk]) weeks[wk] = {}; if (!weeks[wk][dk]) weeks[wk][dk] = []; weeks[wk][dk].push(log); });
+            document.getElementById('fitness-logs-container').innerHTML = Object.keys(weeks).sort().reverse().slice(0, 5).map(wk => {
+                const mon = new Date(wk + 'T00:00:00'); const sun = new Date(mon); sun.setDate(sun.getDate() + 6);
+                const keys = Object.keys(weeks[wk]).sort();
+                let segs = ''; for (let i = 0; i < Math.max(3, keys.length); i++) {
+                    if (i < keys.length) { const dk = keys[i]; segs += `<div class="week-seg done" onclick="openEditSession('${dk}')">${detectDay(weeks[wk][dk].map(l=>l.name)) ? 'D'+detectDay(weeks[wk][dk].map(l=>l.name)) : ''} ${dk.substring(5)}</div>`; } 
+                    else { segs += `<div class="week-seg" onclick="openNewSession(${getNextDay()}, '${wk === curWeekKey ? new Date().toLocaleDateString('en-CA') : sun.toLocaleDateString('en-CA')}')">+</div>`; }
                 }
-
-                const count = dateKeys.length;
-                html += `
-                    <div class="week-row">
-                        <div class="week-head"><span>${fmt(mon)} – ${fmt(sun)}</span><span class="week-count ${count >= 3 ? 'full' : ''}">${count} / 3</span></div>
-                        <div class="week-bar">${segs}</div>
-                    </div>`;
-            });
-            container.innerHTML = html;
+                return `<div class="week-row"><div class="week-head"><span>${mon.getMonth()+1}/${mon.getDate()} - ${sun.getMonth()+1}/${sun.getDate()}</span></div><div class="week-bar">${segs}</div></div>`;
+            }).join('');
         }
 
-        function saveFitnessData() { localStorage.setItem('leon_fitness_data', JSON.stringify(fitnessData)); touchLocal(); scheduleBackup(); }
-
-        function exportFitnessData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fitnessData, null, 2));
-            const a = document.createElement('a');
-            a.setAttribute("href", dataStr);
-            a.setAttribute("download", `Leon_Fitness_${new Date().toISOString().split('T')[0]}.json`);
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-        }
-
-        function importFitnessData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (importedData.logs !== undefined) {
-                        fitnessData = importedData;
-                        sortLogs();
-                        saveFitnessData();
-                        initFitness();
-                        alert("訓練資料匯入成功！");
-                    } else { alert("格式錯誤，無法讀取"); }
-                } catch (err) { alert("讀取失敗，請確認檔案格式是否正確"); }
-            };
-            reader.readAsText(file);
-        }
-
+        function saveFitnessData() { localStorage.setItem('leon_fitness_data', JSON.stringify(fitnessData)); localStorage.setItem('leon_local_updated', Date.now().toString()); scheduleBackup(); }
+        function exportFitnessData() { const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fitnessData, null, 2)); a.download = `Leon_Fitness.json`; document.body.appendChild(a); a.click(); a.remove(); }
+        function importFitnessData(event) { const file = event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = e => { try { const d = JSON.parse(e.target.result); if(d.logs) { fitnessData = d; saveFitnessData(); initFitness(); alert("成功"); } } catch(err){} }; reader.readAsText(file); }
         initFitness();
 
-        // --- 手機版：Day 1–3 左右切換 ---
-        const carEl = () => document.getElementById('program-carousel');
-        const carStep = () => { const c = carEl(); return c.children.length > 1 ? c.children[1].offsetLeft - c.children[0].offsetLeft : c.clientWidth; };
-        function carouselGo(dir) { carEl().scrollBy({ left: dir * carStep(), behavior: 'smooth' }); }
-        function updateCarouselDots() {
-            const c = carEl(); const step = carStep() || 1;
-            const i = Math.max(0, Math.min(c.children.length - 1, Math.round(c.scrollLeft / step)));
-            document.getElementById('car-dots').innerHTML = [...Array(c.children.length).keys()].map(k => `<span class="car-dot ${k === i ? 'on' : ''}"></span>`).join('');
-        }
-        carEl().addEventListener('scroll', updateCarouselDots);
-        if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) carEl().scrollLeft = (getNextDay() - 1) * carStep();
-        updateCarouselDots();
-
-        // --- 5. Google 行事曆 / 任務 API ---
-        function getBadgeHTML(dateString, isAgenda = false) {
-            if (!dateString) return '';
-            const target = new Date(dateString); if (isAgenda) target.setDate(target.getDate() - 1); 
-            const now = new Date(); target.setHours(0,0,0,0); now.setHours(0,0,0,0);
-            const diffDays = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
-            if (diffDays === 0) return `<span class="countdown-badge badge-urgent">今日截止</span>`;
-            if (diffDays < 0) return `<span class="countdown-badge badge-urgent">已逾期 ${Math.abs(diffDays)} 天</span>`;
-            if (diffDays <= 3) return `<span class="countdown-badge badge-warning">剩 ${diffDays} 天</span>`;
-            return `<span class="countdown-badge badge-normal">剩 ${diffDays} 天</span>`;
-        }
-
-        const CLIENT_ID = '964246501733-ha9h53h0erug792i03d3jshhctfv3nal.apps.googleusercontent.com'; 
-        const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest', 'https://www.googleapis.com/discovery/v1/apis/tasks/v1/rest'];
+        /* Google API */
+        const CLIENT_ID = '964246501733-ha9h53h0erug792i03d3jshhctfv3nal.apps.googleusercontent.com';
         const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/tasks https://www.googleapis.com/auth/drive.appdata';
+        let tokenClient; let gapiInited = false; let gisInited = false;
 
-        let tokenClient; let gapiInited = false; let gisInited = false; let hasCelebrated = false;
-
-        function gapiLoaded() { gapi.load('client', async () => { await gapi.client.init({ discoveryDocs: DISCOVERY_DOCS }); gapiInited = true; maybeEnableAuth(); }); }
+        function gapiLoaded() { gapi.load('client', async () => { await gapi.client.init({ discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest', 'https://www.googleapis.com/discovery/v1/apis/tasks/v1/rest'] }); gapiInited = true; maybeEnableAuth(); }); }
         function gisLoaded() { tokenClient = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPES, callback: '' }); gisInited = true; maybeEnableAuth(); }
-
-        function maybeEnableAuth() {
-            if (gapiInited && gisInited) {
-                const storedToken = localStorage.getItem('google_calendar_token');
-                if (storedToken) { gapi.client.setToken({ access_token: storedToken }); fetchData(); }
-            }
-        }
-
-        function handleAuthClick() {
-            tokenClient.callback = async (resp) => {
-                if (resp.error !== undefined) throw (resp);
-                gapi.client.setToken({ access_token: resp.access_token });
-                if (!google.accounts.oauth2.hasGrantedAllScopes(resp, 'https://www.googleapis.com/auth/drive.appdata')) setCloudStatus('登入時沒有勾選 Drive 權限，雲端備份無法使用');
-                localStorage.setItem('google_calendar_token', resp.access_token); await fetchData();
-            };
-            if (gapi.client.getToken() === null) tokenClient.requestAccessToken({prompt: 'consent'});
-            else tokenClient.requestAccessToken({prompt: ''});
-        }
-
-        async function fetchData() {
-            document.getElementById('auth-container').style.display = 'none';
-            document.getElementById('new-task-input').style.display = 'block';
-            await Promise.all([fetchTasks(), fetchAllEvents()]);
-            cloudSync();
-        }
-
-        function renderTaskItem(task, isCompleted) {
-            const hasNotes = task.notes ? true : false;
-            const countdownHTML = task.due && !isCompleted ? getBadgeHTML(task.due, false) : '';
-            const svgArrow = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
-            return `
-                <div class="task-item ${isCompleted ? 'completed' : ''}" id="task-${task.id}">
-                    <div class="task-header">
-                        <div class="task-circle ${isCompleted ? 'completed' : ''}" onclick="toggleTaskStatus('${task.id}', '${task.status}')"></div>
-                        <div class="task-title" ondblclick="toggleTaskStatus('${task.id}', '${task.status}')">
-                            ${task.title} ${countdownHTML}
-                            ${hasNotes ? `<button class="task-detail-btn" id="btn-notes-${task.id}" onclick="toggleNotes('${task.id}')">${svgArrow}</button>` : ''}
-                        </div>
-                        <button class="task-delete-btn" onclick="deleteTask('${task.id}')" title="Delete">×</button>
-                    </div>
-                    ${hasNotes ? `<div class="task-notes" id="notes-${task.id}">${task.notes.replace(/\n/g, '<br>')}</div>` : ''}
-                </div>
-            `;
-        }
+        function maybeEnableAuth() { if (gapiInited && gisInited) { const t = localStorage.getItem('google_calendar_token'); if (t) { gapi.client.setToken({ access_token: t }); fetchData(); } } }
+        function handleAuthClick() { tokenClient.callback = async (resp) => { if (resp.error) return; gapi.client.setToken({ access_token: resp.access_token }); localStorage.setItem('google_calendar_token', resp.access_token); await fetchData(); }; if (gapi.client.getToken() === null) tokenClient.requestAccessToken({prompt: 'consent'}); else tokenClient.requestAccessToken({prompt: ''}); }
+        
+        async function fetchData() { document.getElementById('auth-container').style.display = 'none'; document.getElementById('new-task-input').style.display = 'block'; await Promise.all([fetchTasks(), fetchAllEvents()]); cloudSync(); }
 
         async function fetchTasks() {
-            const activeContainer = document.getElementById('active-task-list');
-            const completedContainer = document.getElementById('completed-task-list');
-            const completedWrapper = document.getElementById('completed-wrapper');
-            const countLabel = document.getElementById('completed-count');
-            const heroCard = document.getElementById('main-hero-card');
-            
             try {
                 const res = await gapi.client.tasks.tasks.list({ tasklist: '@default', showHidden: false });
                 let tasks = res.result.items || [];
-                tasks.sort((a, b) => {
-                    if (a.status === 'completed' && b.status !== 'completed') return 1;
-                    if (a.status !== 'completed' && b.status === 'completed') return -1;
-                    if (a.status === 'needsAction' && b.status === 'needsAction') {
-                        const getDueScore = (t) => { if (!t.due) return 9999; const target = new Date(t.due); const now = new Date(); target.setHours(0,0,0,0); now.setHours(0,0,0,0); return Math.ceil((target - now) / (1000 * 60 * 60 * 24)); };
-                        return getDueScore(a) - getDueScore(b);
-                    } return 0;
-                });
-
-                activeContainer.innerHTML = ''; completedContainer.innerHTML = '';
-                let activeCount = 0; let completedCount = 0;
+                tasks.sort((a, b) => (a.status === 'completed' ? 1 : 0) - (b.status === 'completed' ? 1 : 0));
                 
-                tasks.forEach(task => {
-                    if (task.status === 'completed') { completedContainer.innerHTML += renderTaskItem(task, true); completedCount++; } 
-                    else {
-                        activeContainer.innerHTML += renderTaskItem(task, false);
-                        activeCount++;
-                    }
+                let aHTML = '', cHTML = '', cCount = 0;
+                tasks.forEach(t => { 
+                    const html = `<div class="task-item ${t.status === 'completed' ? 'completed' : ''}" id="task-${t.id}"><div class="task-header"><div class="task-circle ${t.status === 'completed' ? 'completed' : ''}" onclick="toggleTaskStatus('${t.id}', '${t.status}')"></div><div class="task-title" ondblclick="toggleTaskStatus('${t.id}', '${t.status}')">${t.title}</div><button class="task-delete-btn" onclick="deleteTask('${t.id}')">×</button></div></div>`;
+                    if(t.status === 'completed') { cHTML += html; cCount++; } else { aHTML += html; }
                 });
-
-                if (activeCount === 0 && completedCount > 0) {
-                    activeContainer.innerHTML = '<div style="display: flex; height: 100%; align-items: center; justify-content: center;"><p style="opacity: 0.9; font-size: 0.9rem; font-weight: 300; letter-spacing: 1px;">All Focus Completed.</p></div>';
-                    if (!hasCelebrated) { setTimeout(() => { heroCard.classList.add('breathe-glow'); setTimeout(() => heroCard.classList.remove('breathe-glow'), 2500); }, 150); hasCelebrated = true; }
-                } else {
-                    hasCelebrated = false;
-                    if (activeCount === 0 && completedCount === 0) { activeContainer.innerHTML = '<div style="display: flex; height: 100%; align-items: center; justify-content: center;"><p style="opacity: 0.8; font-weight: 300; letter-spacing: 1px; font-size: 0.85rem;">目前沒有任務，去享受專注吧！</p></div>'; }
-                }
-
-                if (completedCount > 0) { completedWrapper.classList.add('visible'); countLabel.textContent = completedCount; } 
-                else { completedWrapper.classList.remove('visible'); }
-            } catch (err) { console.error(err); activeContainer.innerHTML = '<p>⚠️ 讀取失敗，請開啟左下角設定清除快取。</p>'; }
+                
+                document.getElementById('active-task-list').innerHTML = aHTML || '<p style="opacity:0.7; font-size: 0.85rem; text-align: center; margin-top: 15px;">All Focus Completed.</p>';
+                document.getElementById('completed-task-list').innerHTML = cHTML;
+                document.getElementById('completed-count').textContent = cCount;
+                document.getElementById('completed-wrapper').classList.toggle('visible', cCount > 0);
+            } catch (err) {}
         }
-
-        async function toggleTaskStatus(taskId, currentStatus) {
-            const item = document.getElementById(`task-${taskId}`); item.classList.add('animating-out'); 
-            const newStatus = currentStatus === 'completed' ? 'needsAction' : 'completed';
-            try { await gapi.client.tasks.tasks.patch({ tasklist: '@default', task: taskId, resource: { status: newStatus } }); setTimeout(() => { fetchTasks(); }, 300); } 
-            catch (err) { alert('狀態更新失敗'); item.classList.remove('animating-out'); }
-        }
-
-        function toggleCompletedSection() {
-            const list = document.getElementById('completed-task-list'); const arrow = document.getElementById('completed-arrow');
-            list.classList.toggle('show'); arrow.classList.toggle('open');
-        }
-
-        function toggleNotes(taskId) {
-            const notesDiv = document.getElementById(`notes-${taskId}`); const btn = document.getElementById(`btn-notes-${taskId}`);
-            notesDiv.classList.toggle('show'); btn.classList.toggle('open');
-        }
-
-        async function handleAddTask(event) {
-            if (event.key === 'Enter') {
-                const input = event.target; const title = input.value.trim(); if (!title) return;
-                input.disabled = true; input.placeholder = "Saving...";
-                try { await gapi.client.tasks.tasks.insert({ tasklist: '@default', resource: { title: title } }); input.value = ''; fetchTasks(); } 
-                catch (err) { alert('新增失敗'); }
-                input.disabled = false; input.placeholder = "+ Press Enter to add task..."; input.focus();
-            }
-        }
-
-        async function deleteTask(taskId) {
-            if(!confirm("確定要刪除嗎？")) return;
-            const item = document.getElementById(`task-${taskId}`); item.classList.add('animating-out');
-            try { await gapi.client.tasks.tasks.delete({ tasklist: '@default', task: taskId }); setTimeout(() => { fetchTasks(); }, 300); }
-            catch (err) { alert('刪除失敗'); item.classList.remove('animating-out'); }
-        }
-
-        let calendarColors = {};
+        async function toggleTaskStatus(id, s) { document.getElementById(`task-${id}`).classList.add('animating-out'); await gapi.client.tasks.tasks.patch({ tasklist: '@default', task: id, resource: { status: s === 'completed' ? 'needsAction' : 'completed' } }); setTimeout(fetchTasks, 300); }
+        async function handleAddTask(e) { if (e.key === 'Enter' && e.target.value.trim()) { const v = e.target.value.trim(); e.target.value = ''; await gapi.client.tasks.tasks.insert({ tasklist: '@default', resource: { title: v } }); fetchTasks(); } }
+        async function deleteTask(id) { if(confirm("刪除？")) { document.getElementById(`task-${id}`).classList.add('animating-out'); await gapi.client.tasks.tasks.delete({ tasklist: '@default', task: id }); setTimeout(fetchTasks, 300); } }
+        function toggleCompletedSection() { document.getElementById('completed-task-list').classList.toggle('show'); document.getElementById('completed-arrow').classList.toggle('open'); }
 
         async function fetchAllEvents() {
-            const agendaList = document.getElementById('agenda-list');
             try {
-                const startOfDay = new Date(); startOfDay.setHours(0, 0, 0, 0); const endOfDay = new Date(); endOfDay.setHours(23, 59, 59, 999);
-                const calListRes = await gapi.client.calendar.calendarList.list(); const calendars = calListRes.result.items;
-                calendars.forEach(c => { calendarColors[c.id] = c.backgroundColor; });
-                const eventPromises = calendars.map(cal => {
-                    return gapi.client.calendar.events.list({
-                        calendarId: cal.id, timeMin: startOfDay.toISOString(), timeMax: endOfDay.toISOString(),
-                        timeZone: 'Asia/Taipei', showDeleted: false, singleEvents: true, orderBy: 'startTime',
-                    }).then(res => {
-                        let events = res.result.items || []; events.forEach(e => e.colorCode = calendarColors[cal.id]); return events;
-                    }).catch(err => []);
-                });
-
-                let allEvents = (await Promise.all(eventPromises)).flat();
-                if (allEvents.length === 0) { agendaList.innerHTML = '<p style="text-align: center; opacity: 0.7; font-weight: 300; font-size: 0.85rem;">今天沒有安排行程</p>'; return; }
-
-                allEvents.sort((a, b) => new Date(a.start.dateTime || a.start.date) - new Date(b.start.dateTime || b.start.date));
-                agendaList.innerHTML = '';
-
-                allEvents.forEach(event => {
-                    const startData = event.start.dateTime || event.start.date; const endData = event.end.dateTime || event.end.date; if (!startData) return; 
-                    const isAllDay = event.start.date !== undefined; let timeString = isAllDay ? '全天行程' : ''; let agendaCountdownHTML = '';
-                    if (!isAllDay) { const dateObj = new Date(startData); timeString = String(dateObj.getHours()).padStart(2, '0') + ':' + String(dateObj.getMinutes()).padStart(2, '0'); }
-                    if (endData) {
-                        const endDate = new Date(endData); if (isAllDay) endDate.setDate(endDate.getDate() - 1);
-                        const startDate = new Date(startData); startDate.setHours(0,0,0,0); const endDateMidnight = new Date(endDate); endDateMidnight.setHours(0,0,0,0);
-                        if (isAllDay || endDateMidnight.getTime() > startDate.getTime()) { agendaCountdownHTML = getBadgeHTML(event.end.date || event.end.dateTime, isAllDay); }
-                    }
-                    const borderColor = event.colorCode || '#ffffff';
-                    agendaList.innerHTML += `
-                        <div class="agenda-item" style="border-left-color: ${borderColor}; box-shadow: -4px 0 10px -5px ${borderColor};">
-                            <div class="agenda-time">${timeString}</div>
-                            <div class="agenda-content"><h4>${event.summary}</h4>${event.description ? `<p>${event.description}</p>` : ''}</div>
-                            <div style="margin-left: 10px; flex-shrink: 0;">${agendaCountdownHTML}</div>
-                        </div>
-                    `;
-                });
-            } catch (err) { console.error(err); }
+                const s = new Date(); s.setHours(0,0,0,0); const e = new Date(); e.setHours(23,59,59,999);
+                const cals = (await gapi.client.calendar.calendarList.list()).result.items;
+                let events = (await Promise.all(cals.map(cal => gapi.client.calendar.events.list({ calendarId: cal.id, timeMin: s.toISOString(), timeMax: e.toISOString(), singleEvents: true }).then(r => r.result.items.map(ev => ({...ev, colorCode: cal.backgroundColor}))).catch(()=>[])))).flat();
+                events.sort((a, b) => new Date(a.start.dateTime || a.start.date) - new Date(b.start.dateTime || b.start.date));
+                document.getElementById('agenda-list').innerHTML = events.length ? events.map(ev => `<div class="agenda-item" style="border-left-color: ${ev.colorCode};"><div class="agenda-time">${ev.start.dateTime ? new Date(ev.start.dateTime).toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit'}) : '全天'}</div><div class="agenda-content"><h4>${ev.summary}</h4></div></div>`).join('') : '<p style="text-align:center; opacity:0.7; font-size:0.85rem;">今天無行程</p>';
+            } catch (err) {}
         }
-
         function openEventModal() { document.getElementById('event-modal').classList.add('show'); }
         function closeEventModal() { document.getElementById('event-modal').classList.remove('show'); }
-        
-        async function saveNewEvent() {
-            const title = document.getElementById('evt-title').value; const startStr = document.getElementById('evt-start').value; const endStr = document.getElementById('evt-end').value;
-            if (!title || !startStr || !endStr) { alert("請填寫完整資訊"); return; }
-            const event = { summary: title, start: { dateTime: new Date(startStr).toISOString(), timeZone: 'Asia/Taipei' }, end: { dateTime: new Date(endStr).toISOString(), timeZone: 'Asia/Taipei' } };
-            try { await gapi.client.calendar.events.insert({ calendarId: 'primary', resource: event }); closeEventModal(); fetchAllEvents(); document.getElementById('evt-title').value = ''; } 
-            catch (err) { alert('新增行程失敗'); }
-        }
+        async function saveNewEvent() { const title = document.getElementById('evt-title').value, start = document.getElementById('evt-start').value, end = document.getElementById('evt-end').value; if(title && start && end) { await gapi.client.calendar.events.insert({ calendarId: 'primary', resource: { summary: title, start: { dateTime: new Date(start).toISOString() }, end: { dateTime: new Date(end).toISOString() } } }); closeEventModal(); fetchAllEvents(); } }
 
-        // --- 6. Google Drive 雲端備份 ---
-        const BACKUP_NAME = 'leon_dashboard_backup.json';
-        let backupTimer = null;
-        function touchLocal() { localStorage.setItem('leon_local_updated', Date.now().toString()); }
-        function setCloudStatus(msg) { const el = document.getElementById('cloud-status'); if (el) el.innerText = msg; }
+        /* Drive Backup */
+        const BACKUP_NAME = 'leon_dashboard_backup.json'; let backupTimer = null;
         function cloudReady() { return typeof gapi !== 'undefined' && gapi.client && gapi.client.getToken && gapi.client.getToken(); }
-        function scheduleBackup() { if (!cloudReady()) return; clearTimeout(backupTimer); backupTimer = setTimeout(() => cloudBackup(false), 3000); }
-        function buildBackup() {
-            return { version: 1, updatedAt: parseInt(localStorage.getItem('leon_local_updated') || '0') || Date.now(), fitnessData, settings: { city: userCity, lat: userLat, lng: userLng } };
-        }
-        function cloudErrorMsg(err) {
-            const e = err && err.result && err.result.error;
-            const reason = (e && e.errors && e.errors[0] && e.errors[0].reason) || '';
-            const code = (err && err.status) || (e && e.code);
-            const text = (e && e.message) || '';
-            if (code === 401) return '登入已過期：請重新按「Log in with Google」';
-            if (reason === 'accessNotConfigured' || /has not been used|is disabled/i.test(text)) return 'Drive API 尚未在這個專案啟用或還沒生效：到 Google Cloud Console 的 API 程式庫啟用 Google Drive API，等 2–3 分鐘後再試';
-            if (reason === 'insufficientPermissions' || /insufficient/i.test(text)) return '登入時沒有同意 Drive 權限：請登出後重新登入並勾選';
-            if (code === 403) return `Google 拒絕存取 (403${reason ? ': ' + reason : ''})。${text.slice(0, 80)}`;
-            return `雲端備份失敗${code ? ' (' + code + ')' : ''} ${text.slice(0, 80)}`;
-        }
-        async function findBackupFile() {
-            const res = await gapi.client.request({ path: 'https://www.googleapis.com/drive/v3/files', params: { spaces: 'appDataFolder', q: `name='${BACKUP_NAME}'`, fields: 'files(id,name)' } });
-            return ((res.result && res.result.files) || [])[0] || null;
-        }
-        async function readBackup(id) {
-            const res = await gapi.client.request({ path: `https://www.googleapis.com/drive/v3/files/${id}`, params: { alt: 'media' } });
-            return (res.result && typeof res.result === 'object') ? res.result : JSON.parse(res.body);
-        }
-        async function writeBackup(existingId) {
-            const data = JSON.stringify(buildBackup());
-            if (existingId) {
-                await gapi.client.request({ path: `https://www.googleapis.com/upload/drive/v3/files/${existingId}`, method: 'PATCH', params: { uploadType: 'media' }, headers: { 'Content-Type': 'application/json' }, body: data });
-            } else {
-                const b = 'leonbackup';
-                const body = `--${b}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify({ name: BACKUP_NAME, parents: ['appDataFolder'] })}\r\n--${b}\r\nContent-Type: application/json\r\n\r\n${data}\r\n--${b}--`;
-                await gapi.client.request({ path: 'https://www.googleapis.com/upload/drive/v3/files', method: 'POST', params: { uploadType: 'multipart' }, headers: { 'Content-Type': `multipart/related; boundary=${b}` }, body });
-            }
-        }
-        async function cloudBackup(manual) {
-            if (!cloudReady()) { if (manual) alert('請先登入 Google'); return; }
-            try {
-                setCloudStatus('備份中…');
-                const f = await findBackupFile();
-                await writeBackup(f && f.id);
-                setCloudStatus('已備份 ' + new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }));
-                if (manual) alert('已備份到 Google');
-            } catch (err) { console.error(err); setCloudStatus(cloudErrorMsg(err)); if (manual) alert(cloudErrorMsg(err)); }
-        }
-        function applyBackup(b) {
-            if (!b || !b.fitnessData) return false;
-            fitnessData = b.fitnessData; if (!fitnessData.logs) fitnessData.logs = [];
-            sortLogs();
-            localStorage.setItem('leon_fitness_data', JSON.stringify(fitnessData));
-            if (b.settings && b.settings.city) {
-                userCity = b.settings.city; userLat = b.settings.lat; userLng = b.settings.lng;
-                localStorage.setItem('user_city_name', userCity); localStorage.setItem('user_city_lat', userLat); localStorage.setItem('user_city_lng', userLng);
-                document.getElementById('val-weather-city').innerText = userCity; fetchLiveWeather();
-            }
-            localStorage.setItem('leon_local_updated', String(b.updatedAt || Date.now()));
-            initFitness();
-            return true;
-        }
-        async function cloudRestore(manual) {
-            if (!cloudReady()) { if (manual) alert('請先登入 Google'); return; }
-            try {
-                const f = await findBackupFile();
-                if (!f) { setCloudStatus('雲端還沒有備份'); if (manual) alert('雲端還沒有備份'); return; }
-                if (manual && !confirm('用雲端備份覆蓋目前本機的健身資料與設定？')) return;
-                applyBackup(await readBackup(f.id));
-                setCloudStatus('已從雲端還原');
-            } catch (err) { console.error(err); setCloudStatus(cloudErrorMsg(err)); if (manual) alert(cloudErrorMsg(err)); }
-        }
-        async function cloudSync() {
-            try {
-                const f = await findBackupFile();
-                const localTs = parseInt(localStorage.getItem('leon_local_updated') || '0');
-                if (!f) { if (fitnessData.logs.length) await cloudBackup(false); return; }
-                const cloud = await readBackup(f.id);
-                const cloudTs = cloud.updatedAt || 0;
-                if (cloudTs > localTs) { applyBackup(cloud); setCloudStatus('已同步雲端最新資料'); }
-                else if (localTs > cloudTs) { await writeBackup(f.id); setCloudStatus('已備份'); }
-                else setCloudStatus('已與雲端同步');
-            } catch (err) { console.error(err); setCloudStatus(cloudErrorMsg(err)); }
-        }
+        function scheduleBackup() { if (cloudReady()) { clearTimeout(backupTimer); backupTimer = setTimeout(() => cloudBackup(false), 3000); } }
+        async function cloudBackup(manual) { if(!cloudReady()){if(manual)alert('請先登入');return;} try{ const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; const data = JSON.stringify({updatedAt: parseInt(localStorage.getItem('leon_local_updated')||'0'), fitnessData, settings:{city:userCity,lat:userLat,lng:userLng}}); if(f) await gapi.client.request({path:`https://www.googleapis.com/upload/drive/v3/files/${f.id}`, method:'PATCH', params:{uploadType:'media'}, body:data}); else await gapi.client.request({path:'https://www.googleapis.com/upload/drive/v3/files', method:'POST', params:{uploadType:'multipart'}, headers:{'Content-Type':'multipart/related; boundary=bnd'}, body:`--bnd\r\nContent-Type: application/json\r\n\r\n{"name":"${BACKUP_NAME}","parents":["appDataFolder"]}\r\n--bnd\r\nContent-Type: application/json\r\n\r\n${data}\r\n--bnd--`}); document.getElementById('cloud-status').innerText = '已備份'; if(manual)alert('備份成功'); }catch(e){document.getElementById('cloud-status').innerText = '備份失敗';} }
+        async function cloudRestore(manual) { if(!cloudReady()){if(manual)alert('請先登入');return;} try{ const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; if(!f){if(manual)alert('無雲端備份');return;} const d = await gapi.client.request({path:`https://www.googleapis.com/drive/v3/files/${f.id}`, params:{alt:'media'}}); const b = typeof d.result === 'object' ? d.result : JSON.parse(d.body); fitnessData = b.fitnessData; localStorage.setItem('leon_fitness_data', JSON.stringify(fitnessData)); initFitness(); document.getElementById('cloud-status').innerText = '已還原'; }catch(e){document.getElementById('cloud-status').innerText = '還原失敗';} }
+        async function cloudSync() { try { const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; if(!f) { if(fitnessData.logs.length) cloudBackup(false); return; } const d = await gapi.client.request({path:`https://www.googleapis.com/drive/v3/files/${f.id}`, params:{alt:'media'}}); const cloud = typeof d.result === 'object' ? d.result : JSON.parse(d.body); const localTs = parseInt(localStorage.getItem('leon_local_updated')||'0'); if((cloud.updatedAt||0) > localTs) cloudRestore(false); else if(localTs > (cloud.updatedAt||0)) cloudBackup(false); else document.getElementById('cloud-status').innerText = '已同步'; } catch(e){} }
 
         window.onload = () => { gapiLoaded(); gisLoaded(); };
-        if ('serviceWorker' in navigator && location.protocol.startsWith('http')) { navigator.serviceWorker.register('sw.js').catch(() => {}); }
     </script>
 </body>
 </html>
