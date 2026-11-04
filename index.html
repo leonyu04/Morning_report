@@ -28,7 +28,7 @@
         .app-slider { display: flex; width: 100vw; height: 100dvh; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .app-slider::-webkit-scrollbar { display: none; }
 
-        .screen { flex: 0 0 100vw; width: 100vw; height: 100%; overflow-y: auto; overflow-x: hidden; scroll-snap-align: center; scroll-snap-stop: always; padding: calc(env(safe-area-inset-top) + 40px) 36px calc(env(safe-area-inset-bottom) + 120px); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; scrollbar-width: none; position: relative; }
+        .screen { flex: 0 0 100vw; width: 100vw; height: 100%; overflow-y: auto; overflow-x: hidden; scroll-snap-align: center; scroll-snap-stop: always; padding: calc(env(safe-area-inset-top) + 40px) 36px calc(env(safe-area-inset-bottom) + 120px); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; scrollbar-width: none; position: relative; scroll-behavior: smooth; }
         .screen::-webkit-scrollbar { display: none; }
         .content-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
 
@@ -43,8 +43,8 @@
         .global-fab { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 95px); right: 28px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25); color: white; font-size: 1.6rem; font-weight: 300; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.25); cursor: pointer; z-index: 1000; opacity: 0; pointer-events: none; transform: scale(0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .global-fab.show { opacity: 1; pointer-events: auto; transform: scale(1); }
 
-        /* 更霧、更有質感的玻璃卡片 */
-        .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.005)); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); border-top: 1px solid rgba(255, 255, 255, 0.12); border-left: 1px solid rgba(255, 255, 255, 0.12); border-bottom: 1px solid rgba(255, 255, 255, 0.03); border-right: 1px solid rgba(255, 255, 255, 0.03); border-radius: 24px; box-shadow: 0 12px 35px 0 rgba(0, 0, 0, 0.2); padding: 22px 20px; width: 100%; }
+        /* 更理想的半透明度：通透且帶有更重的毛玻璃霧化，確保字體清晰 */
+        .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.005)); backdrop-filter: blur(26px); -webkit-backdrop-filter: blur(26px); border-top: 1px solid rgba(255, 255, 255, 0.14); border-left: 1px solid rgba(255, 255, 255, 0.14); border-bottom: 1px solid rgba(255, 255, 255, 0.03); border-right: 1px solid rgba(255, 255, 255, 0.03); border-radius: 24px; box-shadow: 0 12px 35px 0 rgba(0, 0, 0, 0.25); padding: 22px 20px; width: 100%; }
         
         /* --- Screen 0: Zen Focus 番茄鐘 --- */
         .zen-ring { width: 190px; height: 190px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.25); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 25px auto; cursor: pointer; transition: all 0.3s ease; background: rgba(255,255,255,0.02); }
@@ -52,37 +52,36 @@
         .zen-time { font-size: 3.2rem; font-weight: 300; letter-spacing: 2px; line-height: 1; }
         .zen-cap { font-size: 0.75rem; opacity: 0.6; font-family: 'Noto Serif JP', serif; margin-top: 8px; letter-spacing: 1px; }
 
-        /* --- Screen 1: 健身專屬頁面 (上中下還原排版) --- */
+        /* --- Screen 1: 健身專屬頁面 --- */
         .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .dash-head h2 { font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; }
         
-        .dash-tile { background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-bottom: 12px; }
-        .dash-cap { font-size: 0.75rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
-        .dash-big { font-size: 1.5rem; font-weight: 300; color: #9be7e4; line-height: 1.1; letter-spacing: 1px; margin: 6px 0; }
+        .dash-tile { background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.005)); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-bottom: 12px; }
+        .dash-cap { font-size: 0.7rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
+        .dash-big { font-size: 1.35rem; font-weight: 300; color: #9be7e4; line-height: 1.1; letter-spacing: 1px; margin: 4px 0; }
         
-        .w-num { font-size: 1.5rem; font-weight: 300; cursor: pointer; color: #9be7e4; margin-top: 4px; }
-        .w-track { position: relative; width: 85%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 5px; margin: 12px 0 16px; }
-        .w-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #9be7e4; border-radius: 5px; box-shadow: 0 0 8px rgba(155,231,228,0.6); }
-        .w-mark { position: absolute; top: -3px; width: 2px; height: 11px; background: rgba(255,255,255,0.8); }
-        .w-mark span { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; opacity: 0.8; font-family: 'Noto Serif JP', serif; }
+        /* 體重折線圖區塊 */
+        .weight-chart-container { width: 100%; height: 65px; position: relative; margin: 8px 0 4px; display: flex; align-items: flex-end; }
+        .weight-svg { width: 100%; height: 100%; overflow: visible; }
 
         .weekly-container { margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; }
         .week-row { background: rgba(0,0,0,0.12); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
         .week-head { display: flex; justify-content: space-between; align-items: center; font-family: 'Noto Serif JP', serif; font-size: 0.8rem; opacity: 0.85; margin-bottom: 6px; }
         .week-bar { display: flex; gap: 3px; }
-        .week-seg { flex: 1; height: 32px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: rgba(255,255,255,0.4); cursor: pointer; font-family: 'Noto Serif JP', serif; }
+        .week-seg { flex: 1; height: 32px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: rgba(255,255,255,0.4); cursor: pointer; font-family: 'Noto Serif JP', serif; }
         .week-seg.done { background: rgba(155,231,228,0.2); border-color: #9be7e4; color: #9be7e4; font-weight: 700; }
         
-        .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(0,0,0,0.12); border-radius: 10px; margin-bottom: 8px; cursor: pointer; }
-        .menu-name { font-size: 0.9rem; font-weight: 400; }
-        .menu-reps { font-size: 0.75rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; margin-top: 2px;}
-        .menu-weight { font-size: 0.85rem; font-weight: 300; background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 8px; }
+        /* 完整選單字體全面調小 */
+        .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: rgba(0,0,0,0.12); border-radius: 8px; margin-bottom: 6px; cursor: pointer; }
+        .menu-name { font-size: 0.82rem; font-weight: 400; }
+        .menu-reps { font-size: 0.68rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; margin-top: 1px;}
+        .menu-weight { font-size: 0.78rem; font-weight: 300; background: rgba(255,255,255,0.06); padding: 3px 8px; border-radius: 6px; }
         
         .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; width: 100%; font-size: 1.05rem; font-weight: 400; letter-spacing: 1px; padding-bottom: 4px; }
-        .collapsible-content { display: none; flex-direction: column; gap: 16px; margin-top: 14px; }
+        .collapsible-content { display: none; flex-direction: column; gap: 14px; margin-top: 14px; }
         .collapsible-content.show { display: flex; }
 
-        .running-box { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); border: 1px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 14px; margin-top: 10px; cursor: pointer; }
+        .running-box { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.12); border-radius: 10px; padding: 10px 12px; margin-top: 8px; cursor: pointer; }
 
         /* --- Screen 2: 首頁 (Home) --- */
         .clock-card { display: flex; flex-direction: column; align-items: center; text-align: center; border: none; background: transparent; box-shadow: none; padding: 10px 0; }
@@ -92,12 +91,12 @@
         .dot-separator { width: 4px; height: 4px; background: white; border-radius: 50%; opacity: 0.5; }
 
         .journal-container { width: 100%; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 15px; z-index: 10; }
-        .journal-input { background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 10px 24px; color: white; font-size: 0.85rem; text-align: center; width: 220px; outline: none; transition: all 0.3s ease; font-weight: 300; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .journal-input { background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 10px 24px; color: white; font-size: 0.85rem; text-align: center; width: 220px; outline: none; transition: all 0.3s ease; font-weight: 300; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .journal-input::placeholder { color: rgba(255,255,255,0.4); }
-        .journal-input:focus { border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.1); width: 260px; }
+        .journal-input:focus { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); width: 260px; }
 
         #journal-area { position: absolute; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
-        .journal-bubble { position: absolute; display: flex; align-items: center; gap: 10px; pointer-events: auto; cursor: grab; background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.25); border-radius: 30px; padding: 10px 18px; color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; white-space: nowrap; }
+        .journal-bubble { position: absolute; display: flex; align-items: center; gap: 10px; pointer-events: auto; cursor: grab; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; padding: 10px 18px; color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; white-space: nowrap; }
 
         .trash-drop-zone { position: fixed; left: 0; width: 100vw; height: 90px; background: rgba(239, 68, 68, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(239, 68, 68, 0.35); display: flex; align-items: center; justify-content: center; color: #ff8585; font-size: 0.85rem; font-weight: 300; z-index: 2500; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
         .trash-drop-zone.top { top: 0; }
@@ -105,7 +104,7 @@
         .trash-drop-zone.active { opacity: 1; }
 
         .bubbles-panel { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 15px; width: 100%; z-index: 10; }
-        .floating-bubble { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: white; padding: 10px; width: 32%; aspect-ratio: 1/1; max-width: 120px; cursor: pointer; user-select: none; -webkit-user-select: none; }
+        .floating-bubble { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: white; padding: 10px; width: 32%; aspect-ratio: 1/1; max-width: 120px; cursor: pointer; user-select: none; -webkit-user-select: none; }
         .floating-bubble strong { font-size: 0.7rem; font-weight: 400; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.9; }
         .floating-bubble .val { font-size: 0.8rem; margin: 2px 0; font-weight: 300; }
         .b-weather { animation: floatA 5.2s ease-in-out infinite; }
@@ -116,11 +115,11 @@
         @keyframes floatC { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-12px) rotate(1deg); } }
 
         /* --- 任務區塊 (Today's Focus) --- */
-        .tasks-header { font-size: 1.05rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.9; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
+        .tasks-header { font-size: 1.05rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.9; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
         #active-task-list { width: 100%; max-height: 220px; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; justify-content: flex-start; }
         #active-task-list::-webkit-scrollbar { width: 4px; }
-        #active-task-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 10px; }
-        #active-task-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        #active-task-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
+        #active-task-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
         .task-item { display: flex; flex-direction: column; margin-bottom: 12px; flex-shrink: 0; }
         .task-item.animating-out { opacity: 0; transform: scale(0.95); transition: all 0.3s ease; }
         .task-header { display: flex; align-items: flex-start; width: 100%; }
@@ -136,41 +135,41 @@
         .add-task-input { background: transparent; border: none; color: white; width: 100%; padding: 4px 0; font-size: 0.85rem; font-weight: 300; outline: none; margin-top: 4px; opacity: 0.6; transition: opacity 0.3s; }
         .add-task-input::placeholder { color: rgba(255,255,255,0.5); }
         .add-task-input:focus { opacity: 1; }
-        .completed-wrapper { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); display: none; }
+        .completed-wrapper { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); display: none; }
         .completed-wrapper.visible { display: block; }
         .completed-header { display: flex; align-items: center; cursor: pointer; opacity: 0.6; font-size: 0.8rem; font-weight: 300; letter-spacing: 1px; }
         .completed-task-list { display: none; margin-top: 10px; max-height: 100px; overflow-y: auto; padding-right: 5px; }
 
         /* Agenda & Settings */
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         .calendar-header h2 { font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; }
-        .auth-section { text-align: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 12px; }
+        .auth-section { text-align: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 12px; }
         .google-btn { background: rgba(255,255,255,0.9); color: #333; border: none; padding: 10px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .agenda-item { display: flex; align-items: center; margin-bottom: 10px; background: rgba(0, 0, 0, 0.15); padding: 10px 12px; border-radius: 12px; border-left: 3px solid transparent; }
-        .agenda-time { font-size: 0.85rem; font-weight: 400; width: 85px; flex-shrink: 0; border-right: 1px solid rgba(255, 255, 255, 0.15); margin-right: 12px; }
+        .agenda-time { font-size: 0.85rem; font-weight: 400; width: 85px; flex-shrink: 0; border-right: 1px solid rgba(255, 255, 255, 0.12); margin-right: 12px; }
         
-        .action-btn, .google-login-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); color: white; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 300; margin-top: 8px; font-size: 0.85rem; width: 100%; letter-spacing: 1px; }
+        .action-btn, .google-login-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14); color: white; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 300; margin-top: 8px; font-size: 0.85rem; width: 100%; letter-spacing: 1px; }
         .google-login-btn { background: rgba(255,255,255,0.9); color: black; font-weight: 500; }
         .danger-btn { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #ff6b6b; margin-top: 24px; }
 
         /* Modals */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-overlay.show { display: flex; }
-        .modal-card { background: rgba(25, 30, 35, 0.95); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 24px 20px; width: 420px; max-width: 90%; color: white; box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-height: 85dvh; overflow-y: auto;}
+        .modal-card { background: rgba(25, 30, 35, 0.95); border: 1px solid rgba(255,255,255,0.14); border-radius: 20px; padding: 24px 20px; width: 420px; max-width: 90%; color: white; box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-height: 85dvh; overflow-y: auto;}
         .form-group { margin-bottom: 12px; flex: 1; }
         .form-group label { display: block; font-size: 0.8rem; margin-bottom: 4px; opacity: 0.7; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.18); color: white; border-radius: 10px; font-size: 0.85rem; outline: none; font-family: 'Noto Serif JP', serif;}
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.14); color: white; border-radius: 10px; font-size: 0.85rem; outline: none; font-family: 'Noto Serif JP', serif;}
         .modal-actions { display: flex; justify-content: flex-end; margin-top: 20px; gap: 10px; }
         .modal-btn { padding: 10px 18px; border-radius: 10px; border: none; cursor: pointer; font-weight: 400; font-size: 0.85rem; }
-        .btn-cancel { background: rgba(255,255,255,0.08); color: white; }
+        .btn-cancel { background: rgba(255,255,255,0.06); color: white; }
         .btn-save { background: white; color: black; }
         .btn-delete { background: rgba(239,68,68,0.15); color: #ff6b6b; border: 1px solid rgba(239,68,68,0.4); margin-right: auto; }
         .batch-row { display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 10px; margin-bottom: 6px; }
-        .batch-input { width: 45px; padding: 6px 4px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12); color: white; border-radius: 6px; text-align: center; font-size: 0.85rem; font-family: 'Noto Serif JP', serif; }
+        .batch-input { width: 45px; padding: 6px 4px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 6px; text-align: center; font-size: 0.85rem; font-family: 'Noto Serif JP', serif; }
         .batch-input.b-name { flex: 1; width: auto; text-align: left; padding: 6px 8px; }
         .row-del { background: none; border: none; color: #ff6b6b; }
-        .row-mv { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; width: 26px; height: 28px; border-radius: 6px; font-size: 0.65rem; }
-        .add-event-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.8rem; font-weight: 300; }
+        .row-mv { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: white; width: 26px; height: 28px; border-radius: 6px; font-size: 0.65rem; }
+        .add-event-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.8rem; font-weight: 300; }
     </style>
 </head>
 <body>
@@ -207,35 +206,38 @@
             </div>
         </section>
 
-        <!-- [左一] Screen 1: My Training Space (上中下還原版面 + 收合目錄) -->
+        <!-- [左一] Screen 1: My Training Space -->
         <section class="screen" id="screen-1">
             <div class="content-container">
                 <div class="glass-card">
                     <div class="dash-head"><h2>My Training Space</h2></div>
                     
                     <!-- 第一塊：進度條與當週統計 -->
-                    <div class="dash-tile" style="flex-direction: row; justify-content: space-evenly; padding: 16px;">
+                    <div class="dash-tile" style="flex-direction: row; justify-content: space-evenly; padding: 14px;">
                         <div id="dash-ring"></div>
                         <div style="display:flex; flex-direction:column; justify-content:center; text-align:left;">
-                            <div style="font-size: 1.3rem; font-weight: 300; letter-spacing:1px;" id="dash-streak-title">This week</div>
+                            <div style="font-size: 1.2rem; font-weight: 300; letter-spacing:1px;" id="dash-streak-title">This week</div>
                             <div class="dash-cap" style="margin-top: 4px;" id="dash-streak-sub">本週訓練進度</div>
                         </div>
                     </div>
 
-                    <!-- 第二塊：中間放置下次要做的訓練（如 Day 2） -->
-                    <div class="dash-tile" style="cursor: pointer;" onclick="openNewSession(getNextDay(), new Date().toLocaleDateString('en-CA'))">
-                        <div class="dash-cap" style="margin: 0 0 2px;">Next Workout</div>
-                        <div class="dash-big" id="dash-next-day">Day 1</div>
-                        <div class="dash-cap" id="dash-next-label">胸＋腿</div>
-                        <div class="chips" id="dash-next-chips" style="margin-top:6px;"></div>
+                    <!-- 第二塊：放大版 Next Workout (點擊滑順滾動並展開對應 Day) -->
+                    <div class="dash-tile" style="cursor: pointer; background: linear-gradient(135deg, rgba(155,231,228,0.08), rgba(255,255,255,0.01)); border-color: rgba(155,231,228,0.3);" onclick="scrollToAndExpandNextWorkout()">
+                        <div class="dash-cap" style="margin: 0 0 2px; color: #9be7e4;">NEXT WORKOUT (點擊前往)</div>
+                        <div class="dash-big" id="dash-next-day" style="font-size: 1.6rem; margin: 4px 0;">Day 1</div>
+                        <div class="dash-cap" id="dash-next-label" style="font-size: 0.8rem; opacity: 0.9;">背＋二頭</div>
                     </div>
 
-                    <!-- 第三塊：目前體重 -->
+                    <!-- 第三塊：目前體重與折線圖 -->
                     <div class="dash-tile">
-                        <div class="dash-cap" style="margin-bottom: 2px;">目前體重</div>
-                        <div class="w-num" id="display-weight" onclick="updateWeight()" style="text-decoration:none;">59.0 kg</div>
-                        <div class="w-track" id="dash-w-track"></div>
-                        <div class="dash-cap">目標 66 kg</div>
+                        <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                            <div class="dash-cap">目前體重</div>
+                            <div class="w-num" id="display-weight" onclick="updateWeight()" style="font-size:1.1rem; text-decoration:none;">59.0 kg</div>
+                            <div class="dash-cap" style="opacity:0.5;">目標 66 kg</div>
+                        </div>
+                        <div class="weight-chart-container" id="weight-chart-box">
+                            <!-- 動態 SVG 折線圖 -->
+                        </div>
                     </div>
 
                     <div class="weekly-container">
@@ -243,7 +245,7 @@
                     </div>
                 </div>
 
-                <!-- 菜單總目錄（預設收合，用小箭頭展開） -->
+                <!-- 完整菜單總目錄（可收合） -->
                 <div class="glass-card">
                     <div class="collapsible-header" onclick="toggleMenuCollapse()">
                         <span>Workout Programs (完整菜單)</span>
@@ -251,9 +253,9 @@
                     </div>
                     <div class="collapsible-content" id="menu-collapsible-content">
                         <!-- Day 1 -->
-                        <div style="background: rgba(0,0,0,0.15); padding: 14px; border-radius: 16px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 12px;">
-                                <span style="font-size:0.95rem; font-weight:400;">Day 1 <small style="opacity:0.7; font-family:'Noto Serif JP';">胸＋腿</small></span>
+                        <div id="program-day1" style="background: rgba(0,0,0,0.15); padding: 12px; border-radius: 14px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-bottom: 10px;">
+                                <span style="font-size:0.9rem; font-weight:400;">Day 1 <small style="opacity:0.7; font-family:'Noto Serif JP';">胸＋腿</small></span>
                                 <button class="add-event-btn" onclick="openBatchModal('day1')">📋</button>
                             </div>
                             <div class="menu-action" onclick="quickLog('槓鈴臥推', '3', '10', '30')"><div><div class="menu-name">槓鈴臥推</div><div class="menu-reps">3 × 6–10</div></div><div class="menu-weight" data-exercise="槓鈴臥推">30 kg</div></div>
@@ -263,9 +265,9 @@
                         </div>
 
                         <!-- Day 2 -->
-                        <div style="background: rgba(0,0,0,0.15); padding: 14px; border-radius: 16px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 12px;">
-                                <span style="font-size:0.95rem; font-weight:400;">Day 2 <small style="opacity:0.7; font-family:'Noto Serif JP';">背＋二頭</small></span>
+                        <div id="program-day2" style="background: rgba(0,0,0,0.15); padding: 12px; border-radius: 14px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-bottom: 10px;">
+                                <span style="font-size:0.9rem; font-weight:400;">Day 2 <small style="opacity:0.7; font-family:'Noto Serif JP';">背＋二頭</small></span>
                                 <button class="add-event-btn" onclick="openBatchModal('day2')">📋</button>
                             </div>
                             <div class="menu-action" onclick="quickLog('獨立握把划船機', '3', '12', '')"><div><div class="menu-name">獨立握把划船機</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight" data-exercise="獨立握把划船機">依狀態</div></div>
@@ -273,24 +275,29 @@
                             <div class="menu-action" onclick="quickLog('槌式彎舉', '2', '12', '')"><div><div class="menu-name">槌式彎舉</div><div class="menu-reps">2 × 10–12</div></div><div class="menu-weight" data-exercise="槌式彎舉">依狀態</div></div>
                         </div>
 
-                        <!-- Day 3 & 跑步 -->
-                        <div style="background: rgba(0,0,0,0.15); padding: 14px; border-radius: 16px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 12px;">
-                                <span style="font-size:0.95rem; font-weight:400;">Day 3 <small style="opacity:0.7; font-family:'Noto Serif JP';">肩＋三頭</small></span>
+                        <!-- Day 3 -->
+                        <div id="program-day3" style="background: rgba(0,0,0,0.15); padding: 12px; border-radius: 14px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-bottom: 10px;">
+                                <span style="font-size:0.9rem; font-weight:400;">Day 3 <small style="opacity:0.7; font-family:'Noto Serif JP';">肩＋三頭</small></span>
                                 <button class="add-event-btn" onclick="openBatchModal('day3')">📋</button>
                             </div>
                             <div class="menu-action" onclick="quickLog('肩推', '3', '10', '')"><div><div class="menu-name">肩推</div><div class="menu-reps">3 × 8–10</div></div><div class="menu-weight" data-exercise="肩推">依狀態</div></div>
                             <div class="menu-action" onclick="quickLog('側平舉', '3', '15', '')"><div><div class="menu-name">側平舉</div><div class="menu-reps">2-3 × 12–15</div></div><div class="menu-weight" data-exercise="側平舉">依狀態</div></div>
                             <div class="menu-action" onclick="quickLog('三頭滑輪下壓', '2', '15', '')"><div><div class="menu-name">三頭滑輪下壓</div><div class="menu-reps">1-2 × 10–15 ⚠️</div></div><div class="menu-weight" data-exercise="三頭滑輪下壓">輕量起</div></div>
-                            
-                            <div class="running-box" onclick="quickLog('戶外有氧跑步', '1', '1', '')">
-                                <div>
-                                    <div style="font-size: 0.9rem; font-weight: 400;">🏃‍♂️ Weekly Running (額外跑步)</div>
-                                    <div class="dash-cap" style="margin-top:2px;">點擊記錄今日有氧</div>
-                                </div>
-                                <div style="font-size: 0.8rem; color: #9be7e4;">+ 記錄</div>
+                        </div>
+
+                        <!-- 獨立的跑步方塊 -->
+                        <div id="program-running" style="background: rgba(0,0,0,0.15); padding: 12px; border-radius: 14px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-bottom: 10px;">
+                                <span style="font-size:0.9rem; font-weight:400;">Running <small style="opacity:0.7; font-family:'Noto Serif JP';">有氧跑步</small></span>
+                                <button class="add-event-btn" onclick="openRunningModal()">🏃‍♂️</button>
+                            </div>
+                            <div class="menu-action" onclick="openRunningModal()">
+                                <div><div class="menu-name">戶外有氧跑步</div><div class="menu-reps">距離 (km) / 時間 (分)</div></div>
+                                <div class="menu-weight" style="color:#9be7e4;">+ 記錄</div>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -395,7 +402,7 @@
     
     <div class="modal-overlay" id="fit-modal"><div class="modal-card"><h3>Log Workout</h3><div style="display:flex; gap:10px;"><div class="form-group" style="flex: 1.5;"><label>動作名稱</label><input type="text" id="fit-name"></div><div class="form-group" style="flex: 1;"><label>日期</label><input type="date" id="fit-date"></div></div><div style="display:flex; gap:10px;"><div class="form-group"><label>組</label><input type="number" id="fit-sets"></div><div class="form-group"><label>次</label><input type="number" id="fit-reps"></div><div class="form-group"><label>kg</label><input type="number" id="fit-weight" step="0.5"></div></div><div class="form-group"><label>備註</label><textarea id="fit-note" rows="2"></textarea></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeFitModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveFitLog()">Save</button></div></div></div>
     
-    <div class="modal-overlay" id="session-modal"><div class="modal-card" style="width: 500px;"><h3 id="session-title">Log Day</h3><div class="form-group" style="margin-bottom: 14px;"><label>日期</label><input type="date" id="session-date"></div><div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div><button class="add-row-btn" onclick="addSessionRow()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:white; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:0.8rem;">+ 新增動作</button><div class="modal-actions"><button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除整天</button><button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveSession()">Save</button></div></div></div>
+    <div class="modal-overlay" id="session-modal"><div class="modal-card" style="width: 500px;"><h3 id="session-title">Log Day</h3><div class="form-group" style="margin-bottom: 14px;"><label>日期</label><input type="date" id="session-date"></div><div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div><button class="add-row-btn" onclick="addSessionRow()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:white; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:0.8rem;">+ 新增動作</button><div class="modal-actions"><button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除整天</button><button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveSession()">Save</button></div></div></div>
 
     <script>
         /* === Zen Focus 番茄鐘邏輯 === */
@@ -444,12 +451,26 @@
             document.getElementById('pomodoro-time').innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         }
 
-        /* === 完整菜單收合控制 === */
+        /* === 完整菜單收合與點擊滑動展開 === */
         function toggleMenuCollapse() {
             const content = document.getElementById('menu-collapsible-content');
             const arrow = document.getElementById('menu-toggle-arrow');
             content.classList.toggle('show');
             arrow.innerText = content.classList.contains('show') ? '▲' : '▼';
+        }
+
+        function scrollToAndExpandNextWorkout() {
+            const content = document.getElementById('menu-collapsible-content');
+            const arrow = document.getElementById('menu-toggle-arrow');
+            if (!content.classList.contains('show')) {
+                content.classList.add('show');
+                arrow.innerText = '▲';
+            }
+            const nextDayNum = getNextDay();
+            const targetEl = document.getElementById(`program-day${nextDayNum}`);
+            if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         }
 
         /* === UI Slider & Dock Logic === */
@@ -623,7 +644,6 @@
             const wk = getMonday(new Date()).toLocaleDateString('en-CA'); 
             const days = new Set(fitnessData.logs.filter(l => getMonday(new Date(l.date)).toLocaleDateString('en-CA') === wk).map(l => dateKeyOf(l.date)));
             
-            // 渲染上中下第一塊進度條 (帶火焰連勝與圓環)
             const streakCount = days.size;
             document.getElementById('dash-streak-title').innerHTML = streakCount >= 3 ? `This week 🔥` : `This week`;
             document.getElementById('dash-streak-sub').innerText = streakCount >= 3 ? `本週已達 3 天連勝！` : `本週訓練進度`;
@@ -631,22 +651,55 @@
             const C = 2 * Math.PI * 36, arc = C / 3 - 8; let arcs = ''; for (let i = 0; i < 3; i++) { const on = i < days.size; arcs += `<circle cx="45" cy="45" r="36" fill="none" stroke-width="8" stroke-linecap="round" stroke="${on ? '#9be7e4' : 'rgba(255,255,255,0.12)'}" stroke-dasharray="${arc} ${C - arc}" transform="rotate(${-90 + i * 120 + 5} 45 45)"/>`; }
             document.getElementById('dash-ring').innerHTML = `<svg width="90" height="90" viewBox="0 0 90 90">${arcs}<text x="45" y="52" text-anchor="middle" fill="#fff" font-size="22" font-weight="300">${days.size}/3</text></svg>`;
 
-            // 第二塊：中間放置下次要做的訓練（如 Day 2）
+            // 第二塊：中間 Next Workout 放大顯示，不冗長
             document.getElementById('dash-next-day').innerText = `Day ${next}`; 
-            document.getElementById('dash-next-label').innerText = dayLabels[next] + (days.has(new Date().toLocaleDateString('en-CA')) ? ' ✓' : '');
-            document.getElementById('dash-next-chips').innerHTML = workoutPrograms['day' + next].items.map(i => `<span class="chip">${i.name.substring(0,4)}</span>`).join('');
+            document.getElementById('dash-next-label').innerText = dayLabels[next];
 
-            // 第三塊：體重進度條
-            const cur = parseFloat(fitnessData.weight) || 0; const pos = v => Math.max(0, Math.min(100, (v - Math.min(55, Math.floor(cur)-1)) / (70 - Math.min(55, Math.floor(cur)-1)) * 100));
-            document.getElementById('dash-w-track').innerHTML = `<div class="w-fill" style="width:${pos(cur)}%"></div><div class="w-mark" style="left:${pos(62)}%"><span>62</span></div><div class="w-mark" style="left:${pos(66)}%"><span>66</span></div>`;
+            // 渲染體重折線圖
+            renderWeightChart();
 
             renderWeeklyFitnessLogs(); updateMenuMaxWeights();
+        }
+
+        function renderWeightChart() {
+            const chartBox = document.getElementById('weight-chart-box');
+            const currentW = parseFloat(fitnessData.weight) || 59.0;
+            const targetW = 66.0;
+            
+            // 繪製簡單 SVG 折線圖與目標線
+            chartBox.innerHTML = `
+                <svg class="weight-svg" viewBox="0 0 200 50">
+                    <!-- 目標虛線 (66kg) -->
+                    <line x1="10" y1="10" x2="190" y2="10" stroke="rgba(255,255,255,0.2)" stroke-dasharray="3,3" stroke-width="1"/>
+                    <text x="195" y="13" fill="rgba(255,255,255,0.4)" font-size="7" font-family="sans-serif">66</text>
+
+                    <!-- 目前線 (59kg) -->
+                    <line x1="10" y1="40" x2="190" y2="40" stroke="rgba(155,231,228,0.3)" stroke-width="1"/>
+                    <text x="195" y="43" fill="#9be7e4" font-size="7" font-family="sans-serif">59</text>
+
+                    <!-- 趨勢折線 -->
+                    <polyline fill="none" stroke="#9be7e4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        points="20,40 70,38 120,40 170,40" />
+                    <circle cx="170" cy="40" r="3" fill="#9be7e4" />
+                </svg>
+            `;
         }
 
         function updateWeight() { const newW = prompt("最新體重 (kg)：", fitnessData.weight); if (newW && !isNaN(newW)) { fitnessData.weight = parseFloat(newW).toFixed(1); saveFitnessData(); initFitness(); } }
         function openFitModal() { document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA'); ['fit-name', 'fit-sets', 'fit-reps', 'fit-weight', 'fit-note'].forEach(id => document.getElementById(id).value = ''); document.getElementById('fit-modal').classList.add('show'); }
         function closeFitModal() { document.getElementById('fit-modal').classList.remove('show'); }
         function quickLog(name, sets, reps, weight) { const last = lastLogFor(name); document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA'); document.getElementById('fit-name').value = name; document.getElementById('fit-sets').value = last ? last.sets : sets; document.getElementById('fit-reps').value = last ? last.reps : reps; document.getElementById('fit-weight').value = last ? (parseFloat(last.weight) > 0 ? last.weight : '') : weight; document.getElementById('fit-note').value = ''; document.getElementById('fit-modal').classList.add('show'); }
+        
+        function openRunningModal() {
+            document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA');
+            document.getElementById('fit-name').value = '戶外有氧跑步';
+            document.getElementById('fit-sets').value = '1';
+            document.getElementById('fit-reps').value = '1';
+            document.getElementById('fit-weight').value = '';
+            document.getElementById('fit-note').value = '距離: km, 時間: 分';
+            document.getElementById('fit-modal').classList.add('show');
+        }
+
         function saveFitLog() {
             const dateVal = document.getElementById('fit-date').value; const name = document.getElementById('fit-name').value.trim(); const sets = document.getElementById('fit-sets').value; const reps = document.getElementById('fit-reps').value; const weight = document.getElementById('fit-weight').value;
             if (!name || !sets || !reps) { alert("請填寫動作/組數/次數"); return; }
