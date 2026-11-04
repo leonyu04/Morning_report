@@ -33,17 +33,17 @@
         .content-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
 
         /* --- iOS Dock --- */
-        .ios-dock { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px); left: 50%; transform: translateX(-50%); display: flex; align-items: center; background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.08); border-radius: 40px; padding: 6px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; }
+        .ios-dock { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px); left: 50%; transform: translateX(-50%); display: flex; align-items: center; background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 40px; padding: 6px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; }
         .nav-item { width: 54px; height: 46px; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 2; color: rgba(255, 255, 255, 0.45); transition: color 0.3s ease; }
         .nav-item.active { color: rgba(255, 255, 255, 1); }
         .nav-item svg { width: 22px; height: 22px; stroke-width: 1.5; fill: none; stroke: currentColor; pointer-events: none; }
-        .nav-bubble { position: absolute; top: 6px; left: 6px; width: 54px; height: 46px; background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.25); border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 1; will-change: transform; pointer-events: auto; touch-action: none; cursor: grab; transition: background 0.2s ease, box-shadow 0.2s ease; }
+        .nav-bubble { position: absolute; top: 6px; left: 6px; width: 54px; height: 46px; background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01)); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.25); border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 1; will-change: transform; pointer-events: auto; touch-action: none; cursor: grab; transition: background 0.2s ease, box-shadow 0.2s ease; }
         .nav-bubble.snap { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease, box-shadow 0.2s ease; }
 
-        .global-fab { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 95px); right: 28px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25); color: white; font-size: 1.6rem; font-weight: 300; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.25); cursor: pointer; z-index: 1000; opacity: 0; pointer-events: none; transform: scale(0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .global-fab { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 95px); right: 28px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.25); color: white; font-size: 1.6rem; font-weight: 300; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.25); cursor: pointer; z-index: 1000; opacity: 0; pointer-events: none; transform: scale(0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .global-fab.show { opacity: 1; pointer-events: auto; transform: scale(1); }
 
-        .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.005)); backdrop-filter: blur(26px); -webkit-backdrop-filter: blur(26px); border-top: 1px solid rgba(255, 255, 255, 0.14); border-left: 1px solid rgba(255, 255, 255, 0.14); border-bottom: 1px solid rgba(255, 255, 255, 0.03); border-right: 1px solid rgba(255, 255, 255, 0.03); border-radius: 24px; box-shadow: 0 12px 35px 0 rgba(0, 0, 0, 0.25); padding: 22px 20px; width: 100%; }
+        .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid rgba(255, 255, 255, 0.14); border-left: 1px solid rgba(255, 255, 255, 0.14); border-bottom: 1px solid rgba(255, 255, 255, 0.03); border-right: 1px solid rgba(255, 255, 255, 0.03); border-radius: 24px; box-shadow: 0 12px 35px 0 rgba(0, 0, 0, 0.25); padding: 22px 20px; width: 100%; }
         
         /* --- Screen 0: Zen Flow 舒壓點擊與進化區 --- */
         .zen-container { width: 100%; height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
@@ -86,20 +86,18 @@
         .dot-separator { width: 4px; height: 4px; background: white; border-radius: 50%; opacity: 0.5; }
 
         .journal-container { width: 100%; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 15px; z-index: 10; }
-        .journal-input { background: rgba(0,0,0,0.3); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 10px 18px; color: white; font-size: 0.85rem; text-align: center; width: 220px; outline: none; transition: all 0.3s ease; font-weight: 300; letter-spacing: 1px; font-family: 'Noto Serif JP', serif; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .journal-input { background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 10px 18px; color: white; font-size: 0.85rem; text-align: center; width: 220px; outline: none; transition: all 0.3s ease; font-weight: 300; letter-spacing: 1px; font-family: 'Noto Serif JP', serif; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .journal-input::placeholder { color: rgba(255,255,255,0.4); }
         .journal-input:focus { border-color: rgba(255,255,255,0.3); background: rgba(0,0,0,0.45); width: 260px; }
 
         #journal-area { position: absolute; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
-        .journal-bubble { position: absolute; display: flex; align-items: center; gap: 10px; pointer-events: auto; cursor: grab; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; padding: 10px 18px; color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; white-space: nowrap; }
+        .journal-bubble { position: absolute; display: flex; align-items: center; gap: 10px; pointer-events: auto; cursor: grab; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02)); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; padding: 10px 18px; color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; white-space: nowrap; }
 
-        .trash-drop-zone { position: fixed; left: 0; width: 100vw; height: 90px; background: rgba(239, 68, 68, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(239, 68, 68, 0.35); display: flex; align-items: center; justify-content: center; color: #ff8585; font-size: 0.85rem; font-weight: 300; z-index: 2500; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
-        .trash-drop-zone.top { top: 0; }
-        .trash-drop-zone.bottom { bottom: 0; border-top: 1px solid rgba(239, 68, 68, 0.35); border-bottom: none; }
+        .trash-drop-zone { position: fixed; left: 0; width: 100vw; height: 90px; background: rgba(239, 68, 68, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(239, 68, 68, 0.35); display: flex; align-items: center; justify-content: center; color: #ff8585; font-size: 0.85rem; font-weight: 300; z-index: 2500; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; top: 0; }
         .trash-drop-zone.active { opacity: 1; }
 
         .bubbles-panel { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 15px; width: 100%; z-index: 10; }
-        .floating-bubble { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: white; padding: 10px; width: 32%; aspect-ratio: 1/1; max-width: 120px; cursor: pointer; user-select: none; -webkit-user-select: none; }
+        .floating-bubble { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: white; padding: 10px; width: 32%; aspect-ratio: 1/1; max-width: 120px; cursor: pointer; user-select: none; -webkit-user-select: none; }
         .floating-bubble strong { font-size: 0.7rem; font-weight: 400; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.9; }
         .floating-bubble .val { font-size: 0.8rem; margin: 2px 0; font-weight: 300; }
         .b-weather { animation: floatA 5.2s ease-in-out infinite; }
@@ -173,7 +171,6 @@
     <div class="bg-fixed"></div>
 
     <div class="trash-drop-zone top" id="trash-top">拖曳至此處刪除泡泡</div>
-    <div class="trash-drop-zone bottom" id="trash-bottom">拖曳至此處刪除泡泡</div>
 
     <div class="ios-dock" id="ios-dock">
         <div class="nav-bubble" id="nav-bubble"></div>
@@ -215,7 +212,7 @@
                         </div>
                     </div>
 
-                    <!-- 儀表板 Next Workout / 今日已完成卡片 -->
+                    <!-- 儀表板 Next Workout / 今日已達成卡片 -->
                     <div class="dash-tile" id="dash-next-card" style="cursor: pointer; background: linear-gradient(135deg, rgba(155,231,228,0.08), rgba(255,255,255,0.01)); border-color: rgba(155,231,228,0.3);" onclick="handleDashCardClick()">
                         <div class="dash-cap" id="dash-next-top-cap" style="margin: 0 0 2px; color: #9be7e4;">NEXT WORKOUT (點擊前往)</div>
                         <div class="dash-big" id="dash-next-day" style="font-size: 1.35rem; margin: 4px 0;">Day 1</div>
@@ -612,16 +609,15 @@
         let journalBubbles = JSON.parse(localStorage.getItem('leon_journal_bubbles')) || [];
 
         function addJournalBubble(e) {
-            // 完美相容手機版實體 / 虛擬鍵盤 Enter 送出
             if (e.key === 'Enter' || e.keyCode === 13) {
-                e.preventDefault(); // 阻止鍵盤的預設跳轉或換行行為
+                e.preventDefault(); 
                 const text = e.target.value.trim();
                 if (text !== '') {
                     const newBubble = { id: Date.now().toString(), text, date: new Date().toISOString(), x: Math.random() * (window.innerWidth - 180), y: 120 + Math.random() * (window.innerHeight * 0.35) };
                     journalBubbles.push(newBubble);
                     saveJournals(); renderJournals();
                     e.target.value = '';
-                    e.target.blur(); // 送出後自動收起手機鍵盤
+                    e.target.blur(); 
                 }
             }
         }
@@ -643,27 +639,26 @@
 
                 let isDragging = false, startX, startY, initX, initY;
                 const trashTop = document.getElementById('trash-top');
-                const trashBottom = document.getElementById('trash-bottom');
 
                 el.addEventListener('pointerdown', (e) => {
                     isDragging = true; startX = e.clientX; startY = e.clientY;
                     initX = b.x; initY = b.y;
                     el.setPointerCapture(e.pointerId);
                     el.style.zIndex = 3000; el.style.animation = 'none';
-                    trashTop.classList.add('active'); trashBottom.classList.add('active');
+                    trashTop.classList.add('active');
                 });
                 el.addEventListener('pointermove', (e) => {
                     if (!isDragging) return;
                     b.x = initX + e.clientX - startX;
                     b.y = initY + e.clientY - startY;
                     el.style.left = `${b.x}px`; el.style.top = `${b.y}px`;
-                    if (e.clientY < 100 || e.clientY > window.innerHeight - 100) { el.style.opacity = '0.3'; } else { el.style.opacity = '1'; }
+                    if (e.clientY < 100) { el.style.opacity = '0.3'; } else { el.style.opacity = '1'; }
                 });
                 el.addEventListener('pointerup', (e) => {
                     if (!isDragging) return;
                     isDragging = false; el.releasePointerCapture(e.pointerId);
-                    trashTop.classList.remove('active'); trashBottom.classList.remove('active');
-                    if (e.clientY < 100 || e.clientY > window.innerHeight - 100) {
+                    trashTop.classList.remove('active');
+                    if (e.clientY < 100) {
                         journalBubbles = journalBubbles.filter(item => item.id !== b.id);
                         saveJournals(); renderJournals();
                     } else { saveJournals(); renderJournals(); }
