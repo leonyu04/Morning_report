@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#14191e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -21,34 +21,29 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Marcellus', 'Playfair Display SC', 'Noto Serif JP', serif; }
         
-        /* 固定背景 */
         body { 
             background: #14191e; 
             color: #FFFFFF; 
-            overflow: hidden; /* 鎖死外層，完全依賴內部橫向滑動 */
+            overflow: hidden; 
             position: fixed;
             width: 100vw;
             height: 100dvh;
         }
 
         .bg-fixed {
-            position: absolute;
-            top: 0; left: 0;
+            position: absolute; top: 0; left: 0;
             width: 100%; height: 100%;
             background-image: url('background.jpg');
-            background-repeat: no-repeat;
-            background-position: center center;
-            z-index: -1;
-            pointer-events: none;
+            background-repeat: no-repeat; background-position: center center;
+            background-size: cover;
+            z-index: -1; pointer-events: none;
         }
 
         /* 橫向滑動主容器 (5個畫面) */
         .app-slider {
             display: flex;
-            width: 100vw;
-            height: 100dvh;
-            overflow-x: auto;
-            overflow-y: hidden;
+            width: 100vw; height: 100dvh;
+            overflow-x: auto; overflow-y: hidden;
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
             scrollbar-width: none;
@@ -56,107 +51,156 @@
         }
         .app-slider::-webkit-scrollbar { display: none; }
 
-        /* 單一分頁設定 */
+        /* 單一分頁設定 (統一高度) */
         .screen {
-            flex: 0 0 100vw;
-            width: 100vw;
-            height: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
+            flex: 0 0 100vw; width: 100vw; height: 100%;
+            overflow-y: auto; overflow-x: hidden;
             scroll-snap-align: center;
-            padding: calc(env(safe-area-inset-top) + 20px) 20px calc(env(safe-area-inset-bottom) + 90px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            /* 統一頂部留白，讓各頁面標題與時鐘對齊 */
+            padding: calc(env(safe-area-inset-top) + 60px) 20px calc(env(safe-area-inset-bottom) + 120px);
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
             scrollbar-width: none;
         }
         .screen::-webkit-scrollbar { display: none; }
 
-        /* 內容寬度限制 */
-        .content-container {
-            width: 100%;
-            max-width: 600px; /* 手機與平版最適寬度 */
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+        .content-container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 16px; }
 
-        /* 底部導航列 (玻璃毛邊) */
-        .bottom-nav {
+        /* --- 底部軌道拉桿 (Range Slider) --- */
+        .bottom-slider-container {
             position: fixed;
-            bottom: calc(env(safe-area-inset-bottom) + 20px);
+            bottom: calc(env(safe-area-inset-bottom) + 30px);
             left: 50%;
             transform: translateX(-50%);
-            display: flex;
-            gap: 12px;
-            padding: 14px 24px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-radius: 40px;
-            border: 1px solid rgba(255,255,255,0.25);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 200px; /* 拉桿總寬度 */
+            height: 30px;
+            display: flex; align-items: center; justify-content: center;
             z-index: 1000;
         }
-
-        /* 小細直線設計 */
-        .nav-line {
-            width: 16px;
-            height: 3px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 4px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        
+        /* 自訂 Input Range */
+        input[type=range].nav-range {
+            -webkit-appearance: none;
+            width: 100%; height: 100%;
+            background: transparent;
+            outline: none; margin: 0; padding: 0;
+        }
+        
+        /* 軌道 Track */
+        input[type=range].nav-range::-webkit-slider-runnable-track {
+            width: 100%; height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        input[type=range].nav-range::-moz-range-track {
+            width: 100%; height: 3px; background: rgba(255, 255, 255, 0.3); border-radius: 2px;
+        }
+        
+        /* 控制點 Thumb (橢圓形毛玻璃) */
+        input[type=range].nav-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 14px; width: 34px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3), inset 0 1px 3px rgba(255,255,255,0.8);
+            margin-top: -5.5px; /* 對齊軌道中心 */
             cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .nav-line.active {
-            width: 32px;
-            background: #9be7e4;
-            box-shadow: 0 0 8px rgba(155,231,228,0.6);
+        input[type=range].nav-range::-moz-range-thumb {
+            height: 14px; width: 34px; border-radius: 10px;
+            background: rgba(255, 255, 255, 0.85); box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            border: none; cursor: pointer; transition: transform 0.2s;
         }
+        /* 拖曳時放大 */
+        input[type=range].nav-range:active::-webkit-slider-thumb { transform: scale(1.35); background: #ffffff; }
+        input[type=range].nav-range:active::-moz-range-thumb { transform: scale(1.35); background: #ffffff; }
+
+
+        /* --- 右下角全局懸浮按鈕 (FAB) --- */
+        .global-fab {
+            position: fixed;
+            bottom: calc(env(safe-area-inset-bottom) + 85px);
+            right: 24px;
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white; font-size: 1.8rem; font-weight: 300;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            cursor: pointer; z-index: 1000;
+            opacity: 0; pointer-events: none; transform: scale(0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .global-fab.show { opacity: 1; pointer-events: auto; transform: scale(1); }
+        .global-fab:active { transform: scale(0.9); background: rgba(255,255,255,0.3); }
+
 
         /* 共用卡片樣式 */
         .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03));
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.35); border-left: 1px solid rgba(255, 255, 255, 0.35);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08); border-right: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px; box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.15); transition: all 0.3s ease;
-            padding: 22px 20px;
-            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.3); border-left: 1px solid rgba(255, 255, 255, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px; box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.15);
+            padding: 22px 20px; width: 100%;
         }
 
-        /* --- [中間] 首頁樣式 --- */
-        .hero-card { display: flex; flex-direction: column; align-items: center; text-align: center; }
+        /* --- [中間] 時鐘區塊：玻璃字體特效 --- */
+        .clock-card { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 30px 20px; }
         
-        @keyframes breatheGlow { 0% { box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.2); transform: scale(1); } 50% { box-shadow: 0 0 60px 15px rgba(150, 240, 220, 0.3); transform: scale(1.01); } 100% { box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.2); transform: scale(1); } }
-        .breathe-glow { animation: breatheGlow 2.5s ease-in-out; }
-        
-        .time-display { font-size: 5rem; font-weight: 300; letter-spacing: 2px; line-height: 1; margin-bottom: 8px; text-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .greeting-date-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; opacity: 0.85; font-weight: 300; }
-        .greeting, .date-display { font-size: 0.9rem; font-weight: 300; letter-spacing: 1px; }
+        .time-display {
+            font-size: 5.8rem; 
+            font-weight: 700;
+            line-height: 1; 
+            margin-bottom: 8px; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* 數字字體較圓潤 */
+            
+            /* 毛玻璃文字特效 */
+            color: transparent;
+            background-clip: text;
+            -webkit-background-clip: text;
+            background-image: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.1) 100%);
+            -webkit-text-stroke: 1.5px rgba(255,255,255,0.5); /* 邊緣反光 */
+            filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.3)); /* 外部立體陰影 */
+        }
+
+        .greeting-date-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.85; font-weight: 300; }
+        .greeting, .date-display { font-size: 0.95rem; font-weight: 300; letter-spacing: 1px; }
         .dot-separator { width: 4px; height: 4px; background: white; border-radius: 50%; opacity: 0.5; }
         
+        /* --- [中間] 任務區塊 (限制3筆) --- */
         .tasks-container { width: 100%; text-align: left; }
-        #active-task-list { width: 100%; max-height: 160px; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; justify-content: flex-start; transition: all 0.3s ease; }
+        .tasks-header { font-size: 1.1rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.9; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px;}
+        
+        #active-task-list { 
+            width: 100%; 
+            max-height: 125px; /* 精準限制高度，大約剛好顯示 3 個任務 (每個約40px) */
+            overflow-y: auto; 
+            padding-right: 5px; 
+            display: flex; flex-direction: column; justify-content: flex-start;
+        }
         #active-task-list::-webkit-scrollbar { width: 4px; }
         #active-task-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
         #active-task-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
-        .task-item { display: flex; flex-direction: column; margin-bottom: 10px; transition: all 0.3s ease; animation: fadeIn 0.4s ease; flex-shrink: 0; }
-        .task-item.animating-out { opacity: 0; transform: scale(0.95); }
+        
+        .task-item { display: flex; flex-direction: column; margin-bottom: 12px; flex-shrink: 0; }
+        .task-item.animating-out { opacity: 0; transform: scale(0.95); transition: all 0.3s ease; }
         .task-header { display: flex; align-items: center; width: 100%; }
-        .task-circle { width: 16px; height: 16px; border: 1.5px solid rgba(255, 255, 255, 0.7); border-radius: 50%; margin-right: 10px; cursor: pointer; flex-shrink: 0; transition: all 0.3s; }
+        .task-circle { width: 18px; height: 18px; border: 1.5px solid rgba(255, 255, 255, 0.7); border-radius: 50%; margin-right: 12px; cursor: pointer; flex-shrink: 0; transition: all 0.3s; }
         .task-circle.completed { background: #4ADE80; border-color: #4ADE80; box-shadow: 0 0 10px rgba(74, 222, 128, 0.5); }
-        .task-title { font-size: 0.95rem; font-weight: 300; flex-grow: 1; transition: all 0.3s; display: flex; align-items: center; flex-wrap: wrap; cursor: pointer; user-select: none; letter-spacing: 0.3px; }
+        .task-title { font-size: 0.95rem; font-weight: 300; flex-grow: 1; display: flex; align-items: center; flex-wrap: wrap; cursor: pointer; user-select: none; letter-spacing: 0.5px; }
         .completed .task-title { text-decoration: line-through; opacity: 0.4; }
         
         .countdown-badge { font-size: 0.7rem; font-weight: 400; padding: 2px 7px; border-radius: 20px; margin-left: 6px; letter-spacing: 0.5px; font-family: 'Noto Serif JP', serif; white-space: nowrap; }
         .badge-normal { background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255,255,255,0.2); }
-        .badge-warning { background: rgba(255, 165, 2, 0.85); color: white; }
         .badge-urgent { background: rgba(239, 68, 68, 0.9); color: white; }
         
-        .task-detail-btn { background: none; border: none; color: white; cursor: pointer; opacity: 0.4; margin-left: 6px; display: inline-flex; align-items: center; transition: transform 0.3s ease; }
-        .task-notes { display: none; font-size: 0.82rem; font-weight: 300; opacity: 0.7; margin-left: 26px; margin-top: 5px; padding-left: 8px; border-left: 1px solid rgba(255,255,255,0.3); font-family: 'Noto Serif JP', serif; }
-        .task-notes.show { display: block; animation: fadeIn 0.3s ease; }
+        .task-detail-btn { background: none; border: none; color: white; cursor: pointer; opacity: 0.4; margin-left: 6px; display: inline-flex; align-items: center; }
+        .task-notes { display: none; font-size: 0.82rem; font-weight: 300; opacity: 0.7; margin-left: 30px; margin-top: 5px; padding-left: 8px; border-left: 1px solid rgba(255,255,255,0.3); font-family: 'Noto Serif JP', serif; }
+        .task-notes.show { display: block; }
         .task-delete-btn { background: none; border: none; color: #ff6b6b; cursor: pointer; opacity: 0.6; font-size: 1.2rem; margin-left: 6px; font-weight: 300; }
         .add-task-input { background: transparent; border: none; color: white; width: 100%; padding: 4px 0; font-size: 0.85rem; font-weight: 300; outline: none; margin-top: 4px; opacity: 0.6; transition: opacity 0.3s; }
         .add-task-input::placeholder { color: rgba(255,255,255,0.7); }
@@ -165,52 +209,28 @@
         .completed-wrapper { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.15); display: none; }
         .completed-wrapper.visible { display: block; }
         .completed-header { display: flex; align-items: center; cursor: pointer; opacity: 0.6; font-size: 0.85rem; font-weight: 300; letter-spacing: 1px; }
-        .completed-arrow { margin-right: 6px; transition: transform 0.3s ease; display: inline-flex; }
-        .completed-arrow.open { transform: rotate(90deg); }
-        .completed-task-list { display: none; margin-top: 8px; max-height: 100px; overflow-y: auto; padding-right: 5px; }
-        .completed-task-list.show { display: block; animation: fadeIn 0.3s ease; }
+        .completed-task-list { display: none; margin-top: 10px; max-height: 100px; overflow-y: auto; padding-right: 5px; }
+        .completed-task-list.show { display: block; }
 
         /* 三顆泡泡區塊 */
-        .bubbles-panel {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
+        .bubbles-panel { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 6px; }
         .floating-bubble {
-            position: relative;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%;
+            position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.02));
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            color: white; padding: 10px;
-            animation: float 4s ease-in-out infinite; transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); color: white; padding: 10px;
             width: 32%; aspect-ratio: 1/1; max-width: 120px; cursor: pointer;
+            animation: float 4s ease-in-out infinite;
         }
-        
         .floating-bubble strong { font-size: 0.75rem; font-weight: 400; margin-bottom: 2px; letter-spacing: 0.5px; }
         .floating-bubble .sub { color: rgba(255,255,255,0.8); font-size: 0.65rem; font-family: 'Noto Serif JP', serif; display: none; }
         .floating-bubble .val { font-size: 0.85rem; margin: 2px 0; font-weight: 300; }
-        .edit-icon { opacity: 0.5; font-size: 0.75rem; cursor: pointer; margin-left: 3px; }
-
-        .b-weather { animation-delay: 0s; }
-        .b-tech { animation-delay: -1.5s; padding: 6px; }
-        .b-fitness { animation-delay: -3s; }
-        #val-fitness-next { font-size: 0.85rem !important; color: #9be7e4; letter-spacing: 0.5px; }
-
+        .b-weather { animation-delay: 0s; } .b-tech { animation-delay: -1.5s; padding: 6px; } .b-fitness { animation-delay: -3s; }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- [左一/左二] Fitness 訓練空間樣式 --- */
         .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .dash-head h2 { font-size: 1.35rem; font-weight: 400; letter-spacing: 1px; }
-        .add-event-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.4); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.1rem; font-weight: 300; transition: all 0.2s; }
+        .dash-head h2 { font-size: 1.4rem; font-weight: 400; letter-spacing: 1px; }
         
         .dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
         .dash-tile { background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 140px; }
@@ -224,30 +244,29 @@
         .w-mark { position: absolute; top: -3px; width: 2px; height: 11px; background: rgba(255,255,255,0.8); }
         .w-mark span { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; opacity: 0.8; font-family: 'Noto Serif JP', serif; }
         
-        /* Weekly Progress 整併到 Dash 空間 */
         .weekly-container { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 16px; }
         .week-row { background: rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
         .week-head { display: flex; justify-content: space-between; align-items: center; font-family: 'Noto Serif JP', serif; font-size: 0.82rem; opacity: 0.85; margin-bottom: 6px; }
         .week-bar { display: flex; gap: 3px; }
         .week-seg { flex: 1; height: 32px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; color: rgba(255,255,255,0.4); cursor: pointer; font-family: 'Noto Serif JP', serif; }
-        .week-seg:first-child { border-radius: 6px 3px 3px 6px; }
-        .week-seg:last-child { border-radius: 3px 6px 6px 3px; }
+        .week-seg:first-child { border-radius: 6px 3px 3px 6px; } .week-seg:last-child { border-radius: 3px 6px 6px 3px; }
         .week-seg.done { background: rgba(155,231,228,0.25); border-color: #9be7e4; color: #9be7e4; font-weight: 700; }
 
         /* 左二：具體菜單 */
-        .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(0,0,0,0.15); border-radius: 10px; margin-bottom: 8px; cursor: pointer; }
-        .menu-name { font-size: 0.9rem; font-weight: 400; }
-        .menu-reps { font-size: 0.75rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
-        .menu-weight { font-size: 0.85rem; font-weight: 300; background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 8px; }
-        .day-title { display: flex; flex-direction: column; line-height: 1.2; font-size: 1.15rem; font-weight: 400;}
+        .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: rgba(0,0,0,0.15); border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
+        .menu-name { font-size: 0.95rem; font-weight: 400; }
+        .menu-reps { font-size: 0.78rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; margin-top: 2px;}
+        .menu-weight { font-size: 0.85rem; font-weight: 300; background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 8px; }
+        .day-title { display: flex; flex-direction: column; line-height: 1.2; font-size: 1.2rem; font-weight: 400;}
         .day-title small { font-size: 0.75rem; opacity: 0.7; font-weight: 300; font-family: 'Noto Serif JP', serif; margin-top: 2px;}
+        .add-event-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.4); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.85rem; font-weight: 300; }
 
         /* --- [右一] 行事曆 Agenda --- */
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
-        .calendar-header h2 { font-size: 1.35rem; font-weight: 400; letter-spacing: 1px; display: flex; align-items: center; }
+        .calendar-header h2 { font-size: 1.4rem; font-weight: 400; letter-spacing: 1px; }
         .auth-section { text-align: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.15); margin-bottom: 16px; }
         .google-btn { background: white; color: #333; border: none; padding: 10px 20px; border-radius: 20px; font-size: 0.95rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .agenda-item { display: flex; align-items: center; margin-bottom: 10px; background: rgba(0, 0, 0, 0.15); padding: 12px 14px; border-radius: 14px; border-left: 3px solid transparent; }
+        .agenda-item { display: flex; align-items: center; margin-bottom: 12px; background: rgba(0, 0, 0, 0.15); padding: 12px 14px; border-radius: 14px; border-left: 3px solid transparent; }
         .agenda-time { font-size: 0.95rem; font-weight: 400; width: 90px; flex-shrink: 0; border-right: 1px solid rgba(255, 255, 255, 0.2); margin-right: 14px; }
         .agenda-content h4 { font-size: 0.95rem; font-weight: 300; margin-bottom: 3px; color: white; }
         .agenda-content p { font-size: 0.8rem; font-weight: 300; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
@@ -255,6 +274,7 @@
         /* --- [右二] Settings --- */
         .action-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 14px; border-radius: 12px; cursor: pointer; font-weight: 300; margin-top: 10px; font-size: 1rem; width: 100%; letter-spacing: 1px; }
         .danger-btn { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #ff6b6b; margin-top: 30px; }
+        .google-login-btn { background: white; color: black; border: none; padding: 14px; border-radius: 12px; cursor: pointer; font-weight: 500; margin-top: 10px; font-size: 1rem; width: 100%; letter-spacing: 1px; }
 
         /* Modal UI 共用 */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; }
@@ -282,19 +302,18 @@
 
     <div class="bg-fixed"></div>
 
-    <!-- 底部導航拉桿 -->
-    <div class="bottom-nav">
-        <div class="nav-line" onclick="goToScreen(0)" title="訓練菜單"></div>
-        <div class="nav-line" onclick="goToScreen(1)" title="訓練儀表板"></div>
-        <div class="nav-line active" onclick="goToScreen(2)" title="主畫面"></div>
-        <div class="nav-line" onclick="goToScreen(3)" title="行程表"></div>
-        <div class="nav-line" onclick="goToScreen(4)" title="設定"></div>
+    <!-- 底部軌道拉桿 -->
+    <div class="bottom-slider-container">
+        <input type="range" min="0" max="4" step="0.001" value="2" id="nav-range" class="nav-range">
     </div>
+
+    <!-- 右下角全局懸浮加號 (FAB) -->
+    <div class="global-fab" id="global-fab" onclick="handleFabClick()">+</div>
 
     <!-- 橫向滑動主容器 -->
     <div class="app-slider" id="app-slider">
         
-        <!-- [左二] Screen 0: 訓練菜單 (垂直捲動) -->
+        <!-- [左二] Screen 0: 訓練菜單 -->
         <section class="screen" id="screen-0">
             <div class="content-container">
                 <div class="glass-card">
@@ -330,13 +349,13 @@
             </div>
         </section>
 
-        <!-- [左一] Screen 1: My Training Space (儀表板) -->
+        <!-- [左一] Screen 1: My Training Space -->
         <section class="screen" id="screen-1">
             <div class="content-container">
                 <div class="glass-card">
                     <div class="dash-head">
                         <h2>My Training Space</h2>
-                        <button class="add-event-btn" onclick="openFitModal()">+</button>
+                        <!-- + 號已被移到右下角 FAB -->
                     </div>
 
                     <div class="dash-grid">
@@ -353,14 +372,12 @@
                         </div>
                     </div>
 
-                    <!-- 體重獨立一塊 -->
                     <div class="dash-tile" style="margin-top: 12px; min-height: auto; padding: 20px 16px;">
                         <div class="w-num" id="display-weight" onclick="updateWeight()">59.0 kg</div>
                         <div class="w-track" id="dash-w-track"></div>
                         <div class="dash-cap" style="margin-top: 0;">目標 62 → 66 kg</div>
                     </div>
 
-                    <!-- Weekly Progress 取代原本的 Best 區域 -->
                     <div class="weekly-container">
                         <h3 style="margin-bottom: 12px; font-weight: 400; letter-spacing: 1px; font-size: 1.05rem;">Weekly Progress</h3>
                         <div id="fitness-logs-container"></div>
@@ -371,54 +388,52 @@
 
         <!-- [中間] Screen 2: 主視覺畫面 (Home) -->
         <section class="screen" id="screen-2">
-            <div class="content-container" style="justify-content: center; min-height: 100%;">
+            <div class="content-container">
                 
-                <div class="glass-card hero-card" id="main-hero-card">
-                    <div class="time-block">
-                        <div class="time-display" id="clock">00:00</div>
-                        <div class="greeting-date-wrapper">
-                            <span class="greeting" id="greeting-text">Bonjour, Léon</span>
-                            <span class="dot-separator"></span>
-                            <span class="date-display" id="date">Wed, Jan 1, 2026</span>
-                        </div>
+                <!-- 獨立的時鐘區塊 (玻璃數字) -->
+                <div class="glass-card clock-card">
+                    <div class="time-display" id="clock">00:00</div>
+                    <div class="greeting-date-wrapper">
+                        <span class="greeting" id="greeting-text">Bonjour, Léon</span>
+                        <span class="dot-separator"></span>
+                        <span class="date-display" id="date">Wed, Jan 1, 2026</span>
                     </div>
-                    
+                </div>
+                
+                <!-- 獨立的任務區塊 -->
+                <div class="glass-card">
+                    <h3 class="tasks-header">Today's Focus</h3>
                     <div class="tasks-container">
                         <div id="active-task-list"><p style="opacity: 0.7; font-weight: 300; text-align: center; margin-top: 15px; font-size: 0.85rem;">同步資料中...</p></div>
                         <input type="text" id="new-task-input" class="add-task-input" placeholder="+ Press Enter to add task..." onkeypress="handleAddTask(event)" style="display: none;">
 
                         <div id="completed-wrapper" class="completed-wrapper">
                             <div class="completed-header" onclick="toggleCompletedSection()">
-                                <span id="completed-arrow" class="completed-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
-                                Completed (<span id="completed-count">0</span>)
+                                <span style="margin-right:6px;">✓</span> Completed (<span id="completed-count">0</span>)
                             </div>
                             <div id="completed-task-list" class="completed-task-list task-list"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 三顆浮動泡泡並排 -->
+                <!-- 三顆浮動泡泡 -->
                 <div class="bubbles-panel">
-                    <div class="floating-bubble b-weather" onclick="goToScreen(2)">
+                    <div class="floating-bubble b-weather">
                         <strong>Location <span class="edit-icon" onclick="editCity(event)">✎</span></strong>
                         <div class="val" id="val-weather-city">Douliu</div>
                         <input type="text" id="input-city" class="add-task-input" style="display:none; font-size: 0.85rem; padding: 0; text-align: center;" onkeypress="saveCity(event)">
                         <div class="val" id="val-weather-temp">--°C</div>
-                        <div class="sub" id="sub-weather">氣象資料中</div>
                     </div>
-
                     <div class="floating-bubble b-tech" onclick="window.open('https://technews.tw/feed/', '_blank')">
                         <strong>Tech News</strong>
                         <div class="val" id="val-news" style="line-height: 1.2;">連線科技新報...</div>
-                        <div class="sub" id="sub-news">讀取頭條</div>
                     </div>
-
-                    <div class="floating-bubble b-fitness" onclick="goToScreen(1)">
+                    <div class="floating-bubble b-fitness" onclick="document.getElementById('nav-range').value=1; document.getElementById('nav-range').dispatchEvent(new Event('input')); document.getElementById('nav-range').dispatchEvent(new Event('change'));">
                         <strong>Training</strong>
-                        <div class="val" id="val-fitness-next">Next</div>
-                        <div class="sub" id="sub-fitness-status">讀取中</div>
+                        <div class="val" id="val-fitness-next" style="color: #9be7e4;">Next</div>
                     </div>
                 </div>
+
             </div>
         </section>
 
@@ -427,8 +442,8 @@
             <div class="content-container">
                 <div class="glass-card calendar-card">
                     <div class="calendar-header">
-                        <h2>Agenda <button class="add-event-btn" onclick="openEventModal()">+</button></h2>
-                        <div id="calendar-date" class="date-display" style="opacity: 0.8; font-size: 0.82rem;"></div>
+                        <h2>Agenda</h2>
+                        <div id="calendar-date" class="date-display" style="opacity: 0.8; font-size: 0.85rem;"></div>
                     </div>
                     <div class="auth-section" id="auth-container">
                         <p style="margin-bottom: 10px; font-weight: 300; font-size: 0.85rem;">請登入取得行程</p>
@@ -443,7 +458,7 @@
         <section class="screen" id="screen-4">
             <div class="content-container">
                 <div class="glass-card">
-                    <h2 style="font-size: 1.35rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 12px;">Settings</h2>
+                    <h2 style="font-size: 1.4rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 12px;">Settings</h2>
                     
                     <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 8px; font-weight: 300;">健身資料管理</p>
                     <button class="action-btn" onclick="exportFitnessData()">⬇️ 匯出本機資料</button>
@@ -452,6 +467,10 @@
                     
                     <div style="margin-top: 24px;"></div>
                     <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 8px; font-weight: 300;">Google 雲端備份</p>
+                    
+                    <!-- 新增的獨立登入按鈕 -->
+                    <button class="google-login-btn" id="settings-login-btn" onclick="handleAuthClick()">登入 Google</button>
+                    
                     <button class="action-btn" onclick="cloudBackup(true)">☁️ 備份到 Google</button>
                     <button class="action-btn" onclick="cloudRestore(true)">☁️ 從 Google 還原</button>
                     <p id="cloud-status" style="font-size: 0.75rem; opacity: 0.6; margin-top: 8px; font-weight: 300; line-height: 1.4;">登入 Google 後自動同步</p>
@@ -473,24 +492,56 @@
     <div class="modal-overlay" id="session-modal"><div class="modal-card" style="width: 500px;"><h3 id="session-title">Log Day</h3><div class="form-group" style="margin-bottom: 14px;"><label>日期</label><input type="date" id="session-date"></div><div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div><button class="add-row-btn" onclick="addSessionRow()">+ 新增動作</button><div class="modal-actions"><button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除整天</button><button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveSession()">Save</button></div></div></div>
 
     <script>
-        /* === UI Navigation Logic === */
+        /* === UI Slider Navigation Logic === */
         const slider = document.getElementById('app-slider');
-        const navLines = document.querySelectorAll('.nav-line');
-        
-        function goToScreen(index) {
-            slider.scrollTo({ left: window.innerWidth * index, behavior: 'smooth' });
-        }
+        const navRange = document.getElementById('nav-range');
+        const globalFab = document.getElementById('global-fab');
+        let isDragging = false;
 
+        // 當使用者在螢幕上滑動分頁時，連動下方的 Range Slider
         slider.addEventListener('scroll', () => {
-            const index = Math.round(slider.scrollLeft / window.innerWidth);
-            navLines.forEach((line, i) => line.classList.toggle('active', i === index));
+            if (!isDragging) {
+                const scrollNorm = slider.scrollLeft / window.innerWidth;
+                navRange.value = scrollNorm;
+                updateFabState(Math.round(scrollNorm));
+            }
         });
 
-        // 初始化時直接跳到第 3 個畫面 (index 2: 主視覺Home)
+        // 當使用者拖曳下方的 Range Slider 時，連動上方的頁面滑動 (無動畫，緊跟手指)
+        navRange.addEventListener('input', (e) => {
+            isDragging = true;
+            slider.scrollTo({ left: e.target.value * window.innerWidth, behavior: 'instant' });
+            updateFabState(Math.round(e.target.value));
+        });
+
+        // 當使用者放開 Range Slider 時，自動校正吸附到最近的整數頁面 (帶平滑動畫)
+        navRange.addEventListener('change', (e) => {
+            isDragging = false;
+            const nearestPage = Math.round(e.target.value);
+            slider.scrollTo({ left: nearestPage * window.innerWidth, behavior: 'smooth' });
+            navRange.value = nearestPage;
+        });
+
+        function updateFabState(index) {
+            if (index === 1 || index === 3) {
+                globalFab.classList.add('show');
+            } else {
+                globalFab.classList.remove('show');
+            }
+        }
+
+        function handleFabClick() {
+            const index = Math.round(slider.scrollLeft / window.innerWidth);
+            if (index === 1) openFitModal();
+            else if (index === 3) openEventModal();
+        }
+
+        // 初始化定位在中間主畫面
         window.addEventListener('load', () => {
-            // 用 setTimeout 確保 CSS 渲染完畢後再定位，無動畫瞬間移動
             setTimeout(() => {
                 slider.scrollTo({ left: window.innerWidth * 2, behavior: 'instant' });
+                navRange.value = 2;
+                updateFabState(2);
             }, 50);
         });
 
@@ -529,7 +580,7 @@
             try {
                 const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLng}&current=temperature_2m,apparent_temperature&daily=precipitation_probability_max&timezone=Asia/Taipei`);
                 const data = await res.json();
-                document.getElementById('val-weather-temp').innerHTML = `${Math.round(data.current.temperature_2m)}°C <span style="font-size: 0.65rem; opacity:0.8;">雨 ${data.daily.precipitation_probability_max[0]}%</span>`;
+                document.getElementById('val-weather-temp').innerHTML = `${Math.round(data.current.temperature_2m)}°C`;
             } catch (e) { }
         }
         
@@ -537,7 +588,7 @@
             try {
                 const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://technews.tw/feed/')}`);
                 const data = await res.json();
-                if(data.items && data.items.length > 0) { document.getElementById('val-news').innerText = data.items[0].title.substring(0, 20) + '...'; }
+                if(data.items && data.items.length > 0) { document.getElementById('val-news').innerText = data.items[0].title.substring(0, 18) + '...'; }
             } catch (e) {}
         }
         fetchLiveWeather(); fetchLiveNews();
@@ -661,8 +712,8 @@
 
         function gapiLoaded() { gapi.load('client', async () => { await gapi.client.init({ discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest', 'https://www.googleapis.com/discovery/v1/apis/tasks/v1/rest'] }); gapiInited = true; maybeEnableAuth(); }); }
         function gisLoaded() { tokenClient = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPES, callback: '' }); gisInited = true; maybeEnableAuth(); }
-        function maybeEnableAuth() { if (gapiInited && gisInited) { const t = localStorage.getItem('google_calendar_token'); if (t) { gapi.client.setToken({ access_token: t }); fetchData(); } } }
-        function handleAuthClick() { tokenClient.callback = async (resp) => { if (resp.error) return; gapi.client.setToken({ access_token: resp.access_token }); localStorage.setItem('google_calendar_token', resp.access_token); await fetchData(); }; if (gapi.client.getToken() === null) tokenClient.requestAccessToken({prompt: 'consent'}); else tokenClient.requestAccessToken({prompt: ''}); }
+        function maybeEnableAuth() { if (gapiInited && gisInited) { const t = localStorage.getItem('google_calendar_token'); if (t) { gapi.client.setToken({ access_token: t }); fetchData(); document.getElementById('settings-login-btn').innerText = "已連結 Google"; } } }
+        function handleAuthClick() { tokenClient.callback = async (resp) => { if (resp.error) return; gapi.client.setToken({ access_token: resp.access_token }); localStorage.setItem('google_calendar_token', resp.access_token); document.getElementById('settings-login-btn').innerText = "已連結 Google"; await fetchData(); }; if (gapi.client.getToken() === null) tokenClient.requestAccessToken({prompt: 'consent'}); else tokenClient.requestAccessToken({prompt: ''}); }
         
         async function fetchData() { document.getElementById('auth-container').style.display = 'none'; document.getElementById('new-task-input').style.display = 'block'; await Promise.all([fetchTasks(), fetchAllEvents()]); cloudSync(); }
 
@@ -686,8 +737,8 @@
         }
         async function toggleTaskStatus(id, s) { document.getElementById(`task-${id}`).classList.add('animating-out'); await gapi.client.tasks.tasks.patch({ tasklist: '@default', task: id, resource: { status: s === 'completed' ? 'needsAction' : 'completed' } }); setTimeout(fetchTasks, 300); }
         async function handleAddTask(e) { if (e.key === 'Enter' && e.target.value.trim()) { const v = e.target.value.trim(); e.target.value = ''; await gapi.client.tasks.tasks.insert({ tasklist: '@default', resource: { title: v } }); fetchTasks(); } }
-        async function deleteTask(id) { if(confirm("刪除？")) { document.getElementById(`task-${id}`).classList.add('animating-out'); await gapi.client.tasks.tasks.delete({ tasklist: '@default', task: id }); setTimeout(fetchTasks, 300); } }
-        function toggleCompletedSection() { document.getElementById('completed-task-list').classList.toggle('show'); document.getElementById('completed-arrow').classList.toggle('open'); }
+        async function deleteTask(id) { if(confirm("刪除任務？")) { document.getElementById(`task-${id}`).classList.add('animating-out'); await gapi.client.tasks.tasks.delete({ tasklist: '@default', task: id }); setTimeout(fetchTasks, 300); } }
+        function toggleCompletedSection() { document.getElementById('completed-task-list').classList.toggle('show'); }
 
         async function fetchAllEvents() {
             try {
@@ -695,7 +746,7 @@
                 const cals = (await gapi.client.calendar.calendarList.list()).result.items;
                 let events = (await Promise.all(cals.map(cal => gapi.client.calendar.events.list({ calendarId: cal.id, timeMin: s.toISOString(), timeMax: e.toISOString(), singleEvents: true }).then(r => r.result.items.map(ev => ({...ev, colorCode: cal.backgroundColor}))).catch(()=>[])))).flat();
                 events.sort((a, b) => new Date(a.start.dateTime || a.start.date) - new Date(b.start.dateTime || b.start.date));
-                document.getElementById('agenda-list').innerHTML = events.length ? events.map(ev => `<div class="agenda-item" style="border-left-color: ${ev.colorCode};"><div class="agenda-time">${ev.start.dateTime ? new Date(ev.start.dateTime).toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit'}) : '全天'}</div><div class="agenda-content"><h4>${ev.summary}</h4></div></div>`).join('') : '<p style="text-align:center; opacity:0.7; font-size:0.85rem;">今天無行程</p>';
+                document.getElementById('agenda-list').innerHTML = events.length ? events.map(ev => `<div class="agenda-item" style="border-left-color: ${ev.colorCode};"><div class="agenda-time">${ev.start.dateTime ? new Date(ev.start.dateTime).toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit'}) : '全天'}</div><div class="agenda-content"><h4>${ev.summary}</h4></div></div>`).join('') : '<p style="text-align:center; opacity:0.7; font-size:0.85rem; margin-top:20px;">今天無行程安排</p>';
             } catch (err) {}
         }
         function openEventModal() { document.getElementById('event-modal').classList.add('show'); }
@@ -706,8 +757,8 @@
         const BACKUP_NAME = 'leon_dashboard_backup.json'; let backupTimer = null;
         function cloudReady() { return typeof gapi !== 'undefined' && gapi.client && gapi.client.getToken && gapi.client.getToken(); }
         function scheduleBackup() { if (cloudReady()) { clearTimeout(backupTimer); backupTimer = setTimeout(() => cloudBackup(false), 3000); } }
-        async function cloudBackup(manual) { if(!cloudReady()){if(manual)alert('請先登入');return;} try{ const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; const data = JSON.stringify({updatedAt: parseInt(localStorage.getItem('leon_local_updated')||'0'), fitnessData, settings:{city:userCity,lat:userLat,lng:userLng}}); if(f) await gapi.client.request({path:`https://www.googleapis.com/upload/drive/v3/files/${f.id}`, method:'PATCH', params:{uploadType:'media'}, body:data}); else await gapi.client.request({path:'https://www.googleapis.com/upload/drive/v3/files', method:'POST', params:{uploadType:'multipart'}, headers:{'Content-Type':'multipart/related; boundary=bnd'}, body:`--bnd\r\nContent-Type: application/json\r\n\r\n{"name":"${BACKUP_NAME}","parents":["appDataFolder"]}\r\n--bnd\r\nContent-Type: application/json\r\n\r\n${data}\r\n--bnd--`}); document.getElementById('cloud-status').innerText = '已備份'; if(manual)alert('備份成功'); }catch(e){document.getElementById('cloud-status').innerText = '備份失敗';} }
-        async function cloudRestore(manual) { if(!cloudReady()){if(manual)alert('請先登入');return;} try{ const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; if(!f){if(manual)alert('無雲端備份');return;} const d = await gapi.client.request({path:`https://www.googleapis.com/drive/v3/files/${f.id}`, params:{alt:'media'}}); const b = typeof d.result === 'object' ? d.result : JSON.parse(d.body); fitnessData = b.fitnessData; localStorage.setItem('leon_fitness_data', JSON.stringify(fitnessData)); initFitness(); document.getElementById('cloud-status').innerText = '已還原'; }catch(e){document.getElementById('cloud-status').innerText = '還原失敗';} }
+        async function cloudBackup(manual) { if(!cloudReady()){if(manual)alert('請先登入');return;} try{ const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; const data = JSON.stringify({updatedAt: parseInt(localStorage.getItem('leon_local_updated')||'0'), fitnessData, settings:{city:userCity,lat:userLat,lng:userLng}}); if(f) await gapi.client.request({path:`https://www.googleapis.com/upload/drive/v3/files/${f.id}`, method:'PATCH', params:{uploadType:'media'}, body:data}); else await gapi.client.request({path:'https://www.googleapis.com/upload/drive/v3/files', method:'POST', params:{uploadType:'multipart'}, headers:{'Content-Type':'multipart/related; boundary=bnd'}, body:`--bnd\r\nContent-Type: application/json\r\n\r\n{"name":"${BACKUP_NAME}","parents":["appDataFolder"]}\r\n--bnd\r\nContent-Type: application/json\r\n\r\n${data}\r\n--bnd--`}); document.getElementById('cloud-status').innerText = '已自動備份'; if(manual)alert('備份成功'); }catch(e){document.getElementById('cloud-status').innerText = '備份失敗';} }
+        async function cloudRestore(manual) { if(!cloudReady()){if(manual)alert('請先登入');return;} try{ const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; if(!f){if(manual)alert('無雲端備份');return;} const d = await gapi.client.request({path:`https://www.googleapis.com/drive/v3/files/${f.id}`, params:{alt:'media'}}); const b = typeof d.result === 'object' ? d.result : JSON.parse(d.body); fitnessData = b.fitnessData; localStorage.setItem('leon_fitness_data', JSON.stringify(fitnessData)); initFitness(); document.getElementById('cloud-status').innerText = '已從雲端還原'; }catch(e){document.getElementById('cloud-status').innerText = '還原失敗';} }
         async function cloudSync() { try { const res = await gapi.client.request({path:'https://www.googleapis.com/drive/v3/files', params:{spaces:'appDataFolder',q:`name='${BACKUP_NAME}'`,fields:'files(id)'}}); const f = res.result.files[0]; if(!f) { if(fitnessData.logs.length) cloudBackup(false); return; } const d = await gapi.client.request({path:`https://www.googleapis.com/drive/v3/files/${f.id}`, params:{alt:'media'}}); const cloud = typeof d.result === 'object' ? d.result : JSON.parse(d.body); const localTs = parseInt(localStorage.getItem('leon_local_updated')||'0'); if((cloud.updatedAt||0) > localTs) cloudRestore(false); else if(localTs > (cloud.updatedAt||0)) cloudBackup(false); else document.getElementById('cloud-status').innerText = '已同步'; } catch(e){} }
 
         window.onload = () => { gapiLoaded(); gisLoaded(); };
