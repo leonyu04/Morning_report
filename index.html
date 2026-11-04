@@ -866,14 +866,34 @@
         function deleteSession() { if(confirm("刪除整天紀錄？")) { fitnessData.logs = fitnessData.logs.filter(l => !sessionCtx.ids.includes(l.id)); saveFitnessData(); closeSessionModal(); initFitness(); } }
 
         function renderWeeklyFitnessLogs() {
-            const weeks = {}; const curWeekKey = getMonday(new Date()).toLocaleDateString('en-CA'); weeks[curWeekKey] = {};
-            fitnessData.logs.forEach(log => { const wk = getMonday(new Date(log.date)).toLocaleDateString('en-CA'); const dk = dateKeyOf(log.date); if (!weeks[wk]) weeks[wk] = {}; if (!weeks[wk][dk]) weeks[wk][dk] = []; weeks[wk][dk].push(log); });
-            document.getElementById('fitness-logs-container').innerHTML = Object.keys(weeks).sort().reverse().slice(0, 5).map(wk => {
-                const mon = new Date(wk + 'T00:00:00'); const sun = new Date(mon); sun.setDate(sun.getDate() + 6); const keys = Object.keys(weeks[wk]).sort(); let segs = '';
-                for (let i = 0; i < Math.max(3, keys.length); i++) { if (i < keys.length) { const dk = keys[i]; segs += `<div class="week-seg done" onclick="openEditSession('${dk}')">${detectDay(weeks[wk][dk].map(l=>l.name)) ? 'D'+detectDay(weeks[wk][dk].map(l=>l.name)) : ''} ${dk.substring(5)}</div>`; } else { segs += `<div class="week-seg" onclick="openNewSession(${getNextDay()}, '${wk === curWeekKey ? new Date().toLocaleDateString('en-CA') : sun.toLocaleDateString('en-CA')}')">+</div>`; } }
-                return `<div class="week-row"><div class="week-head"><span>${mon.getMonth()+1}/${mon.getDate()} - ${sun.getMonth()+1}/${sun.getDate()}</span></div><div class="week-bar">${segs}</div></div>`;
-            }).join('');
+    const weeks = {}; const curWeekKey = getMonday(new Date()).toLocaleDateString('en-CA'); weeks[curWeekKey] = {};
+    fitnessData.logs.forEach(log => { const wk = getMonday(new Date(log.date)).toLocaleDateString('en-CA'); const dk = dateKeyOf(log.date); if (!weeks[wk]) weeks[wk] = {}; if (!weeks[wk][dk]) weeks[wk][dk] = []; weeks[wk][dk].push(log); });
+
+    const rows = Object.keys(weeks).sort().reverse().slice(0, 6).map(wk => {
+        const mon = new Date(wk + 'T00:00:00'); const sun = new Date(mon); sun.setDate(sun.getDate() + 6); const keys = Object.keys(weeks[wk]).sort(); let segs = '';
+        for (let i = 0; i < Math.max(3, keys.length); i++) {
+            if (i < keys.length) { const dk = keys[i]; const dn = detectDay(weeks[wk][dk].map(l=>l.name)); segs += `<div class="week-seg done" onclick="openEditSession('${dk}')">${dn ? 'D'+dn : ''} ${dk.substring(5)}</div>`; }
+            else { segs += `<div class="week-seg" onclick="openNewSession(${getNextDay()}, '${wk === curWeekKey ? new Date().toLocaleDateString('en-CA') : sun.toLocaleDateString('en-CA')}')">+</div>`; }
         }
+        return `<div class="week-row"><div class="week-head"><span>${mon.getMonth()+1}/${mon.getDate()} - ${sun.getMonth()+1}/${sun.getDate()}</span></div><div class="week-bar">${segs}</div></div>`;
+    });
+
+    const latest = rows[0] || '';
+    const older = rows.slice(1);
+    const olderHTML = older.length ? `
+        <div class="older-weeks-toggle" onclick="toggleOlderWeeks()">
+            <span>過往週次 (${older.length})</span><span id="older-weeks-arrow">▶</span>
+        </div>
+        <div id="older-weeks-box" style="display:${olderWeeksOpen ? 'block' : 'none'};">${older.join('')}</div>` : '';
+    document.getElementById('fitness-logs-container').innerHTML = latest + olderHTML;
+    const ar = document.getElementById('older-weeks-arrow'); if (ar) ar.innerText = olderWeeksOpen ? '▼' : '▶';
+}
+let olderWeeksOpen = false;
+function toggleOlderWeeks() {
+    olderWeeksOpen = !olderWeeksOpen;
+    document.getElementById('older-weeks-box').style.display = olderWeeksOpen ? 'block' : 'none';
+    document.getElementById('older-weeks-arrow').innerText = olderWeeksOpen ? '▼' : '▶';
+}
 
         function saveFitnessData() { localStorage.setItem('leon_fitness_data', JSON.stringify(fitnessData)); localStorage.setItem('leon_local_updated', Date.now().toString()); scheduleBackup(); }
         function exportFitnessData() { const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ fitnessData, journalBubbles }, null, 2)); a.download = `Leon_Dashboard_Backup.json`; document.body.appendChild(a); a.click(); a.remove(); }
