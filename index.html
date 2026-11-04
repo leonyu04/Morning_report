@@ -46,12 +46,10 @@
         .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.005)); backdrop-filter: blur(26px); -webkit-backdrop-filter: blur(26px); border-top: 1px solid rgba(255, 255, 255, 0.14); border-left: 1px solid rgba(255, 255, 255, 0.14); border-bottom: 1px solid rgba(255, 255, 255, 0.03); border-right: 1px solid rgba(255, 255, 255, 0.03); border-radius: 24px; box-shadow: 0 12px 35px 0 rgba(0, 0, 0, 0.25); padding: 22px 20px; width: 100%; }
         
         /* --- Screen 0: Zen Flow 舒壓點擊與進化區 --- */
-        .zen-container { width: 100%; height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; cursor: pointer; user-select: none; }
-        .zen-orb { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, rgba(155,231,228,0.15), rgba(255,255,255,0.02)); backdrop-filter: blur(14px); border: 1px solid rgba(155,231,228,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 35px rgba(155,231,228,0.25); transition: transform 0.15s ease, background 0.3s ease; will-change: transform; z-index: 2; }
+        .zen-container { width: 100%; height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+        .zen-orb { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, rgba(155,231,228,0.15), rgba(255,255,255,0.02)); backdrop-filter: blur(14px); border: 1px solid rgba(155,231,228,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 35px rgba(155,231,228,0.25); transition: transform 0.15s ease, box-shadow 0.3s ease; will-change: transform; z-index: 2; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
         .zen-orb:active { transform: scale(0.92); }
-        .zen-count { font-size: 1.8rem; font-weight: 300; color: #9be7e4; letter-spacing: 1px; }
-        .zen-level { font-size: 0.65rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; margin-top: 2px; }
-        .zen-text { font-size: 0.75rem; opacity: 0.8; font-family: 'Noto Serif JP', serif; letter-spacing: 1px; margin-top: 18px; text-align: center; z-index: 2; }
+        .zen-count { font-size: 2.4rem; font-weight: 300; color: #9be7e4; letter-spacing: 1px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; pointer-events: none;}
 
         /* --- Screen 1: 健身專屬頁面 --- */
         .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -71,13 +69,12 @@
         .week-seg { flex: 1; height: 32px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: rgba(255,255,255,0.4); cursor: pointer; font-family: 'Noto Serif JP', serif; }
         .week-seg.done { background: rgba(155,231,228,0.2); border-color: #9be7e4; color: #9be7e4; font-weight: 700; }
         
-        /* 完整選單字體全面調小精緻化 */
         .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: rgba(0,0,0,0.12); border-radius: 8px; margin-bottom: 5px; cursor: pointer; }
         .menu-name { font-size: 0.76rem; font-weight: 400; }
         .menu-reps { font-size: 0.62rem; opacity: 0.65; font-family: 'Noto Serif JP', serif; margin-top: 1px;}
         .menu-weight { font-size: 0.72rem; font-weight: 300; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 6px; }
         
-        .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; width: 100%; font-size: 1.05rem; font-weight: 400; letter-spacing: 1px; padding-bottom: 4px; }
+        .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; width: 100%; font-size: 0.9rem; font-weight: 400; letter-spacing: 1px; padding-bottom: 4px; }
         .collapsible-content { display: none; flex-direction: column; gap: 14px; margin-top: 14px; }
         .collapsible-content.show { display: flex; }
 
@@ -89,7 +86,6 @@
         .dot-separator { width: 4px; height: 4px; background: white; border-radius: 50%; opacity: 0.5; }
 
         .journal-container { width: 100%; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 15px; z-index: 10; }
-        /* 修正首頁輸入框樣式，與其他輸入框一致 */
         .journal-input { background: rgba(0,0,0,0.3); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 10px 18px; color: white; font-size: 0.85rem; text-align: center; width: 220px; outline: none; transition: all 0.3s ease; font-weight: 300; letter-spacing: 1px; font-family: 'Noto Serif JP', serif; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .journal-input::placeholder { color: rgba(255,255,255,0.4); }
         .journal-input:focus { border-color: rgba(255,255,255,0.3); background: rgba(0,0,0,0.45); width: 260px; }
@@ -192,17 +188,15 @@
 
     <div class="app-slider" id="app-slider">
         
-        <!-- [左二] Screen 0: Zen Flow 舒壓點擊與進化區 -->
+        <!-- [左二] Screen 0: Zen Flow 舒壓點擊區 -->
         <section class="screen" id="screen-0" style="justify-content: center;">
             <div class="content-container" style="align-items: center; gap: 20px;">
                 <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; padding: 45px 20px;">
-                    <h2 style="font-size:1.1rem; font-weight:400; opacity:0.8; letter-spacing:1px; margin-bottom: 10px;">Zen Flow</h2>
-                    <div class="zen-container" onclick="tapZenCounter()">
+                    <h2 style="font-size:1.1rem; font-weight:400; opacity:0.8; letter-spacing:1px; margin-bottom: 20px;">Zen Flow</h2>
+                    <div class="zen-container" onclick="tapZenCounter(event)" id="zen-container">
                         <div class="zen-orb" id="zen-orb">
                             <div class="zen-count" id="zen-count">0</div>
-                            <div class="zen-level" id="zen-level">新手修行</div>
                         </div>
-                        <div class="zen-text" id="zen-status-text">輕觸圓圈釋放壓力，累積專注能量</div>
                     </div>
                 </div>
             </div>
@@ -243,7 +237,7 @@
                     </div>
                 </div>
 
-                <!-- 完整菜單總目錄（字體已全面縮小精緻化） -->
+                <!-- 完整菜單總目錄 -->
                 <div class="glass-card">
                     <div class="collapsible-header" onclick="toggleMenuCollapse()">
                         <span>Workout Programs (完整菜單)</span>
@@ -395,7 +389,7 @@
 
     </div>
 
-    <!-- Modals (點擊黑幕背景自動關閉 / Cancel) -->
+    <!-- Modals -->
     <div class="modal-overlay" id="event-modal" onclick="if(event.target === this) closeEventModal()"><div class="modal-card"><h3>New Event</h3><div class="form-group"><label>行程標題</label><input type="text" id="evt-title"></div><div class="form-group"><label>開始時間</label><input type="datetime-local" id="evt-start"></div><div class="form-group"><label>結束時間</label><input type="datetime-local" id="evt-end"></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeEventModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveNewEvent()">Save</button></div></div></div>
     
     <div class="modal-overlay" id="fit-modal" onclick="if(event.target === this) closeFitModal()"><div class="modal-card"><h3>Log Workout</h3>
@@ -427,26 +421,83 @@
     <div class="modal-overlay" id="session-modal" onclick="if(event.target === this) closeSessionModal()"><div class="modal-card" style="width: 500px;"><h3 id="session-title">Log Day</h3><div class="form-group" style="margin-bottom: 14px;"><label>日期</label><input type="date" id="session-date"></div><div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div><button class="add-row-btn" onclick="addSessionRow()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:white; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:0.8rem;">+ 新增動作</button><div class="modal-actions"><button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除整天</button><button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveSession()">Save</button></div></div></div>
 
     <script>
-        /* === Zen Flow 舒壓點擊與進化邏輯 === */
+        /* === Zen Flow 舒壓點擊與機率進化系統 === */
         let zenClicks = parseInt(localStorage.getItem('leon_zen_clicks')) || 0;
         
         function updateZenDisplay() {
             document.getElementById('zen-count').innerText = zenClicks;
-            let levelTitle = "新手修行";
-            if(zenClicks >= 50) levelTitle = "心如止水 🌊";
-            else if(zenClicks >= 30) levelTitle = "深度放鬆 🌿";
-            else if(zenClicks >= 15) levelTitle = "內心平靜 ✨";
-            else if(zenClicks >= 5) levelTitle = "逐漸專注 🍃";
-            document.getElementById('zen-level').innerText = levelTitle;
         }
 
-        function tapZenCounter() {
-            zenClicks++;
+        // 浮動特效文字
+        function showZenFloater(val) {
+            const floater = document.createElement('div');
+            floater.innerText = '+' + val;
+            floater.style.position = 'absolute';
+            floater.style.color = val >= 5 ? '#ffffff' : (val >= 2 ? '#a7f3d0' : '#9be7e4');
+            floater.style.fontWeight = val >= 5 ? '700' : '300';
+            floater.style.fontSize = val >= 5 ? '1.5rem' : '1rem';
+            floater.style.pointerEvents = 'none';
+            floater.style.transition = 'all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            floater.style.transform = 'translate(-50%, -50%)';
+            floater.style.left = '50%';
+            floater.style.top = '50%';
+            floater.style.textShadow = '0 0 10px rgba(155,231,228,0.8)';
+            floater.style.zIndex = '10';
+            
+            document.getElementById('zen-container').appendChild(floater);
+            
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 50 + Math.random() * 45;
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance - 40; // 稍微偏上的擴散
+            
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    floater.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1.2)`;
+                    floater.style.opacity = '0';
+                }, 10);
+            });
+            
+            setTimeout(() => floater.remove(), 600);
+        }
+
+        function tapZenCounter(e) {
+            let addVal = 1;
+            const r = Math.random();
+            
+            // 三階段進化邏輯
+            if (zenClicks >= 500) { 
+                // 第三階段 (機率大噴發)
+                if (r < 0.05) addVal = 10;
+                else if (r < 0.20) addVal = 5;
+                else if (r < 0.50) addVal = 3;
+                else addVal = 2;
+            } else if (zenClicks >= 100) { 
+                // 第二階段 (機率小爆擊)
+                if (r < 0.05) addVal = 3;
+                else if (r < 0.30) addVal = 2;
+                else addVal = 1;
+            } else { 
+                // 第一階段 (平穩累積)
+                addVal = 1;
+            }
+            
+            zenClicks += addVal;
             localStorage.setItem('leon_zen_clicks', zenClicks);
-            updateZenDisplay();
+            document.getElementById('zen-count').innerText = zenClicks;
+            
             const orb = document.getElementById('zen-orb');
-            orb.style.transform = 'scale(1.15)';
-            setTimeout(() => { orb.style.transform = 'scale(1)'; }, 150);
+            orb.style.transform = addVal >= 5 ? 'scale(1.25)' : 'scale(1.15)';
+            if (addVal >= 3) {
+                orb.style.boxShadow = '0 0 50px rgba(155,231,228,0.6)';
+            }
+            
+            setTimeout(() => { 
+                orb.style.transform = 'scale(1)'; 
+                orb.style.boxShadow = '0 0 35px rgba(155,231,228,0.25)';
+            }, 150);
+
+            showZenFloater(addVal);
         }
         updateZenDisplay();
 
@@ -464,7 +515,7 @@
             if (!hasDoneToday) {
                 scrollToAndExpandNextWorkout();
             } else {
-                goToScreen(1); // 已完成就停留在健身頁面
+                goToScreen(1);
             }
         }
 
@@ -655,7 +706,7 @@
 
             if (hasDoneToday) {
                 document.getElementById('dash-next-top-cap').innerText = "STATUS";
-                document.getElementById('dash-next-day').innerText = "🎉 今日訓練已完成";
+                document.getElementById('dash-next-day').innerText = "今日已完成";
                 document.getElementById('dash-next-label').innerText = "Great Job, Léon!";
                 document.getElementById('val-fitness-next').innerText = "Done";
             } else {
