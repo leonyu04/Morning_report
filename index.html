@@ -33,59 +33,56 @@
         .content-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
 
         /* --- iOS Dock --- */
-        .ios-dock { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px); left: 50%; transform: translateX(-50%); display: flex; align-items: center; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.12); border-radius: 40px; padding: 6px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; }
+        .ios-dock { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px); left: 50%; transform: translateX(-50%); display: flex; align-items: center; background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.08); border-radius: 40px; padding: 6px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; }
         .nav-item { width: 54px; height: 46px; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 2; color: rgba(255, 255, 255, 0.45); transition: color 0.3s ease; }
         .nav-item.active { color: rgba(255, 255, 255, 1); }
         .nav-item svg { width: 22px; height: 22px; stroke-width: 1.5; fill: none; stroke: currentColor; pointer-events: none; }
-        .nav-bubble { position: absolute; top: 6px; left: 6px; width: 54px; height: 46px; background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02)); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.35); border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 1; will-change: transform; pointer-events: auto; touch-action: none; cursor: grab; transition: background 0.2s ease, box-shadow 0.2s ease; }
+        .nav-bubble { position: absolute; top: 6px; left: 6px; width: 54px; height: 46px; background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.25); border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 1; will-change: transform; pointer-events: auto; touch-action: none; cursor: grab; transition: background 0.2s ease, box-shadow 0.2s ease; }
         .nav-bubble.snap { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease, box-shadow 0.2s ease; }
 
-        .global-fab { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 95px); right: 28px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); color: white; font-size: 1.6rem; font-weight: 300; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.25); cursor: pointer; z-index: 1000; opacity: 0; pointer-events: none; transform: scale(0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .global-fab { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 95px); right: 28px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25); color: white; font-size: 1.6rem; font-weight: 300; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.25); cursor: pointer; z-index: 1000; opacity: 0; pointer-events: none; transform: scale(0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .global-fab.show { opacity: 1; pointer-events: auto; transform: scale(1); }
 
-        .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.15); border-bottom: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.15); padding: 22px 20px; width: 100%; }
+        /* 更霧、更有質感的玻璃卡片 */
+        .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.005)); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); border-top: 1px solid rgba(255, 255, 255, 0.12); border-left: 1px solid rgba(255, 255, 255, 0.12); border-bottom: 1px solid rgba(255, 255, 255, 0.03); border-right: 1px solid rgba(255, 255, 255, 0.03); border-radius: 24px; box-shadow: 0 12px 35px 0 rgba(0, 0, 0, 0.2); padding: 22px 20px; width: 100%; }
         
-        /* --- Screen 0: 預留空白或專注頁 --- */
-        .zen-ring { width: 180px; height: 180px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px auto; cursor: pointer; transition: all 0.3s ease; }
-        .zen-ring.active { border: 2px solid #9be7e4; box-shadow: 0 0 30px rgba(155,231,228,0.2); }
-        .zen-time { font-size: 3rem; font-weight: 300; letter-spacing: 2px; line-height: 1; }
+        /* --- Screen 0: Zen Focus 番茄鐘 --- */
+        .zen-ring { width: 190px; height: 190px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.25); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 25px auto; cursor: pointer; transition: all 0.3s ease; background: rgba(255,255,255,0.02); }
+        .zen-ring.active { border: 2px solid #9be7e4; box-shadow: 0 0 35px rgba(155,231,228,0.25); background: rgba(155,231,228,0.04); }
+        .zen-time { font-size: 3.2rem; font-weight: 300; letter-spacing: 2px; line-height: 1; }
         .zen-cap { font-size: 0.75rem; opacity: 0.6; font-family: 'Noto Serif JP', serif; margin-top: 8px; letter-spacing: 1px; }
 
-        /* --- Screen 1: 健身專屬頁面 (精簡三欄橫排與大卡片) --- */
-        .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        /* --- Screen 1: 健身專屬頁面 (上中下還原排版) --- */
+        .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .dash-head h2 { font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; }
         
-        /* 三欄橫排區塊 */
-        .dash-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
-        .dash-tile-sm { background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 12px 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 100px; }
+        .dash-tile { background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-bottom: 12px; }
+        .dash-cap { font-size: 0.75rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
+        .dash-big { font-size: 1.5rem; font-weight: 300; color: #9be7e4; line-height: 1.1; letter-spacing: 1px; margin: 6px 0; }
         
-        /* 強調今日任務的大卡片 (放大版 Day 2 效果) */
-        .today-highlight-card { background: linear-gradient(135deg, rgba(155,231,228,0.12), rgba(255,255,255,0.02)); border: 1px solid rgba(155,231,228,0.4); border-radius: 24px; padding: 24px 20px; box-shadow: 0 12px 35px rgba(0,0,0,0.2); margin-bottom: 16px; }
-        .highlight-title { display: flex; flex-direction: column; line-height: 1.2; font-size: 1.25rem; font-weight: 400; color: #9be7e4; }
-        .highlight-title small { font-size: 0.75rem; opacity: 0.8; font-weight: 300; font-family: 'Noto Serif JP', serif; margin-top: 4px; color: white; }
+        .w-num { font-size: 1.5rem; font-weight: 300; cursor: pointer; color: #9be7e4; margin-top: 4px; }
+        .w-track { position: relative; width: 85%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 5px; margin: 12px 0 16px; }
+        .w-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #9be7e4; border-radius: 5px; box-shadow: 0 0 8px rgba(155,231,228,0.6); }
+        .w-mark { position: absolute; top: -3px; width: 2px; height: 11px; background: rgba(255,255,255,0.8); }
+        .w-mark span { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; opacity: 0.8; font-family: 'Noto Serif JP', serif; }
 
-        .dash-cap { font-size: 0.7rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
-        .dash-big { font-size: 1.3rem; font-weight: 300; color: #9be7e4; line-height: 1.1; letter-spacing: 1px; margin: 4px 0; }
-        .chips { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; margin-top: 4px; }
-        .chip { font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); font-family: 'Noto Serif JP', serif; }
-        
-        .w-num { font-size: 1.2rem; font-weight: 300; cursor: pointer; color: #9be7e4; margin-top: 4px; }
-        
-        .weekly-container { margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 14px; margin-bottom: 16px; }
-        .week-row { background: rgba(0,0,0,0.12); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
+        .weekly-container { margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; }
+        .week-row { background: rgba(0,0,0,0.12); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
         .week-head { display: flex; justify-content: space-between; align-items: center; font-family: 'Noto Serif JP', serif; font-size: 0.8rem; opacity: 0.85; margin-bottom: 6px; }
         .week-bar { display: flex; gap: 3px; }
-        .week-seg { flex: 1; height: 32px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: rgba(255,255,255,0.4); cursor: pointer; font-family: 'Noto Serif JP', serif; }
+        .week-seg { flex: 1; height: 32px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: rgba(255,255,255,0.4); cursor: pointer; font-family: 'Noto Serif JP', serif; }
         .week-seg.done { background: rgba(155,231,228,0.2); border-color: #9be7e4; color: #9be7e4; font-weight: 700; }
         
-        .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(0,0,0,0.15); border-radius: 10px; margin-bottom: 8px; cursor: pointer; }
+        .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(0,0,0,0.12); border-radius: 10px; margin-bottom: 8px; cursor: pointer; }
         .menu-name { font-size: 0.9rem; font-weight: 400; }
         .menu-reps { font-size: 0.75rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; margin-top: 2px;}
-        .menu-weight { font-size: 0.85rem; font-weight: 300; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px; }
+        .menu-weight { font-size: 0.85rem; font-weight: 300; background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 8px; }
+        
+        .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; width: 100%; font-size: 1.05rem; font-weight: 400; letter-spacing: 1px; padding-bottom: 4px; }
+        .collapsible-content { display: none; flex-direction: column; gap: 16px; margin-top: 14px; }
+        .collapsible-content.show { display: flex; }
 
-        /* 額外跑步區塊 */
-        .running-box { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 12px 14px; margin-top: 12px; cursor: pointer; }
-        .running-box:active { background: rgba(255,255,255,0.1); }
+        .running-box { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); border: 1px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 14px; margin-top: 10px; cursor: pointer; }
 
         /* --- Screen 2: 首頁 (Home) --- */
         .clock-card { display: flex; flex-direction: column; align-items: center; text-align: center; border: none; background: transparent; box-shadow: none; padding: 10px 0; }
@@ -95,21 +92,20 @@
         .dot-separator { width: 4px; height: 4px; background: white; border-radius: 50%; opacity: 0.5; }
 
         .journal-container { width: 100%; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 15px; z-index: 10; }
-        .journal-input { background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 10px 24px; color: white; font-size: 0.85rem; text-align: center; width: 220px; outline: none; transition: all 0.3s ease; font-weight: 300; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .journal-input { background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 10px 24px; color: white; font-size: 0.85rem; text-align: center; width: 220px; outline: none; transition: all 0.3s ease; font-weight: 300; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .journal-input::placeholder { color: rgba(255,255,255,0.4); }
-        .journal-input:focus { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.12); width: 260px; }
+        .journal-input:focus { border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.1); width: 260px; }
 
         #journal-area { position: absolute; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
-        .journal-bubble { position: absolute; display: flex; align-items: center; gap: 10px; pointer-events: auto; cursor: grab; background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; padding: 10px 18px; color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; white-space: nowrap; }
-        .journal-text { font-size: 0.85rem; font-weight: 300; letter-spacing: 0.5px; }
+        .journal-bubble { position: absolute; display: flex; align-items: center; gap: 10px; pointer-events: auto; cursor: grab; background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.25); border-radius: 30px; padding: 10px 18px; color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; white-space: nowrap; }
 
-        .trash-drop-zone { position: fixed; left: 0; width: 100vw; height: 90px; background: rgba(239, 68, 68, 0.25); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(239, 68, 68, 0.4); display: flex; align-items: center; justify-content: center; color: #ff8585; font-size: 0.85rem; font-weight: 300; z-index: 2500; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+        .trash-drop-zone { position: fixed; left: 0; width: 100vw; height: 90px; background: rgba(239, 68, 68, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(239, 68, 68, 0.35); display: flex; align-items: center; justify-content: center; color: #ff8585; font-size: 0.85rem; font-weight: 300; z-index: 2500; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
         .trash-drop-zone.top { top: 0; }
-        .trash-drop-zone.bottom { bottom: 0; border-top: 1px solid rgba(239, 68, 68, 0.4); border-bottom: none; }
+        .trash-drop-zone.bottom { bottom: 0; border-top: 1px solid rgba(239, 68, 68, 0.35); border-bottom: none; }
         .trash-drop-zone.active { opacity: 1; }
 
         .bubbles-panel { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 15px; width: 100%; z-index: 10; }
-        .floating-bubble { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: white; padding: 10px; width: 32%; aspect-ratio: 1/1; max-width: 120px; cursor: pointer; user-select: none; -webkit-user-select: none; }
+        .floating-bubble { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: white; padding: 10px; width: 32%; aspect-ratio: 1/1; max-width: 120px; cursor: pointer; user-select: none; -webkit-user-select: none; }
         .floating-bubble strong { font-size: 0.7rem; font-weight: 400; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.9; }
         .floating-bubble .val { font-size: 0.8rem; margin: 2px 0; font-weight: 300; }
         .b-weather { animation: floatA 5.2s ease-in-out infinite; }
@@ -120,11 +116,11 @@
         @keyframes floatC { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-12px) rotate(1deg); } }
 
         /* --- 任務區塊 (Today's Focus) --- */
-        .tasks-header { font-size: 1.05rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.9; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
+        .tasks-header { font-size: 1.05rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.9; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
         #active-task-list { width: 100%; max-height: 220px; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; justify-content: flex-start; }
         #active-task-list::-webkit-scrollbar { width: 4px; }
-        #active-task-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
-        #active-task-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 10px; }
+        #active-task-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 10px; }
+        #active-task-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         .task-item { display: flex; flex-direction: column; margin-bottom: 12px; flex-shrink: 0; }
         .task-item.animating-out { opacity: 0; transform: scale(0.95); transition: all 0.3s ease; }
         .task-header { display: flex; align-items: flex-start; width: 100%; }
@@ -140,40 +136,41 @@
         .add-task-input { background: transparent; border: none; color: white; width: 100%; padding: 4px 0; font-size: 0.85rem; font-weight: 300; outline: none; margin-top: 4px; opacity: 0.6; transition: opacity 0.3s; }
         .add-task-input::placeholder { color: rgba(255,255,255,0.5); }
         .add-task-input:focus { opacity: 1; }
-        .completed-wrapper { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); display: none; }
+        .completed-wrapper { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); display: none; }
         .completed-wrapper.visible { display: block; }
         .completed-header { display: flex; align-items: center; cursor: pointer; opacity: 0.6; font-size: 0.8rem; font-weight: 300; letter-spacing: 1px; }
         .completed-task-list { display: none; margin-top: 10px; max-height: 100px; overflow-y: auto; padding-right: 5px; }
 
         /* Agenda & Settings */
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
         .calendar-header h2 { font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; }
-        .auth-section { text-align: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 12px; }
+        .auth-section { text-align: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 12px; }
         .google-btn { background: rgba(255,255,255,0.9); color: #333; border: none; padding: 10px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .agenda-item { display: flex; align-items: center; margin-bottom: 10px; background: rgba(0, 0, 0, 0.15); padding: 10px 12px; border-radius: 12px; border-left: 3px solid transparent; }
-        .agenda-time { font-size: 0.85rem; font-weight: 400; width: 85px; flex-shrink: 0; border-right: 1px solid rgba(255, 255, 255, 0.2); margin-right: 12px; }
+        .agenda-time { font-size: 0.85rem; font-weight: 400; width: 85px; flex-shrink: 0; border-right: 1px solid rgba(255, 255, 255, 0.15); margin-right: 12px; }
         
-        .action-btn, .google-login-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25); color: white; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 300; margin-top: 8px; font-size: 0.85rem; width: 100%; letter-spacing: 1px; }
+        .action-btn, .google-login-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); color: white; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 300; margin-top: 8px; font-size: 0.85rem; width: 100%; letter-spacing: 1px; }
         .google-login-btn { background: rgba(255,255,255,0.9); color: black; font-weight: 500; }
         .danger-btn { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #ff6b6b; margin-top: 24px; }
 
         /* Modals */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-overlay.show { display: flex; }
-        .modal-card { background: rgba(25, 30, 35, 0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 24px 20px; width: 420px; max-width: 90%; color: white; box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-height: 85dvh; overflow-y: auto;}
+        .modal-card { background: rgba(25, 30, 35, 0.95); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 24px 20px; width: 420px; max-width: 90%; color: white; box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-height: 85dvh; overflow-y: auto;}
         .form-group { margin-bottom: 12px; flex: 1; }
         .form-group label { display: block; font-size: 0.8rem; margin-bottom: 4px; opacity: 0.7; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-size: 0.85rem; outline: none; font-family: 'Noto Serif JP', serif;}
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.18); color: white; border-radius: 10px; font-size: 0.85rem; outline: none; font-family: 'Noto Serif JP', serif;}
         .modal-actions { display: flex; justify-content: flex-end; margin-top: 20px; gap: 10px; }
         .modal-btn { padding: 10px 18px; border-radius: 10px; border: none; cursor: pointer; font-weight: 400; font-size: 0.85rem; }
-        .btn-cancel { background: rgba(255,255,255,0.1); color: white; }
+        .btn-cancel { background: rgba(255,255,255,0.08); color: white; }
         .btn-save { background: white; color: black; }
         .btn-delete { background: rgba(239,68,68,0.15); color: #ff6b6b; border: 1px solid rgba(239,68,68,0.4); margin-right: auto; }
         .batch-row { display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 10px; margin-bottom: 6px; }
-        .batch-input { width: 45px; padding: 6px 4px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); color: white; border-radius: 6px; text-align: center; font-size: 0.85rem; font-family: 'Noto Serif JP', serif; }
+        .batch-input { width: 45px; padding: 6px 4px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12); color: white; border-radius: 6px; text-align: center; font-size: 0.85rem; font-family: 'Noto Serif JP', serif; }
         .batch-input.b-name { flex: 1; width: auto; text-align: left; padding: 6px 8px; }
         .row-del { background: none; border: none; color: #ff6b6b; }
-        .row-mv { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; width: 26px; height: 28px; border-radius: 6px; font-size: 0.65rem; }
+        .row-mv { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; width: 26px; height: 28px; border-radius: 6px; font-size: 0.65rem; }
+        .add-event-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.8rem; font-weight: 300; }
     </style>
 </head>
 <body>
@@ -189,14 +186,14 @@
         <div class="nav-item" onclick="goToScreen(1)"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="nav-item active" onclick="goToScreen(2)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="nav-item" onclick="goToScreen(3)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="nav-item" onclick="goToScreen(4)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="nav-item" onclick="goToScreen(4)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     </div>
 
     <div class="global-fab" id="global-fab" onclick="handleFabClick()">+</div>
 
     <div class="app-slider" id="app-slider">
         
-        <!-- [左二] Screen 0: 專注與靈感 -->
+        <!-- [左二] Screen 0: Zen Focus 番茄鐘 -->
         <section class="screen" id="screen-0" style="justify-content: center;">
             <div class="content-container" style="align-items: center; gap: 30px;">
                 <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; padding: 40px 20px;">
@@ -205,96 +202,98 @@
                         <div class="zen-time" id="pomodoro-time">25:00</div>
                         <div class="zen-cap" id="pomodoro-status">Tap to start</div>
                     </div>
+                    <button class="action-btn" style="width: auto; padding: 8px 20px; font-size:0.75rem;" onclick="resetPomodoro()">重置計時</button>
                 </div>
             </div>
         </section>
 
-        <!-- [左一] Screen 1: My Training Space (精簡化 + 橫排三格 + 今日大任務卡片) -->
+        <!-- [左一] Screen 1: My Training Space (上中下還原版面 + 收合目錄) -->
         <section class="screen" id="screen-1">
             <div class="content-container">
                 <div class="glass-card">
                     <div class="dash-head"><h2>My Training Space</h2></div>
                     
-                    <!-- 橫排三格：This week / Next / Weight -->
-                    <div class="dash-row-3">
-                        <div class="dash-tile-sm" id="streak-tile">
-                            <div class="dash-cap" style="margin-bottom:2px;">Streak</div>
-                            <div class="dash-big" id="dash-streak-val">0/3</div>
-                            <div class="chips" id="dash-streak-chips">進行中</div>
-                        </div>
-                        <div class="dash-tile-sm" style="cursor: pointer;" onclick="openNewSession(getNextDay(), new Date().toLocaleDateString('en-CA'))">
-                            <div class="dash-cap" style="margin-bottom:2px;">Next</div>
-                            <div class="dash-big" id="dash-next-day">Day 1</div>
-                            <div class="dash-cap" id="dash-next-label">胸＋腿</div>
-                        </div>
-                        <div class="dash-tile-sm">
-                            <div class="dash-cap" style="margin-bottom:2px;">Weight</div>
-                            <div class="w-num" id="display-weight" onclick="updateWeight()">59.0</div>
-                            <div class="dash-cap">目標 66 kg</div>
+                    <!-- 第一塊：進度條與當週統計 -->
+                    <div class="dash-tile" style="flex-direction: row; justify-content: space-evenly; padding: 16px;">
+                        <div id="dash-ring"></div>
+                        <div style="display:flex; flex-direction:column; justify-content:center; text-align:left;">
+                            <div style="font-size: 1.3rem; font-weight: 300; letter-spacing:1px;" id="dash-streak-title">This week</div>
+                            <div class="dash-cap" style="margin-top: 4px;" id="dash-streak-sub">本週訓練進度</div>
                         </div>
                     </div>
-                    
-                    <div class="weekly-container" style="margin-top: 10px; border-top: none; padding-top: 0;">
+
+                    <!-- 第二塊：中間放置下次要做的訓練（如 Day 2） -->
+                    <div class="dash-tile" style="cursor: pointer;" onclick="openNewSession(getNextDay(), new Date().toLocaleDateString('en-CA'))">
+                        <div class="dash-cap" style="margin: 0 0 2px;">Next Workout</div>
+                        <div class="dash-big" id="dash-next-day">Day 1</div>
+                        <div class="dash-cap" id="dash-next-label">胸＋腿</div>
+                        <div class="chips" id="dash-next-chips" style="margin-top:6px;"></div>
+                    </div>
+
+                    <!-- 第三塊：目前體重 -->
+                    <div class="dash-tile">
+                        <div class="dash-cap" style="margin-bottom: 2px;">目前體重</div>
+                        <div class="w-num" id="display-weight" onclick="updateWeight()" style="text-decoration:none;">59.0 kg</div>
+                        <div class="w-track" id="dash-w-track"></div>
+                        <div class="dash-cap">目標 66 kg</div>
+                    </div>
+
+                    <div class="weekly-container">
                         <div id="fitness-logs-container"></div>
                     </div>
                 </div>
 
-                <!-- 超醒目今日任務大卡片 (擺在中間，點擊直接展開或記錄) -->
-                <div class="today-highlight-card" id="today-highlight-card">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
-                        <div>
-                            <div class="dash-cap" style="color: #9be7e4; letter-spacing: 1px; margin-bottom: 2px;">TODAY'S MISSION</div>
-                            <div class="highlight-title" id="highlight-day-title">Day 1 <small>胸＋腿 訓練計畫</small></div>
-                        </div>
-                        <button class="add-event-btn" onclick="openBatchModal('day' + getNextDay())" style="background:#9be7e4; color:#14191e; border:none; font-weight:700;">+</button>
+                <!-- 菜單總目錄（預設收合，用小箭頭展開） -->
+                <div class="glass-card">
+                    <div class="collapsible-header" onclick="toggleMenuCollapse()">
+                        <span>Workout Programs (完整菜單)</span>
+                        <span id="menu-toggle-arrow">▼</span>
                     </div>
-                    <div id="highlight-items-container" style="display: flex; flex-direction: column; gap: 8px;">
-                        <!-- 動態插入今日動作 -->
-                    </div>
-                </div>
-
-                <!-- 完整訓練菜單與額外跑步 -->
-                <div id="fitness-menus-container" style="width: 100%; display: flex; flex-direction: column; gap: 16px;">
-                    <div class="glass-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
-                            <span class="day-title">Day 1<small>胸＋腿</small></span>
-                            <button class="add-event-btn" onclick="openBatchModal('day1')">📋</button>
-                        </div>
-                        <div class="menu-action" onclick="quickLog('槓鈴臥推', '3', '10', '30')"><div><div class="menu-name">槓鈴臥推</div><div class="menu-reps">3 × 6–10</div></div><div class="menu-weight" data-exercise="槓鈴臥推">30 kg</div></div>
-                        <div class="menu-action" onclick="quickLog('上斜啞鈴臥推', '2', '12', '')"><div><div class="menu-name">上斜啞鈴臥推</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight" data-exercise="上斜啞鈴臥推">依狀態</div></div>
-                        <div class="menu-action" onclick="quickLog('腿推', '3', '12', '80')"><div><div class="menu-name">腿推</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight" data-exercise="腿推">80 kg</div></div>
-                        <div class="menu-action" onclick="quickLog('腿屈伸 / 腿後勾', '2', '15', '')"><div><div class="menu-name">腿屈伸 / 腿後勾</div><div class="menu-reps">2 × 10–15</div></div><div class="menu-weight" data-exercise="腿屈伸 / 腿後勾">依狀態</div></div>
-                    </div>
-                    
-                    <div class="glass-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
-                            <span class="day-title">Day 2<small>背＋二頭</small></span>
-                            <button class="add-event-btn" onclick="openBatchModal('day2')">📋</button>
-                        </div>
-                        <div class="menu-action" onclick="quickLog('獨立握把划船機', '3', '12', '')"><div><div class="menu-name">獨立握把划船機</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight" data-exercise="獨立握把划船機">依狀態</div></div>
-                        <div class="menu-action" onclick="quickLog('一般啞鈴二頭彎舉', '2', '12', '8')"><div><div class="menu-name">一般啞鈴二頭彎舉</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight" data-exercise="一般啞鈴二頭彎舉">8 kg</div></div>
-                        <div class="menu-action" onclick="quickLog('槌式彎舉', '2', '12', '')"><div><div class="menu-name">槌式彎舉</div><div class="menu-reps">2 × 10–12</div></div><div class="menu-weight" data-exercise="槌式彎舉">依狀態</div></div>
-                    </div>
-
-                    <div class="glass-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
-                            <span class="day-title">Day 3<small>肩＋三頭</small></span>
-                            <button class="add-event-btn" onclick="openBatchModal('day3')">📋</button>
-                        </div>
-                        <div class="menu-action" onclick="quickLog('肩推', '3', '10', '')"><div><div class="menu-name">肩推</div><div class="menu-reps">3 × 8–10</div></div><div class="menu-weight" data-exercise="肩推">依狀態</div></div>
-                        <div class="menu-action" onclick="quickLog('側平舉', '3', '15', '')"><div><div class="menu-name">側平舉</div><div class="menu-reps">2-3 × 12–15</div></div><div class="menu-weight" data-exercise="側平舉">依狀態</div></div>
-                        <div class="menu-action" onclick="quickLog('三頭滑輪下壓', '2', '15', '')"><div><div class="menu-name">三頭滑輪下壓</div><div class="menu-reps">1-2 × 10–15 ⚠️</div></div><div class="menu-weight" data-exercise="三頭滑輪下壓">輕量起</div></div>
-                        
-                        <!-- 在 Day 3 下方新增的跑步區塊 -->
-                        <div class="running-box" onclick="quickLog('戶外有氧跑步', '1', '1', '')">
-                            <div>
-                                <div style="font-size: 0.9rem; font-weight: 400;">🏃‍♂️ Weekly Running (額外跑步)</div>
-                                <div class="dash-cap" style="margin-top:2px;">點擊記錄今日有氧</div>
+                    <div class="collapsible-content" id="menu-collapsible-content">
+                        <!-- Day 1 -->
+                        <div style="background: rgba(0,0,0,0.15); padding: 14px; border-radius: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 12px;">
+                                <span style="font-size:0.95rem; font-weight:400;">Day 1 <small style="opacity:0.7; font-family:'Noto Serif JP';">胸＋腿</small></span>
+                                <button class="add-event-btn" onclick="openBatchModal('day1')">📋</button>
                             </div>
-                            <div style="font-size: 0.8rem; color: #9be7e4;">+ 記錄</div>
+                            <div class="menu-action" onclick="quickLog('槓鈴臥推', '3', '10', '30')"><div><div class="menu-name">槓鈴臥推</div><div class="menu-reps">3 × 6–10</div></div><div class="menu-weight" data-exercise="槓鈴臥推">30 kg</div></div>
+                            <div class="menu-action" onclick="quickLog('上斜啞鈴臥推', '2', '12', '')"><div><div class="menu-name">上斜啞鈴臥推</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight" data-exercise="上斜啞鈴臥推">依狀態</div></div>
+                            <div class="menu-action" onclick="quickLog('腿推', '3', '12', '80')"><div><div class="menu-name">腿推</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight" data-exercise="腿推">80 kg</div></div>
+                            <div class="menu-action" onclick="quickLog('腿屈伸 / 腿後勾', '2', '15', '')"><div><div class="menu-name">腿屈伸 / 腿後勾</div><div class="menu-reps">2 × 10–15</div></div><div class="menu-weight" data-exercise="腿屈伸 / 腿後勾">依狀態</div></div>
+                        </div>
+
+                        <!-- Day 2 -->
+                        <div style="background: rgba(0,0,0,0.15); padding: 14px; border-radius: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 12px;">
+                                <span style="font-size:0.95rem; font-weight:400;">Day 2 <small style="opacity:0.7; font-family:'Noto Serif JP';">背＋二頭</small></span>
+                                <button class="add-event-btn" onclick="openBatchModal('day2')">📋</button>
+                            </div>
+                            <div class="menu-action" onclick="quickLog('獨立握把划船機', '3', '12', '')"><div><div class="menu-name">獨立握把划船機</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight" data-exercise="獨立握把划船機">依狀態</div></div>
+                            <div class="menu-action" onclick="quickLog('一般啞鈴二頭彎舉', '2', '12', '8')"><div><div class="menu-name">一般啞鈴二頭彎舉</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight" data-exercise="一般啞鈴二頭彎舉">8 kg</div></div>
+                            <div class="menu-action" onclick="quickLog('槌式彎舉', '2', '12', '')"><div><div class="menu-name">槌式彎舉</div><div class="menu-reps">2 × 10–12</div></div><div class="menu-weight" data-exercise="槌式彎舉">依狀態</div></div>
+                        </div>
+
+                        <!-- Day 3 & 跑步 -->
+                        <div style="background: rgba(0,0,0,0.15); padding: 14px; border-radius: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 12px;">
+                                <span style="font-size:0.95rem; font-weight:400;">Day 3 <small style="opacity:0.7; font-family:'Noto Serif JP';">肩＋三頭</small></span>
+                                <button class="add-event-btn" onclick="openBatchModal('day3')">📋</button>
+                            </div>
+                            <div class="menu-action" onclick="quickLog('肩推', '3', '10', '')"><div><div class="menu-name">肩推</div><div class="menu-reps">3 × 8–10</div></div><div class="menu-weight" data-exercise="肩推">依狀態</div></div>
+                            <div class="menu-action" onclick="quickLog('側平舉', '3', '15', '')"><div><div class="menu-name">側平舉</div><div class="menu-reps">2-3 × 12–15</div></div><div class="menu-weight" data-exercise="側平舉">依狀態</div></div>
+                            <div class="menu-action" onclick="quickLog('三頭滑輪下壓', '2', '15', '')"><div><div class="menu-name">三頭滑輪下壓</div><div class="menu-reps">1-2 × 10–15 ⚠️</div></div><div class="menu-weight" data-exercise="三頭滑輪下壓">輕量起</div></div>
+                            
+                            <div class="running-box" onclick="quickLog('戶外有氧跑步', '1', '1', '')">
+                                <div>
+                                    <div style="font-size: 0.9rem; font-weight: 400;">🏃‍♂️ Weekly Running (額外跑步)</div>
+                                    <div class="dash-cap" style="margin-top:2px;">點擊記錄今日有氧</div>
+                                </div>
+                                <div style="font-size: 0.8rem; color: #9be7e4;">+ 記錄</div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
 
@@ -369,7 +368,7 @@
         <section class="screen" id="screen-4">
             <div class="content-container">
                 <div class="glass-card">
-                    <h2 style="font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Settings</h2>
+                    <h2 style="font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">Settings</h2>
                     <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 4px; font-weight: 300;">資料管理與備份</p>
                     <button class="action-btn" onclick="exportFitnessData()">⬇️ 匯出本機資料</button>
                     <button class="action-btn" onclick="document.getElementById('import-file').click()">⬆️ 匯入本機資料</button>
@@ -396,9 +395,63 @@
     
     <div class="modal-overlay" id="fit-modal"><div class="modal-card"><h3>Log Workout</h3><div style="display:flex; gap:10px;"><div class="form-group" style="flex: 1.5;"><label>動作名稱</label><input type="text" id="fit-name"></div><div class="form-group" style="flex: 1;"><label>日期</label><input type="date" id="fit-date"></div></div><div style="display:flex; gap:10px;"><div class="form-group"><label>組</label><input type="number" id="fit-sets"></div><div class="form-group"><label>次</label><input type="number" id="fit-reps"></div><div class="form-group"><label>kg</label><input type="number" id="fit-weight" step="0.5"></div></div><div class="form-group"><label>備註</label><textarea id="fit-note" rows="2"></textarea></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeFitModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveFitLog()">Save</button></div></div></div>
     
-    <div class="modal-overlay" id="session-modal"><div class="modal-card" style="width: 500px;"><h3 id="session-title">Log Day</h3><div class="form-group" style="margin-bottom: 14px;"><label>日期</label><input type="date" id="session-date"></div><div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div><button class="add-row-btn" onclick="addSessionRow()">+ 新增動作</button><div class="modal-actions"><button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除整天</button><button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveSession()">Save</button></div></div></div>
+    <div class="modal-overlay" id="session-modal"><div class="modal-card" style="width: 500px;"><h3 id="session-title">Log Day</h3><div class="form-group" style="margin-bottom: 14px;"><label>日期</label><input type="date" id="session-date"></div><div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div><button class="add-row-btn" onclick="addSessionRow()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:white; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:0.8rem;">+ 新增動作</button><div class="modal-actions"><button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除整天</button><button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveSession()">Save</button></div></div></div>
 
     <script>
+        /* === Zen Focus 番茄鐘邏輯 === */
+        let pomodoroTimer = null;
+        let pomodoroSeconds = 25 * 60;
+        let pomodoroRunning = false;
+
+        function togglePomodoro() {
+            const statusEl = document.getElementById('pomodoro-status');
+            const ringEl = document.getElementById('pomodoro-ring');
+            if (!pomodoroRunning) {
+                pomodoroRunning = true;
+                ringEl.classList.add('active');
+                statusEl.innerText = 'Focusing...';
+                pomodoroTimer = setInterval(() => {
+                    if (pomodoroSeconds > 0) {
+                        pomodoroSeconds--;
+                        updatePomodoroDisplay();
+                    } else {
+                        clearInterval(pomodoroTimer);
+                        pomodoroRunning = false;
+                        ringEl.classList.remove('active');
+                        statusEl.innerText = 'Time is up! 🎉';
+                    }
+                }, 1000);
+            } else {
+                clearInterval(pomodoroTimer);
+                pomodoroRunning = false;
+                ringEl.classList.remove('active');
+                statusEl.innerText = 'Paused (Tap to resume)';
+            }
+        }
+
+        function resetPomodoro() {
+            clearInterval(pomodoroTimer);
+            pomodoroRunning = false;
+            pomodoroSeconds = 25 * 60;
+            document.getElementById('pomodoro-ring').classList.remove('active');
+            document.getElementById('pomodoro-status').innerText = 'Tap to start';
+            updatePomodoroDisplay();
+        }
+
+        function updatePomodoroDisplay() {
+            const m = Math.floor(pomodoroSeconds / 60);
+            const s = pomodoroSeconds % 60;
+            document.getElementById('pomodoro-time').innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        /* === 完整菜單收合控制 === */
+        function toggleMenuCollapse() {
+            const content = document.getElementById('menu-collapsible-content');
+            const arrow = document.getElementById('menu-toggle-arrow');
+            content.classList.toggle('show');
+            arrow.innerText = content.classList.contains('show') ? '▲' : '▼';
+        }
+
         /* === UI Slider & Dock Logic === */
         const slider = document.getElementById('app-slider');
         const globalFab = document.getElementById('global-fab');
@@ -570,29 +623,22 @@
             const wk = getMonday(new Date()).toLocaleDateString('en-CA'); 
             const days = new Set(fitnessData.logs.filter(l => getMonday(new Date(l.date)).toLocaleDateString('en-CA') === wk).map(l => dateKeyOf(l.date)));
             
-            // 連勝機制檢查 (滿 3 天點燃火焰)
+            // 渲染上中下第一塊進度條 (帶火焰連勝與圓環)
             const streakCount = days.size;
-            const streakValEl = document.getElementById('dash-streak-val');
-            const streakChipsEl = document.getElementById('dash-streak-chips');
-            if (streakCount >= 3) {
-                streakValEl.innerHTML = `${streakCount}/3 🔥`;
-                streakChipsEl.innerHTML = `<span class="chip" style="background:rgba(255,100,100,0.2); border-color:#ff8585; color:#ff8585;">已達連勝！</span>`;
-            } else {
-                streakValEl.innerText = `${streakCount}/3`;
-                streakChipsEl.innerText = `持續進步中`;
-            }
+            document.getElementById('dash-streak-title').innerHTML = streakCount >= 3 ? `This week 🔥` : `This week`;
+            document.getElementById('dash-streak-sub').innerText = streakCount >= 3 ? `本週已達 3 天連勝！` : `本週訓練進度`;
 
+            const C = 2 * Math.PI * 36, arc = C / 3 - 8; let arcs = ''; for (let i = 0; i < 3; i++) { const on = i < days.size; arcs += `<circle cx="45" cy="45" r="36" fill="none" stroke-width="8" stroke-linecap="round" stroke="${on ? '#9be7e4' : 'rgba(255,255,255,0.12)'}" stroke-dasharray="${arc} ${C - arc}" transform="rotate(${-90 + i * 120 + 5} 45 45)"/>`; }
+            document.getElementById('dash-ring').innerHTML = `<svg width="90" height="90" viewBox="0 0 90 90">${arcs}<text x="45" y="52" text-anchor="middle" fill="#fff" font-size="22" font-weight="300">${days.size}/3</text></svg>`;
+
+            // 第二塊：中間放置下次要做的訓練（如 Day 2）
             document.getElementById('dash-next-day').innerText = `Day ${next}`; 
             document.getElementById('dash-next-label').innerText = dayLabels[next] + (days.has(new Date().toLocaleDateString('en-CA')) ? ' ✓' : '');
-            
-            // 渲染今日大任務卡片 (Highlight Card)
-            const nextProg = workoutPrograms['day' + next];
-            document.getElementById('highlight-day-title').innerHTML = `Day ${next} <small>${dayLabels[next]} 訓練計畫</small>`;
-            document.getElementById('highlight-items-container').innerHTML = nextProg.items.map(item => {
-                const last = lastLogFor(item.name);
-                const wText = last && parseFloat(last.weight) > 0 ? `${last.weight} kg` : '建議重量';
-                return `<div class="menu-action" onclick="quickLog('${item.name}', '${item.sets}', '${item.reps}', '${last ? last.weight : ''}')"><div><div class="menu-name">${item.name}</div><div class="menu-reps">${item.sets} × ${item.reps}</div></div><div class="menu-weight">${wText}</div></div>`;
-            }).join('');
+            document.getElementById('dash-next-chips').innerHTML = workoutPrograms['day' + next].items.map(i => `<span class="chip">${i.name.substring(0,4)}</span>`).join('');
+
+            // 第三塊：體重進度條
+            const cur = parseFloat(fitnessData.weight) || 0; const pos = v => Math.max(0, Math.min(100, (v - Math.min(55, Math.floor(cur)-1)) / (70 - Math.min(55, Math.floor(cur)-1)) * 100));
+            document.getElementById('dash-w-track').innerHTML = `<div class="w-fill" style="width:${pos(cur)}%"></div><div class="w-mark" style="left:${pos(62)}%"><span>62</span></div><div class="w-mark" style="left:${pos(66)}%"><span>66</span></div>`;
 
             renderWeeklyFitnessLogs(); updateMenuMaxWeights();
         }
