@@ -28,7 +28,8 @@
         .app-slider { display: flex; width: 100vw; height: 100dvh; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .app-slider::-webkit-scrollbar { display: none; }
 
-        .screen { flex: 0 0 100vw; width: 100vw; height: 100%; overflow-y: auto; overflow-x: hidden; scroll-snap-align: center; padding: calc(env(safe-area-inset-top) + 60px) 36px calc(env(safe-area-inset-bottom) + 120px); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; scrollbar-width: none; position: relative; }
+        /* scroll-snap-stop 確保一次只滑動一頁 */
+        .screen { flex: 0 0 100vw; width: 100vw; height: 100%; overflow-y: auto; overflow-x: hidden; scroll-snap-align: center; scroll-snap-stop: always; padding: calc(env(safe-area-inset-top) + 60px) 36px calc(env(safe-area-inset-bottom) + 120px); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; scrollbar-width: none; position: relative; }
         .screen::-webkit-scrollbar { display: none; }
         .content-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
 
@@ -44,12 +45,6 @@
         .global-fab.show { opacity: 1; pointer-events: auto; transform: scale(1); }
 
         .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.15); border-bottom: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.15); padding: 22px 20px; width: 100%; }
-
-        /* --- Screen 0: Zen Focus --- */
-        .zen-ring { width: 180px; height: 180px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px auto; cursor: pointer; transition: all 0.3s ease; }
-        .zen-ring.active { border: 2px solid #9be7e4; box-shadow: 0 0 30px rgba(155,231,228,0.2); }
-        .zen-time { font-size: 3rem; font-weight: 300; letter-spacing: 2px; line-height: 1; }
-        .zen-cap { font-size: 0.75rem; opacity: 0.6; font-family: 'Noto Serif JP', serif; margin-top: 8px; letter-spacing: 1px; }
         
         /* --- Screen 2: 首頁 (Home) --- */
         .clock-card { display: flex; flex-direction: column; align-items: center; text-align: center; border: none; background: transparent; box-shadow: none; padding: 10px 0; }
@@ -64,10 +59,9 @@
         .journal-input::placeholder { color: rgba(255,255,255,0.4); }
         .journal-input:focus { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.12); width: 260px; }
 
-        #journal-area { position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: hidden; }
-        /* 膠囊泡泡本身：處理佈局與外觀 */
+        /* 調高 z-index 確保泡泡不會被卡在底層 */
+        #journal-area { position: absolute; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
         .journal-bubble { position: absolute; display: flex; align-items: center; gap: 12px; pointer-events: auto; cursor: grab; background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; padding: 10px 14px 10px 18px; color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; transform-origin: center center; }
-        /* 將飄浮動畫加在內部容器，不干擾拖曳定位 */
         .journal-bubble-anim { animation: floatCapsule 6s ease-in-out infinite; }
         .journal-text { font-size: 0.85rem; font-weight: 300; letter-spacing: 0.5px; white-space: nowrap; }
         .journal-del { background: rgba(255,255,255,0.1); border: none; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; cursor: pointer; opacity: 0.6; }
@@ -82,7 +76,8 @@
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
 
         /* --- 任務區塊 (Today's Focus) --- */
-        .tasks-header { font-size: 1.05rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.9; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px;}
+        /* 新增 pointer 以便點擊收合 */
+        .tasks-header { font-size: 1.05rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.9; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
         #active-task-list { width: 100%; max-height: 220px; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; justify-content: flex-start; }
         #active-task-list::-webkit-scrollbar { width: 4px; }
         #active-task-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
@@ -90,12 +85,10 @@
         .task-item { display: flex; flex-direction: column; margin-bottom: 12px; flex-shrink: 0; }
         .task-item.animating-out { opacity: 0; transform: scale(0.95); transition: all 0.3s ease; }
         .task-header { display: flex; align-items: flex-start; width: 100%; }
-        /* 縮小任務圈圈 */
         .task-circle { width: 14px; height: 14px; border: 1.5px solid rgba(255, 255, 255, 0.7); border-radius: 50%; margin-right: 12px; margin-top: 3px; cursor: pointer; flex-shrink: 0; transition: all 0.3s; }
         .task-circle.completed { background: #4ADE80; border-color: #4ADE80; box-shadow: 0 0 10px rgba(74, 222, 128, 0.5); }
         .task-title { font-size: 0.9rem; font-weight: 300; flex-grow: 1; display: flex; align-items: flex-start; flex-wrap: wrap; cursor: pointer; user-select: none; letter-spacing: 0.5px; line-height: 1.4;}
         .completed .task-title { text-decoration: line-through; opacity: 0.4; }
-        /* 任務筆記按鈕與內容 */
         .task-detail-btn { background: none; border: none; color: white; opacity: 0.4; margin-left: 8px; font-size: 0.6rem; cursor: pointer; padding: 2px 6px; }
         .task-notes { display: none; font-size: 0.75rem; font-weight: 300; opacity: 0.7; margin-left: 26px; margin-top: 4px; padding-left: 8px; border-left: 1px solid rgba(255,255,255,0.3); font-family: 'Noto Serif JP', serif; line-height: 1.4; white-space: pre-wrap; }
         .task-notes.show { display: block; }
@@ -106,6 +99,8 @@
         .add-task-input:focus { opacity: 1; }
         .completed-wrapper { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); display: none; }
         .completed-wrapper.visible { display: block; }
+        .completed-header { display: flex; align-items: center; cursor: pointer; opacity: 0.6; font-size: 0.8rem; font-weight: 300; letter-spacing: 1px; }
+        .completed-task-list { display: none; margin-top: 10px; max-height: 100px; overflow-y: auto; padding-right: 5px; }
 
         /* --- Fitness 訓練空間 --- */
         .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -113,14 +108,15 @@
         .dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
         .dash-tile { background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 14px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 130px; }
         .dash-cap { font-size: 0.75rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
-        .dash-big { font-size: 1.6rem; font-weight: 300; color: #9be7e4; line-height: 1.1; letter-spacing: 1px; }
-        .chips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 8px; }
+        .dash-big { font-size: 1.6rem; font-weight: 300; color: #9be7e4; line-height: 1.1; letter-spacing: 1px; margin: 8px 0; }
+        .chips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 4px; }
         .chip { font-size: 0.65rem; padding: 3px 8px; border-radius: 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); font-family: 'Noto Serif JP', serif; }
         .w-num { font-size: 1.5rem; font-weight: 300; cursor: pointer; color: #9be7e4; text-decoration: underline dotted; text-underline-offset: 4px; margin-top: 4px; }
-        .w-track { position: relative; width: 85%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 5px; margin: 10px 0 8px; }
+        /* 調整目標體重的間距，不再卡住 */
+        .w-track { position: relative; width: 85%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 5px; margin: 16px 0 20px; }
         .w-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #9be7e4; border-radius: 5px; box-shadow: 0 0 8px rgba(155,231,228,0.6); }
         .w-mark { position: absolute; top: -3px; width: 2px; height: 11px; background: rgba(255,255,255,0.8); }
-        .w-mark span { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; opacity: 0.8; font-family: 'Noto Serif JP', serif; }
+        .w-mark span { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; opacity: 0.8; font-family: 'Noto Serif JP', serif; }
         .weekly-container { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; margin-bottom: 16px; }
         .week-row { background: rgba(0,0,0,0.12); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
         .week-head { display: flex; justify-content: space-between; align-items: center; font-family: 'Noto Serif JP', serif; font-size: 0.8rem; opacity: 0.85; margin-bottom: 6px; }
@@ -172,7 +168,8 @@
 
     <div class="ios-dock" id="ios-dock">
         <div class="nav-bubble" id="nav-bubble"></div>
-        <div class="nav-item" onclick="goToScreen(0)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <!-- 最左側改為記帳本圖示 (錢包/清單) -->
+        <div class="nav-item" onclick="goToScreen(0)"><svg viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="nav-item" onclick="goToScreen(1)"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="nav-item active" onclick="goToScreen(2)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="nav-item" onclick="goToScreen(3)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -183,21 +180,12 @@
 
     <div class="app-slider" id="app-slider">
         
-        <!-- [左二] Screen 0: 全新專注與靈感空間 (Zen & Flow) -->
+        <!-- [左二] Screen 0: 記帳系統預留區塊 -->
         <section class="screen" id="screen-0" style="justify-content: center;">
             <div class="content-container" style="align-items: center; gap: 30px;">
-                <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; padding: 40px 20px;">
-                    <h2 style="font-size:1.1rem; font-weight:400; opacity:0.8; letter-spacing:1px; margin-bottom: 10px;">Zen Focus</h2>
-                    <div class="zen-ring" id="pomodoro-ring" onclick="togglePomodoro()">
-                        <div class="zen-time" id="pomodoro-time">25:00</div>
-                        <div class="zen-cap" id="pomodoro-status">Tap to start</div>
-                    </div>
-                </div>
-                
-                <div class="glass-card" style="text-align: center; padding: 26px 20px;">
-                    <div style="font-size: 0.75rem; opacity: 0.6; margin-bottom: 12px; letter-spacing: 1px; font-family: 'Noto Serif JP', serif;">Mot du jour 🇫🇷</div>
-                    <div style="font-size: 1.6rem; font-family: 'Marcellus', serif; margin-bottom: 4px;">L'équilibre</div>
-                    <div style="font-size: 0.85rem; opacity: 0.8; font-weight: 300;">(n.m.) 平衡，均衡</div>
+                <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; padding: 40px 20px; text-align: center;">
+                    <h2 style="font-size:1.1rem; font-weight:400; opacity:0.8; letter-spacing:1px; margin-bottom: 10px;">Accounting System</h2>
+                    <p style="font-size: 0.85rem; font-weight: 300; opacity: 0.6; line-height: 1.6;">(記帳系統介面即將於此實作)</p>
                 </div>
             </div>
         </section>
@@ -244,10 +232,11 @@
                             <span class="day-title">Day 1<small>胸＋腿</small></span>
                             <button class="add-event-btn" onclick="openBatchModal('day1')">📋</button>
                         </div>
-                        <div class="menu-action" onclick="quickLog('槓鈴臥推', '3', '10', '30')"><div><div class="menu-name">槓鈴臥推</div><div class="menu-reps">3 × 6–10</div></div><div class="menu-weight">30 kg</div></div>
-                        <div class="menu-action" onclick="quickLog('上斜啞鈴臥推', '2', '12', '')"><div><div class="menu-name">上斜啞鈴臥推</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight">依狀態</div></div>
-                        <div class="menu-action" onclick="quickLog('腿推', '3', '12', '80')"><div><div class="menu-name">腿推</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight">80 kg</div></div>
-                        <div class="menu-action" onclick="quickLog('腿屈伸 或 腿後勾', '2', '15', '')"><div><div class="menu-name">腿屈伸 / 腿後勾</div><div class="menu-reps">2 × 10–15</div></div><div class="menu-weight">依狀態</div></div>
+                        <!-- 加入 data-exercise 供 JS 自動抓最高重量 -->
+                        <div class="menu-action" onclick="quickLog('槓鈴臥推', '3', '10', '30')"><div><div class="menu-name">槓鈴臥推</div><div class="menu-reps">3 × 6–10</div></div><div class="menu-weight" data-exercise="槓鈴臥推">30 kg</div></div>
+                        <div class="menu-action" onclick="quickLog('上斜啞鈴臥推', '2', '12', '')"><div><div class="menu-name">上斜啞鈴臥推</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight" data-exercise="上斜啞鈴臥推">依狀態</div></div>
+                        <div class="menu-action" onclick="quickLog('腿推', '3', '12', '80')"><div><div class="menu-name">腿推</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight" data-exercise="腿推">80 kg</div></div>
+                        <div class="menu-action" onclick="quickLog('腿屈伸 / 腿後勾', '2', '15', '')"><div><div class="menu-name">腿屈伸 / 腿後勾</div><div class="menu-reps">2 × 10–15</div></div><div class="menu-weight" data-exercise="腿屈伸 / 腿後勾">依狀態</div></div>
                     </div>
                     
                     <div class="glass-card">
@@ -255,9 +244,9 @@
                             <span class="day-title">Day 2<small>背＋二頭</small></span>
                             <button class="add-event-btn" onclick="openBatchModal('day2')">📋</button>
                         </div>
-                        <div class="menu-action" onclick="quickLog('獨立握把划船機', '3', '12', '')"><div><div class="menu-name">獨立握把划船機</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight">依狀態</div></div>
-                        <div class="menu-action" onclick="quickLog('一般啞鈴二頭彎舉', '2', '12', '8')"><div><div class="menu-name">一般啞鈴二頭彎舉</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight">8 kg</div></div>
-                        <div class="menu-action" onclick="quickLog('槌式彎舉', '2', '12', '')"><div><div class="menu-name">槌式彎舉</div><div class="menu-reps">2 × 10–12</div></div><div class="menu-weight">依狀態</div></div>
+                        <div class="menu-action" onclick="quickLog('獨立握把划船機', '3', '12', '')"><div><div class="menu-name">獨立握把划船機</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight" data-exercise="獨立握把划船機">依狀態</div></div>
+                        <div class="menu-action" onclick="quickLog('一般啞鈴二頭彎舉', '2', '12', '8')"><div><div class="menu-name">一般啞鈴二頭彎舉</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight" data-exercise="一般啞鈴二頭彎舉">8 kg</div></div>
+                        <div class="menu-action" onclick="quickLog('槌式彎舉', '2', '12', '')"><div><div class="menu-name">槌式彎舉</div><div class="menu-reps">2 × 10–12</div></div><div class="menu-weight" data-exercise="槌式彎舉">依狀態</div></div>
                     </div>
 
                     <div class="glass-card">
@@ -265,9 +254,9 @@
                             <span class="day-title">Day 3<small>肩＋三頭</small></span>
                             <button class="add-event-btn" onclick="openBatchModal('day3')">📋</button>
                         </div>
-                        <div class="menu-action" onclick="quickLog('肩推', '3', '10', '')"><div><div class="menu-name">肩推</div><div class="menu-reps">3 × 8–10</div></div><div class="menu-weight">依狀態</div></div>
-                        <div class="menu-action" onclick="quickLog('側平舉', '3', '15', '')"><div><div class="menu-name">側平舉</div><div class="menu-reps">2-3 × 12–15</div></div><div class="menu-weight">依狀態</div></div>
-                        <div class="menu-action" onclick="quickLog('三頭滑輪下壓', '2', '15', '')"><div><div class="menu-name">三頭滑輪下壓</div><div class="menu-reps">1-2 × 10–15 ⚠️</div></div><div class="menu-weight">輕量起</div></div>
+                        <div class="menu-action" onclick="quickLog('肩推', '3', '10', '')"><div><div class="menu-name">肩推</div><div class="menu-reps">3 × 8–10</div></div><div class="menu-weight" data-exercise="肩推">依狀態</div></div>
+                        <div class="menu-action" onclick="quickLog('側平舉', '3', '15', '')"><div><div class="menu-name">側平舉</div><div class="menu-reps">2-3 × 12–15</div></div><div class="menu-weight" data-exercise="側平舉">依狀態</div></div>
+                        <div class="menu-action" onclick="quickLog('三頭滑輪下壓', '2', '15', '')"><div><div class="menu-name">三頭滑輪下壓</div><div class="menu-reps">1-2 × 10–15 ⚠️</div></div><div class="menu-weight" data-exercise="三頭滑輪下壓">輕量起</div></div>
                     </div>
                 </div>
             </div>
@@ -311,13 +300,18 @@
         <section class="screen" id="screen-3">
             <div class="content-container">
                 <div class="glass-card" style="margin-bottom: 6px;">
-                    <h3 class="tasks-header">Today's Focus</h3>
+                    <!-- 加入收合點擊與圖示 -->
+                    <h3 class="tasks-header" onclick="toggleActiveTasks()">
+                        Today's Focus <span id="active-toggle-icon" style="font-size: 0.75rem; opacity: 0.6;">▼</span>
+                    </h3>
                     <div class="tasks-container">
                         <div id="active-task-list"><p style="opacity: 0.7; font-weight: 300; text-align: center; margin-top: 15px; font-size: 0.8rem;">同步資料中...</p></div>
                         <input type="text" id="new-task-input" class="add-task-input" placeholder="+ Press Enter to add task..." onkeypress="handleAddTask(event)" style="display: none;">
                         <div id="completed-wrapper" class="completed-wrapper">
+                            <!-- 加入收合圖示 -->
                             <div class="completed-header" onclick="toggleCompletedSection()">
                                 <span style="margin-right:6px;">✓</span> Completed (<span id="completed-count">0</span>)
+                                <span id="completed-toggle-icon" style="margin-left:auto; font-size:0.75rem;">▶</span>
                             </div>
                             <div id="completed-task-list" class="completed-task-list task-list"></div>
                         </div>
@@ -392,29 +386,7 @@
             updateFabState(activeIndex);
         });
 
-        navBubble.addEventListener('pointerdown', (e) => {
-            isDraggingBubble = true; navBubble.classList.remove('snap');
-            navBubble.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05))';
-            navBubble.style.boxShadow = '0 8px 25px rgba(255,255,255,0.3)';
-            navBubble.setPointerCapture(e.pointerId);
-        });
-
-        navBubble.addEventListener('pointermove', (e) => {
-            if (!isDraggingBubble) return;
-            const dockRect = iosDock.getBoundingClientRect();
-            let x = e.clientX - dockRect.left - (ITEM_WIDTH / 2); 
-            x = Math.max(0, Math.min(x, 4 * ITEM_WIDTH));
-            navBubble.style.transform = `translateX(${x}px) scale(1.15)`;
-            slider.scrollLeft = (x / ITEM_WIDTH) * window.innerWidth;
-        });
-
-        navBubble.addEventListener('pointerup', (e) => {
-            if (!isDraggingBubble) return;
-            isDraggingBubble = false; navBubble.releasePointerCapture(e.pointerId);
-            navBubble.classList.add('snap'); navBubble.style.background = ''; navBubble.style.boxShadow = '';
-            goToScreen(Math.round(slider.scrollLeft / window.innerWidth));
-        });
-
+        // 取消了容易引發延遲的拖曳邏輯，讓它保持穩定的點擊跳轉 (iOS 慣例)
         function updateFabState(index) {
             if (index === 1 || index === 3) globalFab.classList.add('show'); else globalFab.classList.remove('show');
         }
@@ -431,22 +403,6 @@
                 navItems[2].classList.add('active'); updateFabState(2);
             }, 50);
         });
-
-        /* === Pomodoro (Screen 0) === */
-        let pomoTimer = null; let pomoTimeLeft = 25 * 60; let isPomoRunning = false;
-        function formatPomoTime(secs) { const m = Math.floor(secs / 60); const s = secs % 60; return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`; }
-        function togglePomodoro() {
-            const ring = document.getElementById('pomodoro-ring'); const status = document.getElementById('pomodoro-status');
-            if (isPomoRunning) {
-                clearInterval(pomoTimer); isPomoRunning = false; ring.classList.remove('active'); status.innerText = 'Paused';
-            } else {
-                isPomoRunning = true; ring.classList.add('active'); status.innerText = 'Focusing...';
-                pomoTimer = setInterval(() => {
-                    pomoTimeLeft--; document.getElementById('pomodoro-time').innerText = formatPomoTime(pomoTimeLeft);
-                    if (pomoTimeLeft <= 0) { clearInterval(pomoTimer); isPomoRunning = false; ring.classList.remove('active'); status.innerText = 'Done!'; pomoTimeLeft = 25 * 60; }
-                }, 1000);
-            }
-        }
 
         /* === 首頁微日記膠囊 (Journal Bubble) === */
         function addJournalBubble(e) {
@@ -533,12 +489,27 @@
         let fitnessData = JSON.parse(localStorage.getItem('leon_fitness_data')) || { weight: 59.0, logs: [] };
         if (!localStorage.getItem('leon_local_updated') && fitnessData.logs.length) localStorage.setItem('leon_local_updated', Date.now().toString());
 
-        const workoutPrograms = { day1: { title: "Day 1: Chest & Legs", items: [{name: "槓鈴臥推", sets: 3, reps: 10}, {name: "上斜啞鈴臥推", sets: 2, reps: 12}, {name: "腿推", sets: 3, reps: 12}, {name: "腿屈伸 或 腿後勾", sets: 2, reps: 15}] }, day2: { title: "Day 2: Back & Biceps", items: [{name: "獨立握把划船機", sets: 3, reps: 12}, {name: "一般啞鈴二頭彎舉", sets: 2, reps: 12}, {name: "槌式彎舉", sets: 2, reps: 12}] }, day3: { title: "Day 3: Shoulders & Triceps", items: [{name: "肩推", sets: 3, reps: 10}, {name: "側平舉", sets: 3, reps: 15}, {name: "三頭滑輪下壓", sets: 2, reps: 15}] } };
+        const workoutPrograms = { day1: { title: "Day 1: Chest & Legs", items: [{name: "槓鈴臥推", sets: 3, reps: 10}, {name: "上斜啞鈴臥推", sets: 2, reps: 12}, {name: "腿推", sets: 3, reps: 12}, {name: "腿屈伸 / 腿後勾", sets: 2, reps: 15}] }, day2: { title: "Day 2: Back & Biceps", items: [{name: "獨立握把划船機", sets: 3, reps: 12}, {name: "一般啞鈴二頭彎舉", sets: 2, reps: 12}, {name: "槌式彎舉", sets: 2, reps: 12}] }, day3: { title: "Day 3: Shoulders & Triceps", items: [{name: "肩推", sets: 3, reps: 10}, {name: "側平舉", sets: 3, reps: 15}, {name: "三頭滑輪下壓", sets: 2, reps: 15}] } };
         const dayLabels = { 1: "胸＋腿", 2: "背＋二頭", 3: "肩＋三頭" }; const dayKeywords = { 1: ["臥推", "腿推", "腿屈伸", "腿後勾", "飛鳥"], 2: ["划船", "二頭", "槌式", "下拉"], 3: ["肩推", "側平舉", "三頭", "平舉"] };
         const dateKeyOf = (iso) => new Date(iso).toLocaleDateString('en-CA'); function getMonday(d) { d = new Date(d); const day = d.getDay(); d.setDate(d.getDate() - day + (day === 0 ? -6 : 1)); d.setHours(0, 0, 0, 0); return d; }
         function detectDay(names) { let best = 0, bestCount = 0; [1, 2, 3].forEach(d => { const c = names.filter(n => dayKeywords[d].some(kw => n.includes(kw))).length; if (c > bestCount) { bestCount = c; best = d; } }); return best; }
         function getNextDay() { if (fitnessData.logs.length === 0) return 1; const last = detectDay(fitnessData.logs.filter(l => dateKeyOf(l.date) === dateKeyOf(fitnessData.logs[0].date)).map(l => l.name)); return last === 0 ? 1 : (last % 3) + 1; }
         function lastLogFor(name) { return fitnessData.logs.find(l => l.name === name); }
+
+        function updateMenuMaxWeights() {
+            document.querySelectorAll('.menu-weight').forEach(el => {
+                const exName = el.getAttribute('data-exercise');
+                if (exName) {
+                    const logs = fitnessData.logs.filter(l => l.name === exName && parseFloat(l.weight) > 0);
+                    if (logs.length > 0) {
+                        const maxW = Math.max(...logs.map(l => parseFloat(l.weight)));
+                        el.innerText = maxW + ' kg';
+                    } else {
+                        el.innerText = '依狀態';
+                    }
+                }
+            });
+        }
 
         function initFitness() {
             document.getElementById('display-weight').innerText = `${fitnessData.weight} kg`; const next = getNextDay(); document.getElementById('val-fitness-next').innerText = `Next · D${next}`;
@@ -549,6 +520,7 @@
             const cur = parseFloat(fitnessData.weight) || 0; const pos = v => Math.max(0, Math.min(100, (v - Math.min(55, Math.floor(cur)-1)) / (70 - Math.min(55, Math.floor(cur)-1)) * 100));
             document.getElementById('dash-w-track').innerHTML = `<div class="w-fill" style="width:${pos(cur)}%"></div><div class="w-mark" style="left:${pos(62)}%"><span>62</span></div><div class="w-mark" style="left:${pos(66)}%"><span>66</span></div>`;
             renderWeeklyFitnessLogs();
+            updateMenuMaxWeights();
         }
 
         function updateWeight() { const newW = prompt("最新體重 (kg)：", fitnessData.weight); if (newW && !isNaN(newW)) { fitnessData.weight = parseFloat(newW).toFixed(1); saveFitnessData(); initFitness(); } }
@@ -605,6 +577,16 @@
         async function fetchData() { document.getElementById('auth-container').style.display = 'none'; document.getElementById('new-task-input').style.display = 'block'; await Promise.all([fetchTasks(), fetchAllEvents()]); cloudSync(); }
 
         window.toggleTaskNote = function(e, id) { e.stopPropagation(); document.getElementById(`note-${id}`).classList.toggle('show'); }
+        window.toggleActiveTasks = function() {
+            const list = document.getElementById('active-task-list'); const icon = document.getElementById('active-toggle-icon');
+            if(list.style.display === 'none') { list.style.display = 'flex'; icon.innerText = '▼'; }
+            else { list.style.display = 'none'; icon.innerText = '▶'; }
+        }
+        window.toggleCompletedSection = function() {
+            const list = document.getElementById('completed-task-list'); const icon = document.getElementById('completed-toggle-icon');
+            if(list.style.display === 'block') { list.style.display = 'none'; icon.innerText = '▶'; }
+            else { list.style.display = 'block'; icon.innerText = '▼'; }
+        }
 
         async function fetchTasks() {
             try {
@@ -640,7 +622,6 @@
         async function toggleTaskStatus(id, s) { document.getElementById(`task-${id}`).classList.add('animating-out'); await gapi.client.tasks.tasks.patch({ tasklist: '@default', task: id, resource: { status: s === 'completed' ? 'needsAction' : 'completed' } }); setTimeout(fetchTasks, 300); }
         async function handleAddTask(e) { if (e.key === 'Enter' && e.target.value.trim()) { const v = e.target.value.trim(); e.target.value = ''; await gapi.client.tasks.tasks.insert({ tasklist: '@default', resource: { title: v } }); fetchTasks(); } }
         async function deleteTask(id) { if(confirm("刪除任務？")) { document.getElementById(`task-${id}`).classList.add('animating-out'); await gapi.client.tasks.tasks.delete({ tasklist: '@default', task: id }); setTimeout(fetchTasks, 300); } }
-        function toggleCompletedSection() { document.getElementById('completed-task-list').classList.toggle('show'); }
 
         async function fetchAllEvents() {
             try {
