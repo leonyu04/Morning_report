@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Léon">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
-    <title>Léon's Morning Report & Fitness</title>
+    <title>Léon's Dashboard</title>
     
     <script async defer src="https://accounts.google.com/gsi/client"></script>
     <script async defer src="https://apis.google.com/js/api.js"></script>
@@ -21,167 +21,93 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Marcellus', 'Playfair Display SC', 'Noto Serif JP', serif; }
         
-        body { 
-            background: #14191e; color: #FFFFFF; overflow: hidden; 
-            position: fixed; width: 100vw; height: 100dvh;
-        }
+        body { background: #14191e; color: #FFFFFF; overflow: hidden; position: fixed; width: 100vw; height: 100dvh; }
 
-        .bg-fixed {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: url('background.jpg');
-            background-repeat: no-repeat; background-position: center center;
-            background-size: cover;
-            z-index: -1; pointer-events: none;
-        }
+        .bg-fixed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('background.jpg'); background-repeat: no-repeat; background-position: center center; background-size: cover; z-index: -1; pointer-events: none; }
 
-        .app-slider {
-            display: flex; width: 100vw; height: 100dvh;
-            overflow-x: auto; overflow-y: hidden;
-            scroll-snap-type: x mandatory; scroll-behavior: smooth;
-            scrollbar-width: none; -webkit-overflow-scrolling: touch;
-        }
+        .app-slider { display: flex; width: 100vw; height: 100dvh; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .app-slider::-webkit-scrollbar { display: none; }
 
-        .screen {
-            flex: 0 0 100vw; width: 100vw; height: 100%;
-            overflow-y: auto; overflow-x: hidden; scroll-snap-align: center;
-            padding: calc(env(safe-area-inset-top) + 60px) 36px calc(env(safe-area-inset-bottom) + 120px);
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            scrollbar-width: none; position: relative; /* 讓漂浮泡泡以此為定位 */
-        }
+        .screen { flex: 0 0 100vw; width: 100vw; height: 100%; overflow-y: auto; overflow-x: hidden; scroll-snap-align: center; padding: calc(env(safe-area-inset-top) + 60px) 36px calc(env(safe-area-inset-bottom) + 120px); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; scrollbar-width: none; position: relative; }
         .screen::-webkit-scrollbar { display: none; }
         .content-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
 
-        /* --- iOS 風格懸浮導航欄 (Dock) --- */
-        .ios-dock {
-            position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px); left: 50%;
-            transform: translateX(-50%); display: flex; align-items: center;
-            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.12); border-radius: 40px;
-            padding: 6px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            /* 解決反白誤觸的核心：禁止選取與系統默認行為 */
-            user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: none;
-        }
-        .nav-item {
-            width: 54px; height: 46px; display: flex; justify-content: center; align-items: center;
-            cursor: pointer; z-index: 2; color: rgba(255, 255, 255, 0.45); transition: color 0.3s ease;
-        }
+        /* --- iOS Dock --- */
+        .ios-dock { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px); left: 50%; transform: translateX(-50%); display: flex; align-items: center; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.12); border-radius: 40px; padding: 6px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; }
+        .nav-item { width: 54px; height: 46px; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 2; color: rgba(255, 255, 255, 0.45); transition: color 0.3s ease; }
         .nav-item.active { color: rgba(255, 255, 255, 1); }
-        .nav-item svg { width: 22px; height: 22px; stroke-width: 1.5; fill: none; stroke: currentColor; pointer-events: none; } /* 讓點擊穿透 SVG 到 nav-item */
-
-        /* 互動式「游動玻璃泡泡」 */
-        .nav-bubble {
-            position: absolute; top: 6px; left: 6px; width: 54px; height: 46px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.35); border-radius: 30px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 1; 
-            will-change: transform; 
-            pointer-events: auto; touch-action: none; cursor: grab;
-            /* 預設不給 transform transition，解決滾動延遲！ */
-            transition: background 0.2s ease, box-shadow 0.2s ease;
-        }
-        .nav-bubble:active { cursor: grabbing; }
-        /* 只有在點擊圖示跳轉時，才加回動畫 */
+        .nav-item svg { width: 22px; height: 22px; stroke-width: 1.5; fill: none; stroke: currentColor; pointer-events: none; }
+        .nav-bubble { position: absolute; top: 6px; left: 6px; width: 54px; height: 46px; background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02)); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.35); border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 1; will-change: transform; pointer-events: auto; touch-action: none; cursor: grab; transition: background 0.2s ease, box-shadow 0.2s ease; }
         .nav-bubble.snap { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease, box-shadow 0.2s ease; }
 
-        /* 右下角 FAB */
-        .global-fab {
-            position: fixed; bottom: calc(env(safe-area-inset-bottom) + 95px); right: 28px;
-            width: 50px; height: 50px; border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3); color: white; font-size: 1.6rem; font-weight: 300;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25); cursor: pointer; z-index: 1000;
-            opacity: 0; pointer-events: none; transform: scale(0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .global-fab { position: fixed; bottom: calc(env(safe-area-inset-bottom) + 95px); right: 28px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); color: white; font-size: 1.6rem; font-weight: 300; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.25); cursor: pointer; z-index: 1000; opacity: 0; pointer-events: none; transform: scale(0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .global-fab.show { opacity: 1; pointer-events: auto; transform: scale(1); }
-        .global-fab:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
 
-        /* 全局共用卡片樣式 */
-        .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.15);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 24px; box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.15);
-            padding: 22px 20px; width: 100%;
-        }
+        .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.15); border-bottom: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.15); padding: 22px 20px; width: 100%; }
 
-        /* --- [首頁] --- */
+        /* --- Screen 0: Zen Focus --- */
+        .zen-ring { width: 180px; height: 180px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px auto; cursor: pointer; transition: all 0.3s ease; }
+        .zen-ring.active { border: 2px solid #9be7e4; box-shadow: 0 0 30px rgba(155,231,228,0.2); }
+        .zen-time { font-size: 3rem; font-weight: 300; letter-spacing: 2px; line-height: 1; }
+        .zen-cap { font-size: 0.75rem; opacity: 0.6; font-family: 'Noto Serif JP', serif; margin-top: 8px; letter-spacing: 1px; }
+        
+        /* --- Screen 2: 首頁 (Home) --- */
         .clock-card { display: flex; flex-direction: column; align-items: center; text-align: center; border: none; background: transparent; box-shadow: none; padding: 10px 0; }
         .time-display { font-size: 4.8rem; font-weight: 300; letter-spacing: 2px; line-height: 1; margin-bottom: 10px; color: #ffffff; text-shadow: 0 4px 20px rgba(0,0,0,0.25); }
         .greeting-date-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.85; font-weight: 300; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .greeting, .date-display { font-size: 0.9rem; font-weight: 300; letter-spacing: 1px; }
         .dot-separator { width: 4px; height: 4px; background: white; border-radius: 50%; opacity: 0.5; }
 
-        /* 漂浮日記泡泡輸入框 */
+        /* 飄浮膠囊日記 */
         .journal-container { width: 100%; display: flex; justify-content: center; margin-top: -5px; margin-bottom: 10px; z-index: 10; }
-        .journal-input {
-            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 10px 24px; color: white;
-            font-size: 0.85rem; text-align: center; width: 220px; outline: none; transition: all 0.3s ease; 
-            font-weight: 300; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
+        .journal-input { background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 10px 24px; color: white; font-size: 0.85rem; text-align: center; width: 220px; outline: none; transition: all 0.3s ease; font-weight: 300; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .journal-input::placeholder { color: rgba(255,255,255,0.4); }
         .journal-input:focus { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.12); width: 260px; }
 
-        /* 漂浮產生的泡泡 */
         #journal-area { position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: hidden; }
-        .journal-bubble {
-            position: absolute; pointer-events: auto; cursor: grab;
-            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01));
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.25); border-radius: 30px;
-            padding: 10px 18px; color: white; font-size: 0.8rem; font-weight: 300; letter-spacing: 0.5px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            user-select: none; -webkit-user-select: none; white-space: nowrap;
-        }
-        .journal-bubble:active { cursor: grabbing; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        /* 膠囊泡泡本身：處理佈局與外觀 */
+        .journal-bubble { position: absolute; display: flex; align-items: center; gap: 12px; pointer-events: auto; cursor: grab; background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; padding: 10px 14px 10px 18px; color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; transform-origin: center center; }
+        /* 將飄浮動畫加在內部容器，不干擾拖曳定位 */
+        .journal-bubble-anim { animation: floatCapsule 6s ease-in-out infinite; }
+        .journal-text { font-size: 0.85rem; font-weight: 300; letter-spacing: 0.5px; white-space: nowrap; }
+        .journal-del { background: rgba(255,255,255,0.1); border: none; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; cursor: pointer; opacity: 0.6; }
+        .journal-del:active { opacity: 1; background: rgba(255,255,255,0.3); }
+        @keyframes floatCapsule { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.5) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
-        /* --- 浮動系統泡泡 --- */
         .bubbles-panel { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; width: 100%; z-index: 10; }
-        .floating-bubble {
-            position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01));
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: white; padding: 10px;
-            width: 32%; aspect-ratio: 1/1; max-width: 120px; cursor: pointer;
-            animation: float 4s ease-in-out infinite; user-select: none; -webkit-user-select: none;
-        }
+        .floating-bubble { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: white; padding: 10px; width: 32%; aspect-ratio: 1/1; max-width: 120px; cursor: pointer; animation: float 4s ease-in-out infinite; user-select: none; -webkit-user-select: none; }
         .floating-bubble strong { font-size: 0.7rem; font-weight: 400; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.9; }
         .floating-bubble .val { font-size: 0.8rem; margin: 2px 0; font-weight: 300; }
-        .b-weather { animation-delay: 0s; } .b-tech { animation-delay: -1.5s; padding: 6px; } .b-fitness { animation-delay: -3s; }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
 
-        /* --- 任務區塊 --- */
+        /* --- 任務區塊 (Today's Focus) --- */
         .tasks-header { font-size: 1.05rem; font-weight: 400; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.9; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px;}
-        /* 修改 max-height 支援到大約 5 個任務 */
         #active-task-list { width: 100%; max-height: 220px; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; justify-content: flex-start; }
         #active-task-list::-webkit-scrollbar { width: 4px; }
         #active-task-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
         #active-task-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 10px; }
         .task-item { display: flex; flex-direction: column; margin-bottom: 12px; flex-shrink: 0; }
         .task-item.animating-out { opacity: 0; transform: scale(0.95); transition: all 0.3s ease; }
-        .task-header { display: flex; align-items: center; width: 100%; }
-        .task-circle { width: 18px; height: 18px; border: 1.5px solid rgba(255, 255, 255, 0.7); border-radius: 50%; margin-right: 12px; cursor: pointer; flex-shrink: 0; transition: all 0.3s; }
+        .task-header { display: flex; align-items: flex-start; width: 100%; }
+        /* 縮小任務圈圈 */
+        .task-circle { width: 14px; height: 14px; border: 1.5px solid rgba(255, 255, 255, 0.7); border-radius: 50%; margin-right: 12px; margin-top: 3px; cursor: pointer; flex-shrink: 0; transition: all 0.3s; }
         .task-circle.completed { background: #4ADE80; border-color: #4ADE80; box-shadow: 0 0 10px rgba(74, 222, 128, 0.5); }
-        .task-title { font-size: 0.9rem; font-weight: 300; flex-grow: 1; display: flex; align-items: center; flex-wrap: wrap; cursor: pointer; user-select: none; letter-spacing: 0.5px; line-height: 1.3;}
+        .task-title { font-size: 0.9rem; font-weight: 300; flex-grow: 1; display: flex; align-items: flex-start; flex-wrap: wrap; cursor: pointer; user-select: none; letter-spacing: 0.5px; line-height: 1.4;}
         .completed .task-title { text-decoration: line-through; opacity: 0.4; }
-        .task-delete-btn { background: none; border: none; color: #ff6b6b; cursor: pointer; opacity: 0.6; font-size: 1.2rem; margin-left: 6px; font-weight: 300; }
+        /* 任務筆記按鈕與內容 */
+        .task-detail-btn { background: none; border: none; color: white; opacity: 0.4; margin-left: 8px; font-size: 0.6rem; cursor: pointer; padding: 2px 6px; }
+        .task-notes { display: none; font-size: 0.75rem; font-weight: 300; opacity: 0.7; margin-left: 26px; margin-top: 4px; padding-left: 8px; border-left: 1px solid rgba(255,255,255,0.3); font-family: 'Noto Serif JP', serif; line-height: 1.4; white-space: pre-wrap; }
+        .task-notes.show { display: block; }
+        .task-delete-btn { background: none; border: none; color: #ff6b6b; cursor: pointer; opacity: 0.6; font-size: 1.1rem; margin-left: 6px; font-weight: 300; }
+        
         .add-task-input { background: transparent; border: none; color: white; width: 100%; padding: 4px 0; font-size: 0.85rem; font-weight: 300; outline: none; margin-top: 4px; opacity: 0.6; transition: opacity 0.3s; }
         .add-task-input::placeholder { color: rgba(255,255,255,0.5); }
         .add-task-input:focus { opacity: 1; }
         .completed-wrapper { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); display: none; }
         .completed-wrapper.visible { display: block; }
-        .completed-header { display: flex; align-items: center; cursor: pointer; opacity: 0.6; font-size: 0.8rem; font-weight: 300; letter-spacing: 1px; }
-        .completed-task-list { display: none; margin-top: 10px; max-height: 100px; overflow-y: auto; padding-right: 5px; }
-        .completed-task-list.show { display: block; }
 
-        /* --- Fitness 訓練空間樣式 --- */
+        /* --- Fitness 訓練空間 --- */
         .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .dash-head h2 { font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; }
         .dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -191,18 +117,17 @@
         .chips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 8px; }
         .chip { font-size: 0.65rem; padding: 3px 8px; border-radius: 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); font-family: 'Noto Serif JP', serif; }
         .w-num { font-size: 1.5rem; font-weight: 300; cursor: pointer; color: #9be7e4; text-decoration: underline dotted; text-underline-offset: 4px; margin-top: 4px; }
-        /* 縮小體重進度條上下邊界，解決卡字問題 */
         .w-track { position: relative; width: 85%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 5px; margin: 10px 0 8px; }
         .w-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #9be7e4; border-radius: 5px; box-shadow: 0 0 8px rgba(155,231,228,0.6); }
         .w-mark { position: absolute; top: -3px; width: 2px; height: 11px; background: rgba(255,255,255,0.8); }
         .w-mark span { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; opacity: 0.8; font-family: 'Noto Serif JP', serif; }
-        .weekly-container { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; }
+        .weekly-container { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; margin-bottom: 16px; }
         .week-row { background: rgba(0,0,0,0.12); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
         .week-head { display: flex; justify-content: space-between; align-items: center; font-family: 'Noto Serif JP', serif; font-size: 0.8rem; opacity: 0.85; margin-bottom: 6px; }
         .week-bar { display: flex; gap: 3px; }
         .week-seg { flex: 1; height: 32px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: rgba(255,255,255,0.4); cursor: pointer; font-family: 'Noto Serif JP', serif; }
-        .week-seg:first-child { border-radius: 6px 3px 3px 6px; } .week-seg:last-child { border-radius: 3px 6px 6px 3px; }
         .week-seg.done { background: rgba(155,231,228,0.2); border-color: #9be7e4; color: #9be7e4; font-weight: 700; }
+        
         .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(0,0,0,0.12); border-radius: 10px; margin-bottom: 8px; cursor: pointer; }
         .menu-name { font-size: 0.9rem; font-weight: 400; }
         .menu-reps { font-size: 0.75rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; margin-top: 2px;}
@@ -211,29 +136,23 @@
         .day-title small { font-size: 0.7rem; opacity: 0.7; font-weight: 300; font-family: 'Noto Serif JP', serif; margin-top: 2px;}
         .add-event-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.8rem; font-weight: 300; }
 
-        /* --- [右一] 行事曆 Agenda --- */
+        /* Agenda & Settings */
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
         .calendar-header h2 { font-size: 1.25rem; font-weight: 400; letter-spacing: 1px; }
         .auth-section { text-align: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 12px; }
         .google-btn { background: rgba(255,255,255,0.9); color: #333; border: none; padding: 10px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .agenda-item { display: flex; align-items: center; margin-bottom: 10px; background: rgba(0, 0, 0, 0.15); padding: 10px 12px; border-radius: 12px; border-left: 3px solid transparent; }
         .agenda-time { font-size: 0.85rem; font-weight: 400; width: 85px; flex-shrink: 0; border-right: 1px solid rgba(255, 255, 255, 0.2); margin-right: 12px; }
-        .agenda-content h4 { font-size: 0.9rem; font-weight: 300; margin-bottom: 2px; color: white; line-height: 1.3;}
-        .agenda-content p { font-size: 0.75rem; font-weight: 300; opacity: 0.7; font-family: 'Noto Serif JP', serif; }
-
-        /* --- [右二] Settings --- */
-        /* 字體縮小優化 */
-        .action-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25); color: white; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 300; margin-top: 8px; font-size: 0.85rem; width: 100%; letter-spacing: 1px; }
+        
+        .action-btn, .google-login-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25); color: white; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 300; margin-top: 8px; font-size: 0.85rem; width: 100%; letter-spacing: 1px; }
+        .google-login-btn { background: rgba(255,255,255,0.9); color: black; font-weight: 500; }
         .danger-btn { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #ff6b6b; margin-top: 24px; }
-        .google-login-btn { background: rgba(255,255,255,0.9); color: black; border: none; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 500; margin-top: 8px; font-size: 0.85rem; width: 100%; letter-spacing: 1px; }
 
-        /* Modal UI 共用 */
+        /* Modals */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-overlay.show { display: flex; }
-        .modal-card { background: rgba(25, 30, 35, 0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 24px 20px; width: 420px; max-width: 90%; color: white; box-shadow: 0 20px 50px rgba(0,0,0,0.5); font-weight: 300; max-height: 85dvh; overflow-y: auto;}
-        .modal-card h3 { margin-bottom: 18px; text-align: center; font-size: 1.15rem; font-weight: 400; letter-spacing: 1px; }
+        .modal-card { background: rgba(25, 30, 35, 0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 24px 20px; width: 420px; max-width: 90%; color: white; box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-height: 85dvh; overflow-y: auto;}
         .form-group { margin-bottom: 12px; flex: 1; }
-        .form-group label { display: block; font-size: 0.8rem; margin-bottom: 6px; opacity: 0.7; }
         .form-group input, .form-group textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-size: 0.85rem; outline: none; font-family: 'Noto Serif JP', serif;}
         .modal-actions { display: flex; justify-content: flex-end; margin-top: 20px; gap: 10px; }
         .modal-btn { padding: 10px 18px; border-radius: 10px; border: none; cursor: pointer; font-weight: 400; font-size: 0.85rem; }
@@ -243,78 +162,47 @@
         .batch-row { display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 10px; margin-bottom: 6px; }
         .batch-input { width: 45px; padding: 6px 4px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); color: white; border-radius: 6px; text-align: center; font-size: 0.85rem; font-family: 'Noto Serif JP', serif; }
         .batch-input.b-name { flex: 1; width: auto; text-align: left; padding: 6px 8px; }
-        .row-del { background: none; border: none; color: #ff6b6b; font-size: 1.1rem; }
+        .row-del { background: none; border: none; color: #ff6b6b; }
         .row-mv { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; width: 26px; height: 28px; border-radius: 6px; font-size: 0.65rem; }
-        .add-row-btn { width: 100%; background: none; border: 1px dashed rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); padding: 8px; border-radius: 10px; margin-top: 4px; font-size: 0.85rem;}
     </style>
 </head>
 <body>
 
     <div class="bg-fixed"></div>
 
-    <!-- 底部 iOS 導航欄 (Dock) -->
     <div class="ios-dock" id="ios-dock">
         <div class="nav-bubble" id="nav-bubble"></div>
-        <div class="nav-item" onclick="goToScreen(0)">
-            <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="nav-item" onclick="goToScreen(1)">
-            <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="nav-item active" onclick="goToScreen(2)">
-            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="nav-item" onclick="goToScreen(3)">
-            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="nav-item" onclick="goToScreen(4)">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
+        <div class="nav-item" onclick="goToScreen(0)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="nav-item" onclick="goToScreen(1)"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="nav-item active" onclick="goToScreen(2)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="nav-item" onclick="goToScreen(3)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="nav-item" onclick="goToScreen(4)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     </div>
 
-    <!-- 右下角全局懸浮加號 (FAB) -->
     <div class="global-fab" id="global-fab" onclick="handleFabClick()">+</div>
 
-    <!-- 橫向滑動主容器 -->
     <div class="app-slider" id="app-slider">
         
-        <!-- [左二] Screen 0: 訓練菜單 -->
-        <section class="screen" id="screen-0">
-            <div class="content-container">
-                <div class="glass-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
-                        <span class="day-title">Day 1<small>胸＋腿</small></span>
-                        <button class="add-event-btn" onclick="openBatchModal('day1')">📋</button>
+        <!-- [左二] Screen 0: 全新專注與靈感空間 (Zen & Flow) -->
+        <section class="screen" id="screen-0" style="justify-content: center;">
+            <div class="content-container" style="align-items: center; gap: 30px;">
+                <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; padding: 40px 20px;">
+                    <h2 style="font-size:1.1rem; font-weight:400; opacity:0.8; letter-spacing:1px; margin-bottom: 10px;">Zen Focus</h2>
+                    <div class="zen-ring" id="pomodoro-ring" onclick="togglePomodoro()">
+                        <div class="zen-time" id="pomodoro-time">25:00</div>
+                        <div class="zen-cap" id="pomodoro-status">Tap to start</div>
                     </div>
-                    <div class="menu-action" onclick="quickLog('槓鈴臥推', '3', '10', '30')"><div><div class="menu-name">槓鈴臥推</div><div class="menu-reps">3 × 6–10</div></div><div class="menu-weight">30 kg</div></div>
-                    <div class="menu-action" onclick="quickLog('上斜啞鈴臥推', '2', '12', '')"><div><div class="menu-name">上斜啞鈴臥推</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight">依狀態</div></div>
-                    <div class="menu-action" onclick="quickLog('腿推', '3', '12', '80')"><div><div class="menu-name">腿推</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight">80 kg</div></div>
-                    <div class="menu-action" onclick="quickLog('腿屈伸 或 腿後勾', '2', '15', '')"><div><div class="menu-name">腿屈伸 / 腿後勾</div><div class="menu-reps">2 × 10–15</div></div><div class="menu-weight">依狀態</div></div>
                 </div>
                 
-                <div class="glass-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
-                        <span class="day-title">Day 2<small>背＋二頭</small></span>
-                        <button class="add-event-btn" onclick="openBatchModal('day2')">📋</button>
-                    </div>
-                    <div class="menu-action" onclick="quickLog('獨立握把划船機', '3', '12', '')"><div><div class="menu-name">獨立握把划船機</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight">依狀態</div></div>
-                    <div class="menu-action" onclick="quickLog('一般啞鈴二頭彎舉', '2', '12', '8')"><div><div class="menu-name">一般啞鈴二頭彎舉</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight">8 kg</div></div>
-                    <div class="menu-action" onclick="quickLog('槌式彎舉', '2', '12', '')"><div><div class="menu-name">槌式彎舉</div><div class="menu-reps">2 × 10–12</div></div><div class="menu-weight">依狀態</div></div>
-                </div>
-
-                <div class="glass-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
-                        <span class="day-title">Day 3<small>肩＋三頭</small></span>
-                        <button class="add-event-btn" onclick="openBatchModal('day3')">📋</button>
-                    </div>
-                    <div class="menu-action" onclick="quickLog('肩推', '3', '10', '')"><div><div class="menu-name">肩推</div><div class="menu-reps">3 × 8–10</div></div><div class="menu-weight">依狀態</div></div>
-                    <div class="menu-action" onclick="quickLog('側平舉', '3', '15', '')"><div><div class="menu-name">側平舉</div><div class="menu-reps">2-3 × 12–15</div></div><div class="menu-weight">依狀態</div></div>
-                    <div class="menu-action" onclick="quickLog('三頭滑輪下壓', '2', '15', '')"><div><div class="menu-name">三頭滑輪下壓</div><div class="menu-reps">1-2 × 10–15 ⚠️</div></div><div class="menu-weight">輕量起</div></div>
+                <div class="glass-card" style="text-align: center; padding: 26px 20px;">
+                    <div style="font-size: 0.75rem; opacity: 0.6; margin-bottom: 12px; letter-spacing: 1px; font-family: 'Noto Serif JP', serif;">Mot du jour 🇫🇷</div>
+                    <div style="font-size: 1.6rem; font-family: 'Marcellus', serif; margin-bottom: 4px;">L'équilibre</div>
+                    <div style="font-size: 0.85rem; opacity: 0.8; font-weight: 300;">(n.m.) 平衡，均衡</div>
                 </div>
             </div>
         </section>
 
-        <!-- [左一] Screen 1: My Training Space -->
+        <!-- [左一] Screen 1: My Training Space (+ 所有菜單) -->
         <section class="screen" id="screen-1">
             <div class="content-container">
                 <div class="glass-card">
@@ -335,8 +223,6 @@
                             <div class="dash-cap" id="dash-next-label">胸＋腿</div>
                             <div class="chips" id="dash-next-chips"></div>
                         </div>
-
-                        <!-- 修正：調整內部空間，避免文字與進度條卡住 -->
                         <div class="dash-tile">
                             <div class="dash-cap" style="margin-bottom: 4px;">目前體重</div>
                             <div class="w-num" id="display-weight" onclick="updateWeight()" style="text-decoration:none;">59.0 kg</div>
@@ -350,15 +236,46 @@
                         <div id="fitness-logs-container"></div>
                     </div>
                 </div>
+
+                <!-- 整合過來的訓練菜單 -->
+                <div id="fitness-menus-container" style="width: 100%; display: flex; flex-direction: column; gap: 16px;">
+                    <div class="glass-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
+                            <span class="day-title">Day 1<small>胸＋腿</small></span>
+                            <button class="add-event-btn" onclick="openBatchModal('day1')">📋</button>
+                        </div>
+                        <div class="menu-action" onclick="quickLog('槓鈴臥推', '3', '10', '30')"><div><div class="menu-name">槓鈴臥推</div><div class="menu-reps">3 × 6–10</div></div><div class="menu-weight">30 kg</div></div>
+                        <div class="menu-action" onclick="quickLog('上斜啞鈴臥推', '2', '12', '')"><div><div class="menu-name">上斜啞鈴臥推</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight">依狀態</div></div>
+                        <div class="menu-action" onclick="quickLog('腿推', '3', '12', '80')"><div><div class="menu-name">腿推</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight">80 kg</div></div>
+                        <div class="menu-action" onclick="quickLog('腿屈伸 或 腿後勾', '2', '15', '')"><div><div class="menu-name">腿屈伸 / 腿後勾</div><div class="menu-reps">2 × 10–15</div></div><div class="menu-weight">依狀態</div></div>
+                    </div>
+                    
+                    <div class="glass-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
+                            <span class="day-title">Day 2<small>背＋二頭</small></span>
+                            <button class="add-event-btn" onclick="openBatchModal('day2')">📋</button>
+                        </div>
+                        <div class="menu-action" onclick="quickLog('獨立握把划船機', '3', '12', '')"><div><div class="menu-name">獨立握把划船機</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight">依狀態</div></div>
+                        <div class="menu-action" onclick="quickLog('一般啞鈴二頭彎舉', '2', '12', '8')"><div><div class="menu-name">一般啞鈴二頭彎舉</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight">8 kg</div></div>
+                        <div class="menu-action" onclick="quickLog('槌式彎舉', '2', '12', '')"><div><div class="menu-name">槌式彎舉</div><div class="menu-reps">2 × 10–12</div></div><div class="menu-weight">依狀態</div></div>
+                    </div>
+
+                    <div class="glass-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 16px;">
+                            <span class="day-title">Day 3<small>肩＋三頭</small></span>
+                            <button class="add-event-btn" onclick="openBatchModal('day3')">📋</button>
+                        </div>
+                        <div class="menu-action" onclick="quickLog('肩推', '3', '10', '')"><div><div class="menu-name">肩推</div><div class="menu-reps">3 × 8–10</div></div><div class="menu-weight">依狀態</div></div>
+                        <div class="menu-action" onclick="quickLog('側平舉', '3', '15', '')"><div><div class="menu-name">側平舉</div><div class="menu-reps">2-3 × 12–15</div></div><div class="menu-weight">依狀態</div></div>
+                        <div class="menu-action" onclick="quickLog('三頭滑輪下壓', '2', '15', '')"><div><div class="menu-name">三頭滑輪下壓</div><div class="menu-reps">1-2 × 10–15 ⚠️</div></div><div class="menu-weight">輕量起</div></div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- [中間] Screen 2: 主視覺畫面 (Home) -->
+        <!-- [中間] Screen 2: 首頁 (Home) -->
         <section class="screen" id="screen-2" style="justify-content: center;">
-            
-            <!-- 專屬的日誌飄浮區域 -->
             <div id="journal-area"></div>
-
             <div class="content-container" style="flex: unset; gap: 20px;">
                 <div class="clock-card">
                     <div class="time-display" id="clock">00:00</div>
@@ -368,12 +285,9 @@
                         <span class="date-display" id="date">Wed, Jan 1, 2026</span>
                     </div>
                 </div>
-
-                <!-- 新增：生活微日記輸入框 -->
                 <div class="journal-container">
                     <input type="text" id="journal-input" class="journal-input" placeholder="記下此時此刻..." onkeypress="addJournalBubble(event)">
                 </div>
-
                 <div class="bubbles-panel">
                     <div class="floating-bubble b-weather" onclick="goToScreen(2)">
                         <strong>Location <span class="edit-icon" onclick="editCity(event)">✎</span></strong>
@@ -396,7 +310,6 @@
         <!-- [右一] Screen 3: 行事曆 Agenda (+ 任務區) -->
         <section class="screen" id="screen-3">
             <div class="content-container">
-                
                 <div class="glass-card" style="margin-bottom: 6px;">
                     <h3 class="tasks-header">Today's Focus</h3>
                     <div class="tasks-container">
@@ -410,7 +323,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="glass-card calendar-card">
                     <div class="calendar-header">
                         <h2>Agenda</h2>
@@ -422,7 +334,6 @@
                     </div>
                     <div id="agenda-list"></div>
                 </div>
-                
             </div>
         </section>
 
@@ -452,47 +363,37 @@
 
     </div>
 
-    <!-- Modal 區域 -->
+    <!-- Modals -->
     <div class="modal-overlay" id="event-modal"><div class="modal-card"><h3>New Event</h3><div class="form-group"><label>行程標題</label><input type="text" id="evt-title"></div><div class="form-group"><label>開始時間</label><input type="datetime-local" id="evt-start"></div><div class="form-group"><label>結束時間</label><input type="datetime-local" id="evt-end"></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeEventModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveNewEvent()">Save</button></div></div></div>
-    <div class="modal-overlay" id="fit-modal"><div class="modal-card"><h3>Log Workout</h3><div class="fit-input-group"><div class="form-group" style="flex: 1.5;"><label>動作名稱</label><input type="text" id="fit-name"></div><div class="form-group" style="flex: 1;"><label>日期</label><input type="date" id="fit-date"></div></div><div class="fit-input-group"><div class="form-group"><label>組</label><input type="number" id="fit-sets"></div><div class="form-group"><label>次</label><input type="number" id="fit-reps"></div><div class="form-group"><label>kg</label><input type="number" id="fit-weight" step="0.5"></div></div><div class="form-group"><label>備註</label><textarea id="fit-note" rows="2"></textarea></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeFitModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveFitLog()">Save</button></div></div></div>
+    <div class="modal-overlay" id="fit-modal"><div class="modal-card"><h3>Log Workout</h3><div class="fit-input-group" style="display:flex; gap:10px;"><div class="form-group" style="flex: 1.5;"><label>動作名稱</label><input type="text" id="fit-name"></div><div class="form-group" style="flex: 1;"><label>日期</label><input type="date" id="fit-date"></div></div><div class="fit-input-group" style="display:flex; gap:10px;"><div class="form-group"><label>組</label><input type="number" id="fit-sets"></div><div class="form-group"><label>次</label><input type="number" id="fit-reps"></div><div class="form-group"><label>kg</label><input type="number" id="fit-weight" step="0.5"></div></div><div class="form-group"><label>備註</label><textarea id="fit-note" rows="2"></textarea></div><div class="modal-actions"><button class="modal-btn btn-cancel" onclick="closeFitModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveFitLog()">Save</button></div></div></div>
     <div class="modal-overlay" id="session-modal"><div class="modal-card" style="width: 500px;"><h3 id="session-title">Log Day</h3><div class="form-group" style="margin-bottom: 14px;"><label>日期</label><input type="date" id="session-date"></div><div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div><button class="add-row-btn" onclick="addSessionRow()">+ 新增動作</button><div class="modal-actions"><button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除整天</button><button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveSession()">Save</button></div></div></div>
 
     <script>
-        /* === UI Slider Navigation Logic (無延遲 + 完美拖曳版) === */
+        /* === UI Slider & Dock Logic === */
         const slider = document.getElementById('app-slider');
         const globalFab = document.getElementById('global-fab');
         const navBubble = document.getElementById('nav-bubble');
         const iosDock = document.getElementById('ios-dock');
         const navItems = document.querySelectorAll('.nav-item');
-        
-        const ITEM_WIDTH = 54; 
-        let isDraggingBubble = false;
+        const ITEM_WIDTH = 54; let isDraggingBubble = false;
 
         function goToScreen(index) {
-            // 點擊圖標時加上動畫，讓它滑過去
             navBubble.classList.add('snap');
             slider.scrollTo({ left: window.innerWidth * index, behavior: 'smooth' });
-            // 動畫結束後移除，確保後續手滑時零延遲
             setTimeout(() => navBubble.classList.remove('snap'), 300);
         }
 
-        // 畫面滾動時同步泡泡位置
         slider.addEventListener('scroll', () => {
             if (isDraggingBubble) return; 
             const scrollNorm = slider.scrollLeft / window.innerWidth;
-            
-            // 直接賦予 Transform，沒有 Transition，實現「零延遲」同步
             navBubble.style.transform = `translateX(${scrollNorm * ITEM_WIDTH}px)`;
-            
             const activeIndex = Math.round(scrollNorm);
             navItems.forEach((item, i) => item.classList.toggle('active', i === activeIndex));
             updateFabState(activeIndex);
         });
 
-        // 泡泡拖曳邏輯
         navBubble.addEventListener('pointerdown', (e) => {
-            isDraggingBubble = true;
-            navBubble.classList.remove('snap'); // 確保拖曳時無延遲
+            isDraggingBubble = true; navBubble.classList.remove('snap');
             navBubble.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05))';
             navBubble.style.boxShadow = '0 8px 25px rgba(255,255,255,0.3)';
             navBubble.setPointerCapture(e.pointerId);
@@ -509,168 +410,142 @@
 
         navBubble.addEventListener('pointerup', (e) => {
             if (!isDraggingBubble) return;
-            isDraggingBubble = false;
-            navBubble.releasePointerCapture(e.pointerId);
-            
-            navBubble.classList.add('snap');
-            navBubble.style.background = '';
-            navBubble.style.boxShadow = '';
-            
-            const activeIndex = Math.round(slider.scrollLeft / window.innerWidth);
-            goToScreen(activeIndex);
+            isDraggingBubble = false; navBubble.releasePointerCapture(e.pointerId);
+            navBubble.classList.add('snap'); navBubble.style.background = ''; navBubble.style.boxShadow = '';
+            goToScreen(Math.round(slider.scrollLeft / window.innerWidth));
         });
 
         function updateFabState(index) {
-            if (index === 1 || index === 3) globalFab.classList.add('show');
-            else globalFab.classList.remove('show');
+            if (index === 1 || index === 3) globalFab.classList.add('show'); else globalFab.classList.remove('show');
         }
 
         function handleFabClick() {
             const index = Math.round(slider.scrollLeft / window.innerWidth);
-            if (index === 1) openFitModal();
-            else if (index === 3) openEventModal();
+            if (index === 1) openFitModal(); else if (index === 3) openEventModal();
         }
 
         window.addEventListener('load', () => {
             setTimeout(() => {
                 slider.scrollTo({ left: window.innerWidth * 2, behavior: 'instant' });
                 navBubble.style.transform = `translateX(${2 * ITEM_WIDTH}px)`;
-                navItems[2].classList.add('active');
-                updateFabState(2);
+                navItems[2].classList.add('active'); updateFabState(2);
             }, 50);
         });
 
-        /* === 首頁微日記 (Journal Bubble) 邏輯 === */
-        function addJournalBubble(e) {
-            if (e.key === 'Enter' && e.target.value.trim() !== '') {
-                createJournalBubble(e.target.value.trim());
-                e.target.value = ''; // 清空輸入框
+        /* === Pomodoro (Screen 0) === */
+        let pomoTimer = null; let pomoTimeLeft = 25 * 60; let isPomoRunning = false;
+        function formatPomoTime(secs) { const m = Math.floor(secs / 60); const s = secs % 60; return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`; }
+        function togglePomodoro() {
+            const ring = document.getElementById('pomodoro-ring'); const status = document.getElementById('pomodoro-status');
+            if (isPomoRunning) {
+                clearInterval(pomoTimer); isPomoRunning = false; ring.classList.remove('active'); status.innerText = 'Paused';
+            } else {
+                isPomoRunning = true; ring.classList.add('active'); status.innerText = 'Focusing...';
+                pomoTimer = setInterval(() => {
+                    pomoTimeLeft--; document.getElementById('pomodoro-time').innerText = formatPomoTime(pomoTimeLeft);
+                    if (pomoTimeLeft <= 0) { clearInterval(pomoTimer); isPomoRunning = false; ring.classList.remove('active'); status.innerText = 'Done!'; pomoTimeLeft = 25 * 60; }
+                }, 1000);
             }
         }
 
+        /* === 首頁微日記膠囊 (Journal Bubble) === */
+        function addJournalBubble(e) {
+            if (e.key === 'Enter' && e.target.value.trim() !== '') {
+                createJournalBubble(e.target.value.trim()); e.target.value = '';
+            }
+        }
         function createJournalBubble(text) {
             const area = document.getElementById('journal-area');
-            const bubble = document.createElement('div');
-            bubble.className = 'journal-bubble';
-            bubble.innerText = text;
+            const bubbleWrapper = document.createElement('div');
+            bubbleWrapper.className = 'journal-bubble';
+            // 加入刪除按鈕
+            bubbleWrapper.innerHTML = `
+                <div class="journal-bubble-anim" style="display:flex; align-items:center; gap:8px;">
+                    <span class="journal-text">${text}</span>
+                    <button class="journal-del">×</button>
+                </div>
+            `;
             
-            // 在畫面安全範圍內隨機生成位置
-            const maxX = window.innerWidth - 150;
-            const maxY = window.innerHeight - 350;
+            // 安全範圍計算（生成在中下方，避開時鐘）
+            const maxX = window.innerWidth - 180; 
+            const minY = window.innerHeight * 0.45; // 從螢幕中間開始往下
+            const maxY = window.innerHeight - 300; 
             const x = Math.max(20, Math.random() * maxX);
-            const y = Math.max(100, Math.random() * maxY);
+            const y = Math.max(minY, minY + Math.random() * (maxY - minY));
             
-            bubble.style.left = `${x}px`;
-            bubble.style.top = `${y}px`;
+            bubbleWrapper.style.left = `${x}px`; bubbleWrapper.style.top = `${y}px`;
+            bubbleWrapper.style.animation = 'popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
             
-            // 讓泡泡可被拖曳
-            let isDragging = false;
-            let startX, startY, initX, initY;
-            
-            bubble.addEventListener('pointerdown', (e) => {
-                isDragging = true;
-                startX = e.clientX; startY = e.clientY;
-                initX = parseFloat(bubble.style.left); initY = parseFloat(bubble.style.top);
-                bubble.setPointerCapture(e.pointerId);
-                bubble.style.zIndex = 100;
+            // 刪除事件
+            bubbleWrapper.querySelector('.journal-del').addEventListener('click', () => {
+                bubbleWrapper.style.animation = 'popIn 0.3s reverse forwards';
+                setTimeout(() => bubbleWrapper.remove(), 300);
             });
-            bubble.addEventListener('pointermove', (e) => {
+
+            // 拖曳事件
+            let isDragging = false; let startX, startY, initX, initY;
+            bubbleWrapper.addEventListener('pointerdown', (e) => {
+                if(e.target.classList.contains('journal-del')) return;
+                isDragging = true; startX = e.clientX; startY = e.clientY;
+                initX = parseFloat(bubbleWrapper.style.left); initY = parseFloat(bubbleWrapper.style.top);
+                bubbleWrapper.setPointerCapture(e.pointerId); bubbleWrapper.style.zIndex = 100;
+                bubbleWrapper.style.transform = 'scale(1.05)';
+            });
+            bubbleWrapper.addEventListener('pointermove', (e) => {
                 if(!isDragging) return;
-                bubble.style.left = `${initX + e.clientX - startX}px`;
-                bubble.style.top = `${initY + e.clientY - startY}px`;
+                bubbleWrapper.style.left = `${initX + e.clientX - startX}px`;
+                bubbleWrapper.style.top = `${initY + e.clientY - startY}px`;
             });
-            bubble.addEventListener('pointerup', (e) => {
-                isDragging = false;
-                bubble.releasePointerCapture(e.pointerId);
-                bubble.style.zIndex = 1;
+            bubbleWrapper.addEventListener('pointerup', (e) => {
+                isDragging = false; bubbleWrapper.releasePointerCapture(e.pointerId);
+                bubbleWrapper.style.zIndex = 1; bubbleWrapper.style.transform = 'scale(1)';
             });
-            
-            // 連點兩下刪除泡泡
-            bubble.addEventListener('dblclick', () => {
-                bubble.style.animation = 'popIn 0.3s reverse forwards';
-                setTimeout(() => bubble.remove(), 300);
-            });
-            
-            area.appendChild(bubble);
+            area.appendChild(bubbleWrapper);
         }
 
-        /* === API 與 基礎資料 (與之前一致) === */
+        /* === 基礎設施 API === */
         function clearDataAndReload() { localStorage.removeItem('google_calendar_token'); location.reload(); }
-
-        let userCity = localStorage.getItem('user_city_name') || 'Douliu';
-        let userLat = localStorage.getItem('user_city_lat') || '23.709';
-        let userLng = localStorage.getItem('user_city_lng') || '120.543';
+        let userCity = localStorage.getItem('user_city_name') || 'Douliu'; let userLat = localStorage.getItem('user_city_lat') || '23.709'; let userLng = localStorage.getItem('user_city_lng') || '120.543';
         document.getElementById('val-weather-city').innerText = userCity;
-
         function editCity(e) { e.stopPropagation(); document.getElementById('val-weather-city').style.display = 'none'; const input = document.getElementById('input-city'); input.style.display = 'block'; input.focus(); }
         async function saveCity(event) {
             if (event.key === 'Enter') {
                 const cityName = event.target.value.trim();
                 if (!cityName) { document.getElementById('val-weather-city').style.display = 'block'; document.getElementById('input-city').style.display = 'none'; return; }
                 document.getElementById('val-weather-temp').innerText = '...';
-                try {
-                    const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=zh`);
-                    const geoData = await geoRes.json();
-                    if(geoData.results) {
-                        userLat = geoData.results[0].latitude; userLng = geoData.results[0].longitude; userCity = geoData.results[0].name; 
-                        localStorage.setItem('user_city_name', userCity); localStorage.setItem('user_city_lat', userLat); localStorage.setItem('user_city_lng', userLng); scheduleBackup();
-                        document.getElementById('val-weather-city').innerText = userCity; fetchLiveWeather(); 
-                    }
+                try { const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=zh`); const geoData = await geoRes.json();
+                    if(geoData.results) { userLat = geoData.results[0].latitude; userLng = geoData.results[0].longitude; userCity = geoData.results[0].name; localStorage.setItem('user_city_name', userCity); localStorage.setItem('user_city_lat', userLat); localStorage.setItem('user_city_lng', userLng); scheduleBackup(); document.getElementById('val-weather-city').innerText = userCity; fetchLiveWeather(); }
                 } catch (e) {}
                 document.getElementById('val-weather-city').style.display = 'block'; document.getElementById('input-city').style.display = 'none'; document.getElementById('input-city').value = '';
             }
         }
-        async function fetchLiveWeather() {
-            try {
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLng}&current=temperature_2m,apparent_temperature&daily=precipitation_probability_max&timezone=Asia/Taipei`);
-                const data = await res.json();
-                document.getElementById('val-weather-temp').innerHTML = `${Math.round(data.current.temperature_2m)}°C`;
-            } catch (e) { }
-        }
+        async function fetchLiveWeather() { try { const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLng}&current=temperature_2m,apparent_temperature&daily=precipitation_probability_max&timezone=Asia/Taipei`); const data = await res.json(); document.getElementById('val-weather-temp').innerHTML = `${Math.round(data.current.temperature_2m)}°C`; } catch (e) { } }
         async function fetchLiveNews() { try { const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://technews.tw/feed/')}`); const data = await res.json(); if(data.items && data.items.length > 0) { document.getElementById('val-news').innerText = data.items[0].title.substring(0, 18) + '...'; } } catch (e) {} }
         fetchLiveWeather(); fetchLiveNews();
 
         function updateTime() {
-            const now = new Date();
-            document.getElementById('clock').textContent = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+            const now = new Date(); document.getElementById('clock').textContent = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
             const dateStr = `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][now.getDay()]}, ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
-            document.getElementById('date').textContent = dateStr; document.getElementById('calendar-date').textContent = dateStr;
-            document.getElementById('greeting-text').textContent = `${(now.getHours() >= 5 && now.getHours() < 18) ? "Bonjour" : "Bonsoir"}, Léon`;
+            document.getElementById('date').textContent = dateStr; document.getElementById('calendar-date').textContent = dateStr; document.getElementById('greeting-text').textContent = `${(now.getHours() >= 5 && now.getHours() < 18) ? "Bonjour" : "Bonsoir"}, Léon`;
         }
         setInterval(updateTime, 1000); updateTime();
         
         let fitnessData = JSON.parse(localStorage.getItem('leon_fitness_data')) || { weight: 59.0, logs: [] };
         if (!localStorage.getItem('leon_local_updated') && fitnessData.logs.length) localStorage.setItem('leon_local_updated', Date.now().toString());
 
-        const workoutPrograms = {
-            day1: { title: "Day 1: Chest & Legs", items: [{name: "槓鈴臥推", sets: 3, reps: 10}, {name: "上斜啞鈴臥推", sets: 2, reps: 12}, {name: "腿推", sets: 3, reps: 12}, {name: "腿屈伸 或 腿後勾", sets: 2, reps: 15}] },
-            day2: { title: "Day 2: Back & Biceps", items: [{name: "獨立握把划船機", sets: 3, reps: 12}, {name: "一般啞鈴二頭彎舉", sets: 2, reps: 12}, {name: "槌式彎舉", sets: 2, reps: 12}] },
-            day3: { title: "Day 3: Shoulders & Triceps", items: [{name: "肩推", sets: 3, reps: 10}, {name: "側平舉", sets: 3, reps: 15}, {name: "三頭滑輪下壓", sets: 2, reps: 15}] }
-        };
-        const dayLabels = { 1: "胸＋腿", 2: "背＋二頭", 3: "肩＋三頭" };
-        const dayKeywords = { 1: ["臥推", "腿推", "腿屈伸", "腿後勾", "飛鳥"], 2: ["划船", "二頭", "槌式", "下拉"], 3: ["肩推", "側平舉", "三頭", "平舉"] };
-        const dateKeyOf = (iso) => new Date(iso).toLocaleDateString('en-CA');
-        function getMonday(d) { d = new Date(d); const day = d.getDay(); d.setDate(d.getDate() - day + (day === 0 ? -6 : 1)); d.setHours(0, 0, 0, 0); return d; }
-
+        const workoutPrograms = { day1: { title: "Day 1: Chest & Legs", items: [{name: "槓鈴臥推", sets: 3, reps: 10}, {name: "上斜啞鈴臥推", sets: 2, reps: 12}, {name: "腿推", sets: 3, reps: 12}, {name: "腿屈伸 或 腿後勾", sets: 2, reps: 15}] }, day2: { title: "Day 2: Back & Biceps", items: [{name: "獨立握把划船機", sets: 3, reps: 12}, {name: "一般啞鈴二頭彎舉", sets: 2, reps: 12}, {name: "槌式彎舉", sets: 2, reps: 12}] }, day3: { title: "Day 3: Shoulders & Triceps", items: [{name: "肩推", sets: 3, reps: 10}, {name: "側平舉", sets: 3, reps: 15}, {name: "三頭滑輪下壓", sets: 2, reps: 15}] } };
+        const dayLabels = { 1: "胸＋腿", 2: "背＋二頭", 3: "肩＋三頭" }; const dayKeywords = { 1: ["臥推", "腿推", "腿屈伸", "腿後勾", "飛鳥"], 2: ["划船", "二頭", "槌式", "下拉"], 3: ["肩推", "側平舉", "三頭", "平舉"] };
+        const dateKeyOf = (iso) => new Date(iso).toLocaleDateString('en-CA'); function getMonday(d) { d = new Date(d); const day = d.getDay(); d.setDate(d.getDate() - day + (day === 0 ? -6 : 1)); d.setHours(0, 0, 0, 0); return d; }
         function detectDay(names) { let best = 0, bestCount = 0; [1, 2, 3].forEach(d => { const c = names.filter(n => dayKeywords[d].some(kw => n.includes(kw))).length; if (c > bestCount) { bestCount = c; best = d; } }); return best; }
         function getNextDay() { if (fitnessData.logs.length === 0) return 1; const last = detectDay(fitnessData.logs.filter(l => dateKeyOf(l.date) === dateKeyOf(fitnessData.logs[0].date)).map(l => l.name)); return last === 0 ? 1 : (last % 3) + 1; }
         function lastLogFor(name) { return fitnessData.logs.find(l => l.name === name); }
 
         function initFitness() {
-            document.getElementById('display-weight').innerText = `${fitnessData.weight} kg`;
-            const next = getNextDay();
-            document.getElementById('val-fitness-next').innerText = `Next · D${next}`;
-            
-            const wk = getMonday(new Date()).toLocaleDateString('en-CA');
-            const days = new Set(fitnessData.logs.filter(l => getMonday(new Date(l.date)).toLocaleDateString('en-CA') === wk).map(l => dateKeyOf(l.date)));
-            const C = 2 * Math.PI * 36, arc = C / 3 - 8; let arcs = '';
-            for (let i = 0; i < 3; i++) { const on = i < days.size; arcs += `<circle cx="45" cy="45" r="36" fill="none" stroke-width="8" stroke-linecap="round" stroke="${on ? '#9be7e4' : 'rgba(255,255,255,0.15)'}" stroke-dasharray="${arc} ${C - arc}" transform="rotate(${-90 + i * 120 + 5} 45 45)"/>`; }
+            document.getElementById('display-weight').innerText = `${fitnessData.weight} kg`; const next = getNextDay(); document.getElementById('val-fitness-next').innerText = `Next · D${next}`;
+            const wk = getMonday(new Date()).toLocaleDateString('en-CA'); const days = new Set(fitnessData.logs.filter(l => getMonday(new Date(l.date)).toLocaleDateString('en-CA') === wk).map(l => dateKeyOf(l.date)));
+            const C = 2 * Math.PI * 36, arc = C / 3 - 8; let arcs = ''; for (let i = 0; i < 3; i++) { const on = i < days.size; arcs += `<circle cx="45" cy="45" r="36" fill="none" stroke-width="8" stroke-linecap="round" stroke="${on ? '#9be7e4' : 'rgba(255,255,255,0.15)'}" stroke-dasharray="${arc} ${C - arc}" transform="rotate(${-90 + i * 120 + 5} 45 45)"/>`; }
             document.getElementById('dash-ring').innerHTML = `<svg width="90" height="90" viewBox="0 0 90 90">${arcs}<text x="45" y="52" text-anchor="middle" fill="#fff" font-size="22" font-weight="300">${days.size}/3</text></svg>`;
-
-            document.getElementById('dash-next-day').innerText = `Day ${next}`;
-            document.getElementById('dash-next-label').innerText = dayLabels[next] + (days.has(new Date().toLocaleDateString('en-CA')) ? ' ✓' : '');
-            document.getElementById('dash-next-chips').innerHTML = workoutPrograms['day' + next].items.map(i => `<span class="chip">${i.name.substring(0,4)}</span>`).join('');
-
+            document.getElementById('dash-next-day').innerText = `Day ${next}`; document.getElementById('dash-next-label').innerText = dayLabels[next] + (days.has(new Date().toLocaleDateString('en-CA')) ? ' ✓' : ''); document.getElementById('dash-next-chips').innerHTML = workoutPrograms['day' + next].items.map(i => `<span class="chip">${i.name.substring(0,4)}</span>`).join('');
             const cur = parseFloat(fitnessData.weight) || 0; const pos = v => Math.max(0, Math.min(100, (v - Math.min(55, Math.floor(cur)-1)) / (70 - Math.min(55, Math.floor(cur)-1)) * 100));
             document.getElementById('dash-w-track').innerHTML = `<div class="w-fill" style="width:${pos(cur)}%"></div><div class="w-mark" style="left:${pos(62)}%"><span>62</span></div><div class="w-mark" style="left:${pos(66)}%"><span>66</span></div>`;
             renderWeeklyFitnessLogs();
@@ -692,44 +567,23 @@
         function addSessionRow(r = {}) {
             const row = document.createElement('div'); row.className = 'batch-row';
             row.innerHTML = `<input type="text" class="batch-input b-name"><input type="number" class="batch-input b-sets"><input type="number" class="batch-input b-reps"><input type="number" class="batch-input b-weight" step="0.5"><button class="row-mv" onclick="moveRow(this, -1)">▲</button><button class="row-mv" onclick="moveRow(this, 1)">▼</button><button class="row-del" onclick="this.parentElement.remove()">×</button>`;
-            row.querySelector('.b-name').value = r.name || ''; row.querySelector('.b-sets').value = r.sets || ''; row.querySelector('.b-reps').value = r.reps || ''; row.querySelector('.b-weight').value = r.weight || '';
-            document.getElementById('batch-list').appendChild(row);
+            row.querySelector('.b-name').value = r.name || ''; row.querySelector('.b-sets').value = r.sets || ''; row.querySelector('.b-reps').value = r.reps || ''; row.querySelector('.b-weight').value = r.weight || ''; document.getElementById('batch-list').appendChild(row);
         }
         function moveRow(btn, dir) { const row = btn.closest('.batch-row'); if (dir < 0 && row.previousElementSibling) row.parentElement.insertBefore(row, row.previousElementSibling); else if (dir > 0 && row.nextElementSibling) row.parentElement.insertBefore(row.nextElementSibling, row); }
         
-        function openNewSession(dayNum, dateStr) {
-            sessionCtx = { mode: 'new', ids: [] }; document.getElementById('session-title').innerText = 'Log ' + workoutPrograms['day' + dayNum].title; document.getElementById('session-date').value = dateStr; document.getElementById('session-delete').style.display = 'none'; document.getElementById('batch-list').innerHTML = '';
-            workoutPrograms['day' + dayNum].items.forEach(item => { const last = lastLogFor(item.name); addSessionRow({ name: item.name, sets: last ? last.sets : item.sets, reps: last ? last.reps : item.reps, weight: last && parseFloat(last.weight) > 0 ? last.weight : '' }); });
-            document.getElementById('session-modal').classList.add('show');
-        }
+        function openNewSession(dayNum, dateStr) { sessionCtx = { mode: 'new', ids: [] }; document.getElementById('session-title').innerText = 'Log ' + workoutPrograms['day' + dayNum].title; document.getElementById('session-date').value = dateStr; document.getElementById('session-delete').style.display = 'none'; document.getElementById('batch-list').innerHTML = ''; workoutPrograms['day' + dayNum].items.forEach(item => { const last = lastLogFor(item.name); addSessionRow({ name: item.name, sets: last ? last.sets : item.sets, reps: last ? last.reps : item.reps, weight: last && parseFloat(last.weight) > 0 ? last.weight : '' }); }); document.getElementById('session-modal').classList.add('show'); }
         function openBatchModal(dayKey) { openNewSession(parseInt(dayKey.replace('day', '')), new Date().toLocaleDateString('en-CA')); }
-        function openEditSession(dateKey) {
-            const dayLogs = fitnessData.logs.filter(l => dateKeyOf(l.date) === dateKey).sort((a, b) => new Date(a.date) - new Date(b.date));
-            sessionCtx = { mode: 'edit', ids: dayLogs.map(l=>l.id) }; document.getElementById('session-title').innerText = `${dateKey.substring(5)} 訓練紀錄`; document.getElementById('session-date').value = dateKey; document.getElementById('session-delete').style.display = 'block'; document.getElementById('batch-list').innerHTML = '';
-            dayLogs.forEach(l => addSessionRow({ name: l.name, sets: l.sets, reps: l.reps, weight: parseFloat(l.weight) > 0 ? l.weight : '' })); document.getElementById('session-modal').classList.add('show');
-        }
+        function openEditSession(dateKey) { const dayLogs = fitnessData.logs.filter(l => dateKeyOf(l.date) === dateKey).sort((a, b) => new Date(a.date) - new Date(b.date)); sessionCtx = { mode: 'edit', ids: dayLogs.map(l=>l.id) }; document.getElementById('session-title').innerText = `${dateKey.substring(5)} 訓練紀錄`; document.getElementById('session-date').value = dateKey; document.getElementById('session-delete').style.display = 'block'; document.getElementById('batch-list').innerHTML = ''; dayLogs.forEach(l => addSessionRow({ name: l.name, sets: l.sets, reps: l.reps, weight: parseFloat(l.weight) > 0 ? l.weight : '' })); document.getElementById('session-modal').classList.add('show'); }
         function closeSessionModal() { document.getElementById('session-modal').classList.remove('show'); }
-        function saveSession() {
-            const dateVal = document.getElementById('session-date').value; if (!dateVal) return;
-            const newLogs = [...document.querySelectorAll('#batch-list .batch-row')].map((row, idx) => {
-                const name = row.querySelector('.b-name').value.trim(); if(!name) return null;
-                return { id: Date.now().toString() + idx, date: new Date(new Date(dateVal).getTime() + idx).toISOString(), name, sets: row.querySelector('.b-sets').value || "1", reps: row.querySelector('.b-reps').value || "1", weight: row.querySelector('.b-weight').value || "0", note: "" };
-            }).filter(Boolean);
-            if (newLogs.length === 0) { alert("至少需一個動作"); return; }
-            fitnessData.logs = fitnessData.logs.filter(l => !sessionCtx.ids.includes(l.id)).concat(newLogs); fitnessData.logs.sort((a, b) => new Date(b.date) - new Date(a.date)); saveFitnessData(); closeSessionModal(); initFitness();
-        }
+        function saveSession() { const dateVal = document.getElementById('session-date').value; if (!dateVal) return; const newLogs = [...document.querySelectorAll('#batch-list .batch-row')].map((row, idx) => { const name = row.querySelector('.b-name').value.trim(); if(!name) return null; return { id: Date.now().toString() + idx, date: new Date(new Date(dateVal).getTime() + idx).toISOString(), name, sets: row.querySelector('.b-sets').value || "1", reps: row.querySelector('.b-reps').value || "1", weight: row.querySelector('.b-weight').value || "0", note: "" }; }).filter(Boolean); if (newLogs.length === 0) { alert("至少需一個動作"); return; } fitnessData.logs = fitnessData.logs.filter(l => !sessionCtx.ids.includes(l.id)).concat(newLogs); fitnessData.logs.sort((a, b) => new Date(b.date) - new Date(a.date)); saveFitnessData(); closeSessionModal(); initFitness(); }
         function deleteSession() { if(confirm("刪除整天紀錄？")) { fitnessData.logs = fitnessData.logs.filter(l => !sessionCtx.ids.includes(l.id)); saveFitnessData(); closeSessionModal(); initFitness(); } }
 
         function renderWeeklyFitnessLogs() {
             const weeks = {}; const curWeekKey = getMonday(new Date()).toLocaleDateString('en-CA'); weeks[curWeekKey] = {};
             fitnessData.logs.forEach(log => { const wk = getMonday(new Date(log.date)).toLocaleDateString('en-CA'); const dk = dateKeyOf(log.date); if (!weeks[wk]) weeks[wk] = {}; if (!weeks[wk][dk]) weeks[wk][dk] = []; weeks[wk][dk].push(log); });
             document.getElementById('fitness-logs-container').innerHTML = Object.keys(weeks).sort().reverse().slice(0, 5).map(wk => {
-                const mon = new Date(wk + 'T00:00:00'); const sun = new Date(mon); sun.setDate(sun.getDate() + 6);
-                const keys = Object.keys(weeks[wk]).sort();
-                let segs = ''; for (let i = 0; i < Math.max(3, keys.length); i++) {
-                    if (i < keys.length) { const dk = keys[i]; segs += `<div class="week-seg done" onclick="openEditSession('${dk}')">${detectDay(weeks[wk][dk].map(l=>l.name)) ? 'D'+detectDay(weeks[wk][dk].map(l=>l.name)) : ''} ${dk.substring(5)}</div>`; } 
-                    else { segs += `<div class="week-seg" onclick="openNewSession(${getNextDay()}, '${wk === curWeekKey ? new Date().toLocaleDateString('en-CA') : sun.toLocaleDateString('en-CA')}')">+</div>`; }
-                }
+                const mon = new Date(wk + 'T00:00:00'); const sun = new Date(mon); sun.setDate(sun.getDate() + 6); const keys = Object.keys(weeks[wk]).sort(); let segs = '';
+                for (let i = 0; i < Math.max(3, keys.length); i++) { if (i < keys.length) { const dk = keys[i]; segs += `<div class="week-seg done" onclick="openEditSession('${dk}')">${detectDay(weeks[wk][dk].map(l=>l.name)) ? 'D'+detectDay(weeks[wk][dk].map(l=>l.name)) : ''} ${dk.substring(5)}</div>`; } else { segs += `<div class="week-seg" onclick="openNewSession(${getNextDay()}, '${wk === curWeekKey ? new Date().toLocaleDateString('en-CA') : sun.toLocaleDateString('en-CA')}')">+</div>`; } }
                 return `<div class="week-row"><div class="week-head"><span>${mon.getMonth()+1}/${mon.getDate()} - ${sun.getMonth()+1}/${sun.getDate()}</span></div><div class="week-bar">${segs}</div></div>`;
             }).join('');
         }
@@ -739,8 +593,8 @@
         function importFitnessData(event) { const file = event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = e => { try { const d = JSON.parse(e.target.result); if(d.logs) { fitnessData = d; saveFitnessData(); initFitness(); alert("成功"); } } catch(err){} }; reader.readAsText(file); }
         initFitness();
 
-        const CLIENT_ID = '964246501733-ha9h53h0erug792i03d3jshhctfv3nal.apps.googleusercontent.com';
-        const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/tasks https://www.googleapis.com/auth/drive.appdata';
+        /* Google Tasks & Calendar */
+        const CLIENT_ID = '964246501733-ha9h53h0erug792i03d3jshhctfv3nal.apps.googleusercontent.com'; const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/tasks https://www.googleapis.com/auth/drive.appdata';
         let tokenClient; let gapiInited = false; let gisInited = false;
 
         function gapiLoaded() { gapi.load('client', async () => { await gapi.client.init({ discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest', 'https://www.googleapis.com/discovery/v1/apis/tasks/v1/rest'] }); gapiInited = true; maybeEnableAuth(); }); }
@@ -750,6 +604,8 @@
         
         async function fetchData() { document.getElementById('auth-container').style.display = 'none'; document.getElementById('new-task-input').style.display = 'block'; await Promise.all([fetchTasks(), fetchAllEvents()]); cloudSync(); }
 
+        window.toggleTaskNote = function(e, id) { e.stopPropagation(); document.getElementById(`note-${id}`).classList.toggle('show'); }
+
         async function fetchTasks() {
             try {
                 const res = await gapi.client.tasks.tasks.list({ tasklist: '@default', showHidden: false });
@@ -758,7 +614,20 @@
                 
                 let aHTML = '', cHTML = '', cCount = 0;
                 tasks.forEach(t => { 
-                    const html = `<div class="task-item ${t.status === 'completed' ? 'completed' : ''}" id="task-${t.id}"><div class="task-header"><div class="task-circle ${t.status === 'completed' ? 'completed' : ''}" onclick="toggleTaskStatus('${t.id}', '${t.status}')"></div><div class="task-title" ondblclick="toggleTaskStatus('${t.id}', '${t.status}')">${t.title}</div><button class="task-delete-btn" onclick="deleteTask('${t.id}')">×</button></div></div>`;
+                    const noteBtn = t.notes ? `<button class="task-detail-btn" onclick="toggleTaskNote(event, '${t.id}')">▼</button>` : '';
+                    const notesDiv = t.notes ? `<div class="task-notes" id="note-${t.id}">${t.notes.replace(/\n/g, '<br>')}</div>` : '';
+                    
+                    const html = `
+                    <div class="task-item ${t.status === 'completed' ? 'completed' : ''}" id="task-${t.id}">
+                        <div class="task-header">
+                            <div class="task-circle ${t.status === 'completed' ? 'completed' : ''}" onclick="toggleTaskStatus('${t.id}', '${t.status}')"></div>
+                            <div class="task-title" ondblclick="toggleTaskStatus('${t.id}', '${t.status}')">
+                                ${t.title} ${noteBtn}
+                            </div>
+                            <button class="task-delete-btn" onclick="deleteTask('${t.id}')">×</button>
+                        </div>
+                        ${notesDiv}
+                    </div>`;
                     if(t.status === 'completed') { cHTML += html; cCount++; } else { aHTML += html; }
                 });
                 
