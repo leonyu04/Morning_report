@@ -45,12 +45,13 @@
 
         .glass-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.005)); backdrop-filter: blur(26px); -webkit-backdrop-filter: blur(26px); border-top: 1px solid rgba(255, 255, 255, 0.14); border-left: 1px solid rgba(255, 255, 255, 0.14); border-bottom: 1px solid rgba(255, 255, 255, 0.03); border-right: 1px solid rgba(255, 255, 255, 0.03); border-radius: 24px; box-shadow: 0 12px 35px 0 rgba(0, 0, 0, 0.25); padding: 22px 20px; width: 100%; }
         
-        /* --- Screen 0: Zen Breathing & Flow 舒壓區 --- */
-        .zen-container { width: 100%; height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; cursor: pointer; user-select: none; }
-        .zen-aura { position: absolute; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle, rgba(155,231,228,0.35) 0%, rgba(155,231,228,0.02) 70%); animation: breatheAura 6s ease-in-out infinite; pointer-events: none; }
-        .zen-orb { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(155,231,228,0.05)); backdrop-filter: blur(10px); border: 1px solid rgba(155,231,228,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(155,231,228,0.2); transition: transform 0.1s ease; will-change: transform; z-index: 2; }
-        @keyframes breatheAura { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.6); opacity: 0.9; } }
-        .zen-text { font-size: 0.75rem; opacity: 0.8; font-family: 'Noto Serif JP', serif; letter-spacing: 2px; margin-top: 20px; z-index: 2; }
+        /* --- Screen 0: Zen Flow 舒壓點擊與進化區 --- */
+        .zen-container { width: 100%; height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; cursor: pointer; user-select: none; }
+        .zen-orb { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, rgba(155,231,228,0.15), rgba(255,255,255,0.02)); backdrop-filter: blur(14px); border: 1px solid rgba(155,231,228,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 35px rgba(155,231,228,0.25); transition: transform 0.15s ease, background 0.3s ease; will-change: transform; z-index: 2; }
+        .zen-orb:active { transform: scale(0.92); }
+        .zen-count { font-size: 1.8rem; font-weight: 300; color: #9be7e4; letter-spacing: 1px; }
+        .zen-level { font-size: 0.65rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; margin-top: 2px; }
+        .zen-text { font-size: 0.75rem; opacity: 0.8; font-family: 'Noto Serif JP', serif; letter-spacing: 1px; margin-top: 18px; text-align: center; z-index: 2; }
 
         /* --- Screen 1: 健身專屬頁面 --- */
         .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -70,16 +71,15 @@
         .week-seg { flex: 1; height: 32px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: rgba(255,255,255,0.4); cursor: pointer; font-family: 'Noto Serif JP', serif; }
         .week-seg.done { background: rgba(155,231,228,0.2); border-color: #9be7e4; color: #9be7e4; font-weight: 700; }
         
-        .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: rgba(0,0,0,0.12); border-radius: 8px; margin-bottom: 6px; cursor: pointer; }
-        .menu-name { font-size: 0.82rem; font-weight: 400; }
-        .menu-reps { font-size: 0.68rem; opacity: 0.7; font-family: 'Noto Serif JP', serif; margin-top: 1px;}
-        .menu-weight { font-size: 0.78rem; font-weight: 300; background: rgba(255,255,255,0.06); padding: 3px 8px; border-radius: 6px; }
+        /* 完整選單字體全面調小精緻化 */
+        .menu-action { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: rgba(0,0,0,0.12); border-radius: 8px; margin-bottom: 5px; cursor: pointer; }
+        .menu-name { font-size: 0.76rem; font-weight: 400; }
+        .menu-reps { font-size: 0.62rem; opacity: 0.65; font-family: 'Noto Serif JP', serif; margin-top: 1px;}
+        .menu-weight { font-size: 0.72rem; font-weight: 300; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 6px; }
         
         .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; width: 100%; font-size: 1.05rem; font-weight: 400; letter-spacing: 1px; padding-bottom: 4px; }
         .collapsible-content { display: none; flex-direction: column; gap: 14px; margin-top: 14px; }
         .collapsible-content.show { display: flex; }
-
-        .running-box { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.12); border-radius: 10px; padding: 10px 12px; margin-top: 8px; cursor: pointer; }
 
         /* --- Screen 2: 首頁 (Home) --- */
         .clock-card { display: flex; flex-direction: column; align-items: center; text-align: center; border: none; background: transparent; box-shadow: none; padding: 10px 0; }
@@ -89,9 +89,10 @@
         .dot-separator { width: 4px; height: 4px; background: white; border-radius: 50%; opacity: 0.5; }
 
         .journal-container { width: 100%; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 15px; z-index: 10; }
-        .journal-input { background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 10px 24px; color: white; font-size: 0.85rem; text-align: center; width: 220px; outline: none; transition: all 0.3s ease; font-weight: 300; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        /* 修正首頁輸入框樣式，與其他輸入框一致 */
+        .journal-input { background: rgba(0,0,0,0.3); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 10px 18px; color: white; font-size: 0.85rem; text-align: center; width: 220px; outline: none; transition: all 0.3s ease; font-weight: 300; letter-spacing: 1px; font-family: 'Noto Serif JP', serif; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .journal-input::placeholder { color: rgba(255,255,255,0.4); }
-        .journal-input:focus { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); width: 260px; }
+        .journal-input:focus { border-color: rgba(255,255,255,0.3); background: rgba(0,0,0,0.45); width: 260px; }
 
         #journal-area { position: absolute; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
         .journal-bubble { position: absolute; display: flex; align-items: center; gap: 10px; pointer-events: auto; cursor: grab; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; padding: 10px 18px; color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15); user-select: none; -webkit-user-select: none; touch-action: none; white-space: nowrap; }
@@ -191,17 +192,17 @@
 
     <div class="app-slider" id="app-slider">
         
-        <!-- [左二] Screen 0: Zen Breathing & Flow 舒壓區 -->
+        <!-- [左二] Screen 0: Zen Flow 舒壓點擊與進化區 -->
         <section class="screen" id="screen-0" style="justify-content: center;">
             <div class="content-container" style="align-items: center; gap: 20px;">
                 <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; padding: 45px 20px;">
                     <h2 style="font-size:1.1rem; font-weight:400; opacity:0.8; letter-spacing:1px; margin-bottom: 10px;">Zen Flow</h2>
-                    <div class="zen-container" id="zen-container">
-                        <div class="zen-aura"></div>
+                    <div class="zen-container" onclick="tapZenCounter()">
                         <div class="zen-orb" id="zen-orb">
-                            <span style="font-size: 1.2rem; font-weight: 300;">✨</span>
+                            <div class="zen-count" id="zen-count">0</div>
+                            <div class="zen-level" id="zen-level">新手修行</div>
                         </div>
-                        <div class="zen-text" id="zen-status-text">點擊或拖曳來感受呼吸與流動</div>
+                        <div class="zen-text" id="zen-status-text">輕觸圓圈釋放壓力，累積專注能量</div>
                     </div>
                 </div>
             </div>
@@ -221,9 +222,10 @@
                         </div>
                     </div>
 
-                    <div class="dash-tile" style="cursor: pointer; background: linear-gradient(135deg, rgba(155,231,228,0.08), rgba(255,255,255,0.01)); border-color: rgba(155,231,228,0.3);" onclick="scrollToAndExpandNextWorkout()">
-                        <div class="dash-cap" style="margin: 0 0 2px; color: #9be7e4;">NEXT WORKOUT (點擊前往)</div>
-                        <div class="dash-big" id="dash-next-day" style="font-size: 1.6rem; margin: 4px 0;">Day 1</div>
+                    <!-- 儀表板 Next Workout / 今日已完成卡片 -->
+                    <div class="dash-tile" id="dash-next-card" style="cursor: pointer; background: linear-gradient(135deg, rgba(155,231,228,0.08), rgba(255,255,255,0.01)); border-color: rgba(155,231,228,0.3);" onclick="handleDashCardClick()">
+                        <div class="dash-cap" id="dash-next-top-cap" style="margin: 0 0 2px; color: #9be7e4;">NEXT WORKOUT (點擊前往)</div>
+                        <div class="dash-big" id="dash-next-day" style="font-size: 1.5rem; margin: 4px 0;">Day 1</div>
                         <div class="dash-cap" id="dash-next-label" style="font-size: 0.8rem; opacity: 0.9;">背＋二頭</div>
                     </div>
 
@@ -241,6 +243,7 @@
                     </div>
                 </div>
 
+                <!-- 完整菜單總目錄（字體已全面縮小精緻化） -->
                 <div class="glass-card">
                     <div class="collapsible-header" onclick="toggleMenuCollapse()">
                         <span>Workout Programs (完整菜單)</span>
@@ -248,10 +251,10 @@
                     </div>
                     <div class="collapsible-content" id="menu-collapsible-content">
                         <!-- Day 1 -->
-                        <div id="program-day1" style="background: rgba(0,0,0,0.15); padding: 12px; border-radius: 14px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-bottom: 10px;">
-                                <span style="font-size:0.9rem; font-weight:400;">Day 1 <small style="opacity:0.7; font-family:'Noto Serif JP';">胸＋腿</small></span>
-                                <button class="add-event-btn" onclick="openBatchModal('day1')">📋</button>
+                        <div id="program-day1" style="background: rgba(0,0,0,0.15); padding: 10px; border-radius: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 4px; margin-bottom: 8px;">
+                                <span style="font-size:0.82rem; font-weight:400;">Day 1 <small style="opacity:0.65; font-family:'Noto Serif JP';">胸＋腿</small></span>
+                                <button class="add-event-btn" onclick="openBatchModal('day1')" style="width:24px; height:24px; font-size:0.7rem;">📋</button>
                             </div>
                             <div class="menu-action" onclick="quickLog('槓鈴臥推', '3', '10', '30')"><div><div class="menu-name">槓鈴臥推</div><div class="menu-reps">3 × 6–10</div></div><div class="menu-weight" data-exercise="槓鈴臥推">30 kg</div></div>
                             <div class="menu-action" onclick="quickLog('上斜啞鈴臥推', '2', '12', '')"><div><div class="menu-name">上斜啞鈴臥推</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight" data-exercise="上斜啞鈴臥推">依狀態</div></div>
@@ -260,10 +263,10 @@
                         </div>
 
                         <!-- Day 2 -->
-                        <div id="program-day2" style="background: rgba(0,0,0,0.15); padding: 12px; border-radius: 14px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-bottom: 10px;">
-                                <span style="font-size:0.9rem; font-weight:400;">Day 2 <small style="opacity:0.7; font-family:'Noto Serif JP';">背＋二頭</small></span>
-                                <button class="add-event-btn" onclick="openBatchModal('day2')">📋</button>
+                        <div id="program-day2" style="background: rgba(0,0,0,0.15); padding: 10px; border-radius: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 4px; margin-bottom: 8px;">
+                                <span style="font-size:0.82rem; font-weight:400;">Day 2 <small style="opacity:0.65; font-family:'Noto Serif JP';">背＋二頭</small></span>
+                                <button class="add-event-btn" onclick="openBatchModal('day2')" style="width:24px; height:24px; font-size:0.7rem;">📋</button>
                             </div>
                             <div class="menu-action" onclick="quickLog('獨立握把划船機', '3', '12', '')"><div><div class="menu-name">獨立握把划船機</div><div class="menu-reps">3 × 8–12</div></div><div class="menu-weight" data-exercise="獨立握把划船機">依狀態</div></div>
                             <div class="menu-action" onclick="quickLog('一般啞鈴二頭彎舉', '2', '12', '8')"><div><div class="menu-name">一般啞鈴二頭彎舉</div><div class="menu-reps">2 × 8–12</div></div><div class="menu-weight" data-exercise="一般啞鈴二頭彎舉">8 kg</div></div>
@@ -271,10 +274,10 @@
                         </div>
 
                         <!-- Day 3 -->
-                        <div id="program-day3" style="background: rgba(0,0,0,0.15); padding: 12px; border-radius: 14px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-bottom: 10px;">
-                                <span style="font-size:0.9rem; font-weight:400;">Day 3 <small style="opacity:0.7; font-family:'Noto Serif JP';">肩＋三頭</small></span>
-                                <button class="add-event-btn" onclick="openBatchModal('day3')">📋</button>
+                        <div id="program-day3" style="background: rgba(0,0,0,0.15); padding: 10px; border-radius: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 4px; margin-bottom: 8px;">
+                                <span style="font-size:0.82rem; font-weight:400;">Day 3 <small style="opacity:0.65; font-family:'Noto Serif JP';">肩＋三頭</small></span>
+                                <button class="add-event-btn" onclick="openBatchModal('day3')" style="width:24px; height:24px; font-size:0.7rem;">📋</button>
                             </div>
                             <div class="menu-action" onclick="quickLog('肩推', '3', '10', '')"><div><div class="menu-name">肩推</div><div class="menu-reps">3 × 8–10</div></div><div class="menu-weight" data-exercise="肩推">依狀態</div></div>
                             <div class="menu-action" onclick="quickLog('側平舉', '3', '15', '')"><div><div class="menu-name">側平舉</div><div class="menu-reps">2-3 × 12–15</div></div><div class="menu-weight" data-exercise="側平舉">依狀態</div></div>
@@ -282,10 +285,10 @@
                         </div>
 
                         <!-- Running -->
-                        <div id="program-running" style="background: rgba(0,0,0,0.15); padding: 12px; border-radius: 14px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-bottom: 10px;">
-                                <span style="font-size:0.9rem; font-weight:400;">Running <small style="opacity:0.7; font-family:'Noto Serif JP';">有氧跑步</small></span>
-                                <button class="add-event-btn" onclick="openRunningModal()">🏃‍♂️</button>
+                        <div id="program-running" style="background: rgba(0,0,0,0.15); padding: 10px; border-radius: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 4px; margin-bottom: 8px;">
+                                <span style="font-size:0.82rem; font-weight:400;">Running <small style="opacity:0.65; font-family:'Noto Serif JP';">有氧跑步</small></span>
+                                <button class="add-event-btn" onclick="openRunningModal()" style="width:24px; height:24px; font-size:0.7rem;">🏃‍♂️</button>
                             </div>
                             <div class="menu-action" onclick="openRunningModal()">
                                 <div><div class="menu-name">戶外有氧跑步</div><div class="menu-reps">距離 (km) / 時間 (分)</div></div>
@@ -380,7 +383,7 @@
                     <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 4px; font-weight: 300;">Google 雲端備份</p>
                     <button class="google-login-btn" id="settings-login-btn" onclick="handleAuthClick()">登入 Google</button>
                     <button class="action-btn" onclick="cloudBackup(true)">☁️ 備份到 Google</button>
-                    <button class="action-btn" onclick="cloudRestore(true)">☁️ 從 Google還原</button>
+                    <button class="action-btn" onclick="cloudRestore(true)">☁️ 從 Google 還原</button>
                     <p id="cloud-status" style="font-size: 0.7rem; opacity: 0.6; margin-top: 8px; font-weight: 300; line-height: 1.4;">登入 Google 後自動同步</p>
                     
                     <div style="margin-top: 30px;"></div>
@@ -411,7 +414,6 @@
             </div>
             <div class="form-group" style="flex: 1;"><label>日期</label><input type="date" id="fit-date"></div>
         </div>
-        <!-- 顯示上一次的組數提示 -->
         <div id="last-record-hint" style="font-size:0.75rem; color:#9be7e4; margin-bottom:12px; font-family:'Noto Serif JP',serif; display:none;"></div>
         
         <div style="display:flex; gap:10px;">
@@ -425,30 +427,28 @@
     <div class="modal-overlay" id="session-modal" onclick="if(event.target === this) closeSessionModal()"><div class="modal-card" style="width: 500px;"><h3 id="session-title">Log Day</h3><div class="form-group" style="margin-bottom: 14px;"><label>日期</label><input type="date" id="session-date"></div><div id="batch-list" style="max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div><button class="add-row-btn" onclick="addSessionRow()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:white; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:0.8rem;">+ 新增動作</button><div class="modal-actions"><button class="modal-btn btn-delete" id="session-delete" onclick="deleteSession()">刪除整天</button><button class="modal-btn btn-cancel" onclick="closeSessionModal()">Cancel</button><button class="modal-btn btn-save" onclick="saveSession()">Save</button></div></div></div>
 
     <script>
-        /* === Zen Breathing & Flow 舒壓區互動邏輯 === */
-        const zenContainer = document.getElementById('zen-container');
-        const zenOrb = document.getElementById('zen-orb');
-        const zenStatusText = document.getElementById('zen-status-text');
-        let isZenInteracting = false;
+        /* === Zen Flow 舒壓點擊與進化邏輯 === */
+        let zenClicks = parseInt(localStorage.getItem('leon_zen_clicks')) || 0;
+        
+        function updateZenDisplay() {
+            document.getElementById('zen-count').innerText = zenClicks;
+            let levelTitle = "新手修行";
+            if(zenClicks >= 50) levelTitle = "心如止水 🌊";
+            else if(zenClicks >= 30) levelTitle = "深度放鬆 🌿";
+            else if(zenClicks >= 15) levelTitle = "內心平靜 ✨";
+            else if(zenClicks >= 5) levelTitle = "逐漸專注 🍃";
+            document.getElementById('zen-level').innerText = levelTitle;
+        }
 
-        zenContainer.addEventListener('pointerdown', (e) => {
-            isZenInteracting = true;
-            zenOrb.style.transform = 'scale(1.25)';
-            zenStatusText.innerText = '釋放壓力，感受呼吸與當下... 🌿';
-        });
-        window.addEventListener('pointermove', (e) => {
-            if (!isZenInteracting) return;
-            const rect = zenContainer.getBoundingClientRect();
-            const x = e.clientX - (rect.left + rect.width / 2);
-            const y = e.clientY - (rect.top + rect.height / 2);
-            zenOrb.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px) scale(1.35)`;
-        });
-        window.addEventListener('pointerup', () => {
-            if (!isZenInteracting) return;
-            isZenInteracting = false;
-            zenOrb.style.transform = 'translate(0px, 0px) scale(1)';
-            zenStatusText.innerText = '點擊或拖曳來感受呼吸與流動';
-        });
+        function tapZenCounter() {
+            zenClicks++;
+            localStorage.setItem('leon_zen_clicks', zenClicks);
+            updateZenDisplay();
+            const orb = document.getElementById('zen-orb');
+            orb.style.transform = 'scale(1.15)';
+            setTimeout(() => { orb.style.transform = 'scale(1)'; }, 150);
+        }
+        updateZenDisplay();
 
         /* === 完整菜單收合與點擊滑動展開 === */
         function toggleMenuCollapse() {
@@ -456,6 +456,16 @@
             const arrow = document.getElementById('menu-toggle-arrow');
             content.classList.toggle('show');
             arrow.innerText = content.classList.contains('show') ? '▲' : '▼';
+        }
+
+        function handleDashCardClick() {
+            const todayStr = new Date().toLocaleDateString('en-CA');
+            const hasDoneToday = fitnessData.logs.some(l => dateKeyOf(l.date) === todayStr);
+            if (!hasDoneToday) {
+                scrollToAndExpandNextWorkout();
+            } else {
+                goToScreen(1); // 已完成就停留在健身頁面
+            }
         }
 
         function scrollToAndExpandNextWorkout() {
@@ -638,7 +648,23 @@
         }
 
         function initFitness() {
-            document.getElementById('display-weight').innerText = `${fitnessData.weight} kg`; const next = getNextDay(); document.getElementById('val-fitness-next').innerText = `Next · D${next}`;
+            document.getElementById('display-weight').innerText = `${fitnessData.weight} kg`; 
+            
+            const todayStr = new Date().toLocaleDateString('en-CA');
+            const hasDoneToday = fitnessData.logs.some(l => dateKeyOf(l.date) === todayStr);
+
+            if (hasDoneToday) {
+                document.getElementById('dash-next-top-cap').innerText = "STATUS";
+                document.getElementById('dash-next-day').innerText = "🎉 今日訓練已完成";
+                document.getElementById('dash-next-label').innerText = "Great Job, Léon!";
+                document.getElementById('val-fitness-next').innerText = "Done";
+            } else {
+                const next = getNextDay();
+                document.getElementById('dash-next-top-cap').innerText = "NEXT WORKOUT (點擊前往)";
+                document.getElementById('dash-next-day').innerText = `Day ${next}`;
+                document.getElementById('dash-next-label').innerText = dayLabels[next];
+                document.getElementById('val-fitness-next').innerText = `Next · D${next}`;
+            }
             
             const wk = getMonday(new Date()).toLocaleDateString('en-CA'); 
             const days = new Set(fitnessData.logs.filter(l => getMonday(new Date(l.date)).toLocaleDateString('en-CA') === wk).map(l => dateKeyOf(l.date)));
@@ -649,9 +675,6 @@
 
             const C = 2 * Math.PI * 36, arc = C / 3 - 8; let arcs = ''; for (let i = 0; i < 3; i++) { const on = i < days.size; arcs += `<circle cx="45" cy="45" r="36" fill="none" stroke-width="8" stroke-linecap="round" stroke="${on ? '#9be7e4' : 'rgba(255,255,255,0.12)'}" stroke-dasharray="${arc} ${C - arc}" transform="rotate(${-90 + i * 120 + 5} 45 45)"/>`; }
             document.getElementById('dash-ring').innerHTML = `<svg width="90" height="90" viewBox="0 0 90 90">${arcs}<text x="45" y="52" text-anchor="middle" fill="#fff" font-size="22" font-weight="300">${days.size}/3</text></svg>`;
-
-            document.getElementById('dash-next-day').innerText = `Day ${next}`; 
-            document.getElementById('dash-next-label').innerText = dayLabels[next];
 
             renderWeightChart();
             renderWeeklyFitnessLogs(); updateMenuMaxWeights();
@@ -674,7 +697,6 @@
 
         function updateWeight() { const newW = prompt("最新體重 (kg)：", fitnessData.weight); if (newW && !isNaN(newW)) { fitnessData.weight = parseFloat(newW).toFixed(1); saveFitnessData(); initFitness(); } }
         
-        /* === 智慧下拉與歷史提示記錄功能 === */
         function openFitModal() { 
             document.getElementById('fit-date').value = new Date().toLocaleDateString('en-CA'); 
             const sel = document.getElementById('fit-name-select');
